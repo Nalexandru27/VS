@@ -1,0 +1,18 @@
+NUE passed all tests
+Market Cap: 34.58B
+Current Ratio: 2.59
+LTDebtToWC: 0.55
+Dividend Record: 14
+P/E Ratio: 1.82
+Price-to-book ratio: 2.49
+Graham's price-to-book ratio: 3.08
+----------------------
+SWKS passed all tests
+Market Cap: 13.43B
+Current Ratio: 5.75
+LTDebtToWC: 0.36
+Dividend Record: 9
+P/E Ratio: 4.71
+Price-to-book ratio: 4.12
+Graham's price-to-book ratio: 9.97
+----------------------

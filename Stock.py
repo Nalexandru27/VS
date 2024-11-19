@@ -13,34 +13,28 @@ class Stock:
 
     # TEST 1
     # Market Capitalization > 2 billion & using yahoo finance
+    def get_market_cap(self):
+        return self.stock.info['marketCap']
+
     def check_market_cap(self):
         return self.stock.info['marketCap'] >= MIN_MARKET_CAP
     
     # TEST 2.1
     # Current Ratio >= 2 & using yahoo finance
-    def calculate_current_ratio(self):
-        # balance_sheet = self.stock.balance_sheet
-        # current_assets = balance_sheet.loc["Current Assets"].iloc[0]
-        # current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
-        # return current_assets / current_liabilities
+    def get_current_ratio(self):
         return self.stock.info['currentRatio']
 
     def check_current_ratio(self):
-        current_ratio = self.calculate_current_ratio()
-        return current_ratio >= MIN_CURRENT_RATIO
+        return self.stock.info['currentRatio'] >= MIN_CURRENT_RATIO
     
     # TEST 2.2
     # Long-Term Debt to Working Capital Ratio <= 1 & using yahoo finance
     def calculate_LTDebt_to_WC(self):
         balance_sheet = self.stock.balance_sheet
-
-        # long_term_debt_col = next((col for col in balance_sheet.index if col.startswith("Long Term Debt")), None)
-        # if not long_term_debt_col:
-        #     raise ValueError("No column starting with 'Long Term Debt' found in the balance sheet.")
-        
+        current_assets = balance_sheet.loc["Current Assets"].iloc[0]
+        current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
+        working_capital = current_assets - current_liabilities
         long_term_debt = balance_sheet.loc["Long Term Debt"].iloc[0]
-
-        working_capital = balance_sheet.loc["Working Capital"].iloc[0]
         return long_term_debt / working_capital
     
     def check_LTDebt_To_WC(self):
@@ -211,12 +205,12 @@ class Stock:
     def print_results(self):
         marketcap = convert_to_billion(self.stock.info['marketCap'])
         print(f"Market Cap: {marketcap:.2f} billions")
-        print(f"Current Ratio: {self.calculate_current_ratio():.2f}")
+        print(f"Current Ratio: {self.stock.info["currentRatio"]:.2f}")
         print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
-        print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
         print(f"Dividend Record is: {self.count_consecutive_years_of_dividend_increase()} consecutive years")
-        print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years()}%")
         print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
         print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.5f}")
         print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.5f}")
+        # print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
+        # print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years()}%")
         print('---------------------------------------------------------')
