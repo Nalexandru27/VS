@@ -32,7 +32,7 @@ class StockScreener:
                 return False
 
             # Check Earnings Growth
-            if not stock.earnings_growth_last_10_years():
+            if not stock.check_earnings_growth():
                 print(f"-->{stock.ticker} failed the test 'Earnings Growth'")
                 return False
 
@@ -41,9 +41,9 @@ class StockScreener:
                 print(f"-->{stock.ticker} failed the test 'P/E Ratio'")
                 return False
 
-            # Check Price_To_Book_Ratio using Graham's formula
-            if not stock.compute_price_to_book_ratio_graham():
-                print(f"-->{stock.ticker} failed the test 'Price_To_Book_Ratio_Graham'")
+            # Check Price_To_Book_Ratio normal and using Graham's formula
+            if not stock.check_price_to_book_ratio_graham() and not stock.check_price_to_book_ratio():
+                print(f"-->{stock.ticker} failed the test 'Price_To_Book_Ratio'(normal and Graham's)")
                 return False
 
             # All tests passed
@@ -70,3 +70,4 @@ class StockScreener:
                 stock.print_results()
             else:
                 print(f"{ticker} did not pass all the test")
+                print("\n")

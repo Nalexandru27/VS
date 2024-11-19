@@ -19,10 +19,11 @@ class Stock:
     # TEST 2.1
     # Current Ratio >= 2 & using yahoo finance
     def calculate_current_ratio(self):
-        balance_sheet = self.stock.balance_sheet
-        current_assets = balance_sheet.loc["Current Assets"].iloc[0]
-        current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
-        return current_assets / current_liabilities
+        # balance_sheet = self.stock.balance_sheet
+        # current_assets = balance_sheet.loc["Current Assets"].iloc[0]
+        # current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
+        # return current_assets / current_liabilities
+        return self.stock.info['currentRatio']
 
     def check_current_ratio(self):
         current_ratio = self.calculate_current_ratio()
@@ -44,7 +45,7 @@ class Stock:
     
     def check_LTDebt_To_WC(self):
         LTDebtToWC = self.calculate_LTDebt_to_WC()
-        return LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO 
+        return (LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO and LTDebtToWC >= 0) 
     
     # TEST 3
     def get_earnings_from_income_stmt(self):
@@ -70,9 +71,6 @@ class Stock:
         for report in annual_report:
             try:
                 if int(report['netIncome']) < 0:
-                    # fiscal_date = report['fiscalDateEnding']
-                    # year = fiscal_date[:4]
-                    # print(f'{year} net income is negative')
                     return False
             except KeyError:
                 print("Error: 'netIncome' or 'fiscalDateEnding' missing key in annual report")
@@ -171,9 +169,11 @@ class Stock:
 
     # TEST 6 - Moderate P/E Ratio <= 15
     def compute_PE_ratio(self):
-        past_3_years_earnings = self.get_last_n_year_earnings(3)
+        income_stmt = self.stock.income_stmt
+        data = income_stmt.loc["Net Income"]
+        past_3_years_earnings = [value for value in data[0:3]]
         sum = 0
-        for year, earnings in past_3_years_earnings.items():
+        for earnings in past_3_years_earnings:
             sum += earnings
         no_shares = self.stock.info['sharesOutstanding']
         avg_earnings_per_share = sum / no_shares
@@ -187,7 +187,8 @@ class Stock:
     # 7.1 < 1.5
     def compute_price_to_book_ratio(self):
         # Tangible book value describes the standard definition of book value because it exclude the intangible assets like franchises, brand name, patents and trademarks
-        tangible_book_value = self.stock.info['Tangible Book Value']
+        balance_sheet = self.stock.balance_sheet
+        tangible_book_value = balance_sheet.loc['Tangible Book Value'].iloc[0]
         no_shares = self.stock.info['sharesOutstanding']
         tangible_book_value_per_share = tangible_book_value / no_shares
         current_price_per_share = self.stock.info['currentPrice']
@@ -204,7 +205,7 @@ class Stock:
         return pe_ratio * price_to_book_ratio
     
     def check_price_to_book_ratio_graham(self):
-        return self.compute_price_to_book_ratio_graham < PRICE_TO_BOOK_RATIO_GRAHAM
+        return self.compute_price_to_book_ratio_graham() < PRICE_TO_BOOK_RATIO_GRAHAM
 
     # print stock indicators value
     def print_results(self):
