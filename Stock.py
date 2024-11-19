@@ -98,7 +98,7 @@ class Stock:
             year = timestamp[i].strftime('%Y')
             if year == str(current_year):
                 break
-            dividend_record[year] = dividend_record.get(year,0) + float(dividends[i])
+            dividend_record[year] = dividends[i]
 
         return dividend_record
 
@@ -120,11 +120,11 @@ class Stock:
             if previous_dividend is not None:
                 if dividend > previous_dividend:
                     consecutive_years += 1
-                else:
+                elif dividend < previous_dividend:
                     consecutive_years = 0
             previous_dividend = dividend
 
-        return consecutive_years
+        return consecutive_years + 1
 
     # Check if the stock has increased its dividend for more than 10 years in a row
     def  check_dividend_record(self):
@@ -186,7 +186,7 @@ class Stock:
         no_shares = self.stock.info['sharesOutstanding']
         tangible_book_value_per_share = tangible_book_value / no_shares
         current_price_per_share = self.stock.info['currentPrice']
-        return current_price_per_share / tangible_book_value_per_share
+        return (current_price_per_share / tangible_book_value_per_share)
     
     def check_price_to_book_ratio(self):
         return self.compute_price_to_book_ratio < PRICE_TO_BOOK_RATIO
@@ -196,13 +196,18 @@ class Stock:
     def compute_price_to_book_ratio_graham(self):
         price_to_book_ratio = self.stock.info['priceToBook']
         pe_ratio = self.compute_PE_ratio()
-        return pe_ratio * price_to_book_ratio
+        return (pe_ratio * price_to_book_ratio)
     
     def check_price_to_book_ratio_graham(self):
         return self.compute_price_to_book_ratio_graham() < PRICE_TO_BOOK_RATIO_GRAHAM
 
     # print stock indicators value
     def print_results(self):
+        print(f"Stock: {self.ticker}")
+        print(f"Price: {self.stock.info['currentPrice']}")
+        print(f"52-week low: {self.stock.info['fiftyTwoWeekLow']}")
+        print(f"52-week high: {self.stock.info['fiftyTwoWeekHigh']}")
+        print(f"Sector: {self.stock.info['sector']}")
         marketcap = convert_to_billion(self.stock.info['marketCap'])
         print(f"Market Cap: {marketcap:.2f} billions")
         print(f"Current Ratio: {self.stock.info["currentRatio"]:.2f}")

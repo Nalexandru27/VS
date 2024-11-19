@@ -4,7 +4,6 @@ class StockScreener:
     def __init__(self):
         self.result = {}
 
-
     def validate_criterias(self ,stock: Stock):
         try:
             # Check Market Cap
@@ -33,7 +32,7 @@ class StockScreener:
                 return False
 
             # Check Price_To_Book_Ratio normal and using Graham's formula
-            if not stock.check_price_to_book_ratio_graham() and not stock.check_price_to_book_ratio():
+            if (not stock.check_price_to_book_ratio_graham() and not stock.check_price_to_book_ratio()):
                 print(f"-->{stock.ticker} failed the test 'Price_To_Book_Ratio'(normal and Graham's)")
                 return False
 
@@ -86,15 +85,19 @@ class StockScreener:
                     file.write("----------------------\n")
             print(f"Results exported to {file_name}")
 
-    def stock_data(self,stock):
+    def stock_data(self,ticker: Stock):
         date = {}
-        date['Market Cap'] = f"{stock.get_market_cap()/BILLION_DIVISION:.2f}B"
-        date['Current Ratio'] = f"{stock.get_current_ratio():.2f}"
-        date['LTDebtToWC'] = f"{stock.calculate_LTDebt_to_WC():.2f}"
-        date['Dividend Record'] = stock.count_consecutive_years_of_dividend_increase()
-        date['P/E Ratio'] = f"{stock.compute_PE_ratio():.2f}"
-        date['Price-to-book ratio'] = f"{stock.compute_price_to_book_ratio():.2f}"
-        date["Graham's price-to-book ratio"] = f"{stock.compute_price_to_book_ratio_graham():.2f}"
+        date['Price'] = ticker.stock.info['currentPrice']
+        date['52-week low'] = ticker.stock.info['fiftyTwoWeekLow']
+        date['52-week high'] = ticker.stock.info['fiftyTwoWeekHigh']
+        date["Sector"] = ticker.stock.info['sector']
+        date['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
+        date['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
+        date['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
+        date['Dividend Record'] = ticker.count_consecutive_years_of_dividend_increase()
+        date['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
+        date['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
+        date["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
         # date['Earnings Stability'] = stock.check_earnings_stability()
         # date['Earnings Growth'] = stock.earnings_growth_last_10_years()
         return date
