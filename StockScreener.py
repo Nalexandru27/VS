@@ -122,6 +122,8 @@ class StockScreener:
         date['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
         date['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
         date['Dividend Record'] = ticker.get_dividend_record_from_excel()
+        date["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100}%:.2f"
+        date["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel()}:.2f"
         date['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
         date['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
         date["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"

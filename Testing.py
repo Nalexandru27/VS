@@ -7,12 +7,12 @@ import time
 
 
 current_date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"results_{current_date}.txt"
+file_name = f"./outData/results_{current_date}.txt"
 def create_text_file():
     if os.path.exists(FILE_PATH):
         print("File found, proceeding to read it.")
         df = pd.read_excel(FILE_PATH)
-        tickers = df.iloc[:100, 0].tolist()
+        tickers = df.iloc[:, 0].tolist()
         screener = StockScreener()
         screening_start_time = time.time()
         screener.screen_stocks(tickers)

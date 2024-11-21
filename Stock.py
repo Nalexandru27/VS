@@ -135,11 +135,15 @@ class Stock:
     # Read dividend record from excel file
     def get_dividend_record_from_excel(self):
         if os.path.exists(FILE_PATH):
-            print("File found, proceeding to look for dividend record.")
             df = pd.read_excel(FILE_PATH)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'No Years']
-        else:
-            print("File not found. Check the path:", FILE_PATH)
+        
+    
+    # Get DGR 10Y from excel file
+    def get_DGR_10Y_from_excel(self):
+        if os.path.exists(FILE_PATH):
+            df = pd.read_excel(FILE_PATH)
+            return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 10Y']
 
     # TEST 5
     # Compute Earnings Growth
