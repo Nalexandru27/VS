@@ -1,0 +1,91 @@
+NUE passed all tests
+Price: 147.62
+52-week low: 133.42
+52-week high: 203.0
+Sector: Basic Materials
+Market Cap: 34.66B
+Current Ratio: 2.59
+LTDebtToWC: 0.55
+Dividend Record: 16
+P/E Ratio: 1.83
+Price-to-book ratio: 2.50
+Graham's price-to-book ratio: 3.10
+----------------------
+BRC passed all tests
+Price: 70.095
+52-week low: 52.99
+52-week high: 77.68
+Sector: Industrials
+Market Cap: 3.35B
+Current Ratio: 2.27
+LTDebtToWC: 0.27
+Dividend Record: 32
+P/E Ratio: 5.94
+Price-to-book ratio: 7.29
+Graham's price-to-book ratio: 18.57
+----------------------
+AVT passed all tests
+Price: 52.26
+52-week low: 43.62
+52-week high: 59.24
+Sector: Technology
+Market Cap: 4.54B
+Current Ratio: 2.25
+LTDebtToWC: 0.41
+Dividend Record: 11
+P/E Ratio: 2.32
+Price-to-book ratio: 1.10
+Graham's price-to-book ratio: 2.10
+----------------------
+DHI passed all tests
+Price: 162.79
+52-week low: 125.28
+52-week high: 199.85
+Sector: Consumer Cyclical
+Market Cap: 52.75B
+Current Ratio: 5.42
+LTDebtToWC: 0.18
+Dividend Record: 10
+P/E Ratio: 3.57
+Price-to-book ratio: 2.34
+Graham's price-to-book ratio: 7.44
+----------------------
+NEU passed all tests
+Price: 534.7
+52-week low: 494.04
+52-week high: 650.0
+Sector: Basic Materials
+Market Cap: 5.13B
+Current Ratio: 2.83
+LTDebtToWC: 0.95
+Dividend Record: 12
+P/E Ratio: 5.97
+Price-to-book ratio: 5.39
+Graham's price-to-book ratio: 22.45
+----------------------
+ALG passed all tests
+Price: 190.395
+52-week low: 163.74
+52-week high: 231.4
+Sector: Industrials
+Market Cap: 2.30B
+Current Ratio: 4.15
+LTDebtToWC: 0.37
+Dividend Record: 11
+P/E Ratio: 7.21
+Price-to-book ratio: 4.12
+Graham's price-to-book ratio: 16.10
+----------------------
+SWKS passed all tests
+Price: 83.38
+52-week low: 82.13
+52-week high: 120.86
+Sector: Technology
+Market Cap: 13.33B
+Current Ratio: 5.75
+LTDebtToWC: 0.36
+Dividend Record: 10
+P/E Ratio: 4.67
+Price-to-book ratio: 4.09
+Graham's price-to-book ratio: 9.82
+----------------------

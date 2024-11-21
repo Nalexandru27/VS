@@ -1,10 +1,12 @@
+from concurrent.futures import ThreadPoolExecutor
 from Stock import *
+import pandas as pd
 
 class StockScreener:
     def __init__(self):
         self.result = {}
 
-    def validate_criterias(self ,stock: Stock):
+    def validate_criterias(self, stock: Stock):
         try:
             # Check Market Cap
             if not stock.check_market_cap():
@@ -12,19 +14,22 @@ class StockScreener:
                 return False
 
             # Check Current Ratio
-            if not stock.check_current_ratio():
-                print(f"-->{stock.ticker} failed the test 'CurrentRatio'")
-                return False
-
+            if stock.yf.info["sector"] != "Utilities":
+                if not stock.check_current_ratio():
+                    print(f"-->{stock.ticker} failed the test 'CurrentRatio'")
+                    return False
+            else:
+                print(f"{stock.ticker} is a utility company. Current ratio test skipped")
+            
             # Check Long-Term Debt to Working Capital
             if not stock.check_LTDebt_To_WC():
                 print(f"-->{stock.ticker} failed the test 'LTDebtToWC'")
                 return False
             
             # Check Dividend Record
-            if not stock.check_dividend_record():
-                print(f"-->{stock.ticker} failed the test 'Dividend Record'")
-                return False
+            # if not stock.check_dividend_record():
+            #     print(f"-->{stock.ticker} failed the test 'Dividend Record'")
+            #     return False
 
             # Check P/E Ratio
             if not stock.check_PE_ratio():
@@ -54,13 +59,16 @@ class StockScreener:
     
     def screen_stocks(self, tickers):
         self.result = {}
-        for ticker in tickers:
+
+        def process_ticker(ticker):
             print(f"Screening {ticker}...")
             stock = Stock(ticker)
             self.result[ticker] = self.validate_criterias(stock)
-        print("\n")
-        print("Screening done.")
-        print("\n")
+        
+        with ThreadPoolExecutor() as executor:
+            executor.map(process_ticker, tickers)
+
+        print("\nScreening done.\n")
 
     def inspect_results_of_screening(self):
         for ticker, value in self.result.items():
@@ -74,30 +82,49 @@ class StockScreener:
             
     def export_results(self, file_name):
         print(f"Exporting results to {file_name}...")
-        with open(file_name, 'w') as file:
-            for ticker, value in self.result.items():
-                if value:
-                    file.write(f'{ticker} passed all tests\n')
+        if not self.result:
+            print("No results to export. Ensure the screening process was completed successfully.")
+            return
+        
+        def process_ticker(ticker):
+            try:
+                if self.result[ticker]:
                     stock = Stock(ticker)
                     data = self.stock_data(stock)
-                    for key, value in data.items():
-                        file.write(f'{key}: {value}\n')
-                    file.write("----------------------\n")
+                    result = f"{ticker} passed all tests\n"
+                    result += "\n".join([f"{key}: {value}" for key, value in data.items()])
+                    result += "\n----------------------\n"
+                    return result
+                return ""
+            except Exception as e:
+                return f"Error processing {ticker}: {e}\n"
+
+        try:
+            with ThreadPoolExecutor() as executor:
+                futures = [executor.submit(process_ticker, ticker) for ticker in self.result]
+                results = [future.result() for future in futures]
+
+            with open(file_name, 'w') as file:
+                file.writelines(results)
+
             print(f"Results exported to {file_name}")
+        except Exception as e:
+            print(f"Error occured during export: {e}")
+            
 
     def stock_data(self,ticker: Stock):
         date = {}
-        date['Price'] = ticker.stock.info['currentPrice']
-        date['52-week low'] = ticker.stock.info['fiftyTwoWeekLow']
-        date['52-week high'] = ticker.stock.info['fiftyTwoWeekHigh']
-        date["Sector"] = ticker.stock.info['sector']
+        date['Price'] = ticker.yf.info['currentPrice']
+        date['52-week low'] = ticker.yf.info['fiftyTwoWeekLow']
+        date['52-week high'] = ticker.yf.info['fiftyTwoWeekHigh']
+        date["Sector"] = ticker.yf.info['sector']
         date['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
         date['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
         date['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
-        date['Dividend Record'] = ticker.count_consecutive_years_of_dividend_increase()
+        date['Dividend Record'] = ticker.get_dividend_record_from_excel()
         date['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
         date['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
         date["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
-        # date['Earnings Stability'] = stock.check_earnings_stability()
-        # date['Earnings Growth'] = stock.earnings_growth_last_10_years()
+        # date['Earnings Stability'] = ticker.check_earnings_stability()
+        # date['Earnings Growth'] = ticker.earnings_growth_last_10_years()
         return date

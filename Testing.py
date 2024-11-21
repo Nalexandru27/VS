@@ -5,13 +5,14 @@ import os
 import pandas as pd
 import time
 
-file_path = 'D:\FacultyYear3\Licenta\Registru1.xlsx'
 
-def create_text_file(file_path, file_name):
-    if os.path.exists(file_path):
+current_date = datetime.now().strftime("%Y-%m-%d")
+file_name = f"results_{current_date}.txt"
+def create_text_file():
+    if os.path.exists(FILE_PATH):
         print("File found, proceeding to read it.")
-        df = pd.read_excel(file_path)
-        tickers = df.iloc[:, 0].tolist()
+        df = pd.read_excel(FILE_PATH)
+        tickers = df.iloc[:100, 0].tolist()
         screener = StockScreener()
         screening_start_time = time.time()
         screener.screen_stocks(tickers)
@@ -19,7 +20,6 @@ def create_text_file(file_path, file_name):
         print(f"Screening time: {(screening_end_time - screening_start_time)/60:.2f} minutes")
         screener.export_results(file_name)
     else:
-        print("File not found. Check the path:", file_path)
+        print("File not found. Check the path:", FILE_PATH)
     
-create_text_file(file_path, 'results.txt')
-    
+create_text_file()
