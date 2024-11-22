@@ -4,22 +4,121 @@ from StockScreener import *
 import os
 import pandas as pd
 import time
+import requests
+import matplotlib.pyplot as plt
+import CreateExcelFile
+
+
+# url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=NUE&apikey=0F4NZKNHX3TGXQ78'
+# r = requests.get(url)
+# data = r.json()
+
+# annual_reports = data['annualReports']
+
+# dict = {}
+# for report in annual_reports:
+#     fiscal_date = report['fiscalDateEnding']
+#     year = fiscal_date[:4]
+#     operating_cashflows = report['operatingCashflow']
+#     dividens_paid = report['dividendPayout']
+#     dict[year] = [operating_cashflows, dividens_paid]
+    
+# for year, value in dict.items():
+#     print(f"Year: {year}, value: {value}")
+
+
+# url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=NUE&apikey=0F4NZKNHX3TGXQ78'
+# r = requests.get(url)
+# data = r.json()
+
+# results = [
+#     {
+#         'fiscalDateEnding': report['fiscalDateEnding'],
+#         'operatingCashflow': report['operatingCashflow'],
+#         'dividendPayout': report['dividendPayout'],
+#         'capitalExpenditures': report['capitalExpenditures']
+#     }
+#     for report in data['annualReports']
+# ]
+
+# import matplotlib.pyplot as plt
+
+# results = results[::-1]
+
+# # Prepare data for plotting
+# years = [result['fiscalDateEnding'][:4] for result in results]  # Extract years
+# operating_CF = [float(result['operatingCashflow']) or 0 for result in results]
+# dividends_paid = [float(result['dividendPayout']) or 0 for result in results]
+# capital_expenditures = [float(result['capitalExpenditures']) or 0 for result in results]
+# free_cash_flows = [op_cf - capex for op_cf, capex in zip(operating_CF, capital_expenditures)]
+# free_cash_flow_ratios = [(div / fcf) * 100 for div, fcf in zip(dividends_paid, free_cash_flows)]
+
+# operating_cash_flows = [float(x) for x in operating_CF]
+# free_cash_flows = [float(x) for x in free_cash_flows]
+# free_cash_flow_ratios = [float(x) for x in free_cash_flow_ratios]
+# years = [int(year) for year in years]
+
+# # Transform the values to billions
+# operating_cash_flows_billion = [ocf / 1_000_000_000 for ocf in operating_cash_flows]
+# free_cash_flows_billion = [fcf / 1_000_000_000 for fcf in free_cash_flows]
+
+# # Create figure and axis with a larger size
+# fig, ax1 = plt.subplots(figsize=(14, 8))  # Adjusted figsize (14 inches wide by 8 inches tall)
+
+# # Plot Operating Cash Flow and Free Cash Flow on the primary Y-axis
+# ax1.plot(years, operating_cash_flows_billion, label='Operating Cash Flow (Billion USD)', marker='o', color='blue')
+# ax1.plot(years, free_cash_flows_billion, label='Free Cash Flow (Billion USD)', marker='s', color='green')
+# ax1.set_xlabel('Year')
+# ax1.set_ylabel('Cash Flows (Billion USD)', color='black')
+# ax1.tick_params(axis='y', labelcolor='black')
+
+# # Annotate each point for Operating Cash Flow
+# for x, y in zip(years, operating_cash_flows_billion):
+#     ax1.text(x, y, f'{y:.2f}', color='blue', fontsize=9, ha='left', va='bottom')
+
+# # Annotate each point for Free Cash Flow
+# for x, y in zip(years, free_cash_flows_billion):
+#     ax1.text(x, y, f'{y:.2f}', color='green', fontsize=9, ha='left', va='bottom')
+
+# # Add grid for clarity
+# ax1.grid(True, linestyle='--', alpha=0.6)
+
+# # Secondary Y-axis for Free Cash Flow Ratio
+# ax2 = ax1.twinx()
+# ax2.plot(years, free_cash_flow_ratios, label='Free Cash Flow Ratio (%)', marker='x', color='purple')
+# ax2.set_ylabel('Free Cash Flow Ratio (%)', color='purple')
+# ax2.tick_params(axis='y', labelcolor='purple')
+
+# # Annotate each point for Free Cash Flow Ratio
+# for x, y in zip(years, free_cash_flow_ratios):
+#     ax2.text(x, y, f'{y:.1f}%', color='purple', fontsize=9, ha='left', va='bottom')
+
+# # Combine legends from both axes
+# lines_1, labels_1 = ax1.get_legend_handles_labels()
+# lines_2, labels_2 = ax2.get_legend_handles_labels()
+# ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper left')
+
+# # Set title
+# plt.title('Operating Cash Flow, Free Cash Flow, and Ratios Over Time')
+
+# # Display the plot
+# plt.show()
+
 
 
 current_date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"./outData/results_{current_date}.txt"
-def create_text_file():
+file_name = f"./outData/excel_{current_date}.xlsx"
+def create_excel_file():
     if os.path.exists(FILE_PATH):
         print("File found, proceeding to read it.")
         df = pd.read_excel(FILE_PATH)
-        tickers = df.iloc[:, 0].tolist()
+        tickers = df.iloc[:50, 0].tolist()
         screener = StockScreener()
         screening_start_time = time.time()
         screener.screen_stocks(tickers)
         screening_end_time = time.time()
         print(f"Screening time: {(screening_end_time - screening_start_time)/60:.2f} minutes")
-        screener.export_results(file_name)
     else:
         print("File not found. Check the path:", FILE_PATH)
     
-create_text_file()
+create_excel_file()

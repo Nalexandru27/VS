@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from Stock import *
 import pandas as pd
+import CreateExcelFile
 
 class StockScreener:
     def __init__(self):
@@ -80,7 +81,7 @@ class StockScreener:
                 print(f"{ticker} did not pass all the test")
                 print("\n")
             
-    def export_results(self, file_name):
+    def export_results_to_text_file(self, file_name):
         print(f"Exporting results to {file_name}...")
         if not self.result:
             print("No results to export. Ensure the screening process was completed successfully.")
@@ -110,23 +111,44 @@ class StockScreener:
             print(f"Results exported to {file_name}")
         except Exception as e:
             print(f"Error occured during export: {e}")
+
+
+    def export_results_to_excel_file(self, file_name):
+        print(f"Exporting results to {file_name}...")
+        if not self.result:
+            print("No results to export. Ensure the screening process was completed successfully.")
+            return
+        
+        try:
+            columns = ['Ticker', 'Price', '52-week low', '52-week high', 'Sector', 'Market Cap', 'Current Ratio', 'LTDebtToWC', 'Dividend Record', 'Dividend Yield', 'DGR 10Y', 'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio"]
+            excel = CreateExcelFile.ExcelFile(file_name, columns)
+
+            for ticker, value in self.result.items():
+                if value:
+                    stock = Stock(ticker)
+                    data = self.stock_data(stock)
+                    excel.add_stocks(data)
+
+            excel.save()
+        except Exception as e:
+            print(f"Error occured during export: {e}")
             
 
     def stock_data(self,ticker: Stock):
-        date = {}
-        date['Price'] = ticker.yf.info['currentPrice']
-        date['52-week low'] = ticker.yf.info['fiftyTwoWeekLow']
-        date['52-week high'] = ticker.yf.info['fiftyTwoWeekHigh']
-        date["Sector"] = ticker.yf.info['sector']
-        date['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
-        date['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
-        date['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
-        date['Dividend Record'] = ticker.get_dividend_record_from_excel()
-        date["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100}%:.2f"
-        date["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel()}:.2f"
-        date['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
-        date['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
-        date["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
+        data = {}
+        data['Price'] = ticker.yf.info['currentPrice']
+        data['52-week low'] = ticker.yf.info['fiftyTwoWeekLow']
+        data['52-week high'] = ticker.yf.info['fiftyTwoWeekHigh']
+        data["Sector"] = ticker.yf.info['sector']
+        data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
+        data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
+        data['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
+        data['Dividend Record'] = ticker.get_dividend_record_from_excel()
+        data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100}%:.2f"
+        data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel()}:.2f"
+        data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
+        data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
+        data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
         # date['Earnings Stability'] = ticker.check_earnings_stability()
         # date['Earnings Growth'] = ticker.earnings_growth_last_10_years()
-        return date
+        return data

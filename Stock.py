@@ -216,6 +216,19 @@ class Stock:
     def check_price_to_book_ratio_graham(self):
         return self.compute_price_to_book_ratio_graham() < PRICE_TO_BOOK_RATIO_GRAHAM
 
+
+    # Get Dividend Yield
+    def get_dividend_yield(self):
+        return self.yf.info['dividendYield']
+    
+    # Get cash flows from the past 10 years
+    def get_cash_flows(self):
+        url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey=0F4NZKNHX3TGXQ78'
+        r = requests.get(url)
+        data = r.json()
+
+        print(data)
+
     # print stock indicators value
     def print_results(self):
         print(f"Stock: {self.ticker}")
