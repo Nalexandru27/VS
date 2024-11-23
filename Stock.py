@@ -19,7 +19,7 @@ class Stock:
         return self.yf.info['marketCap']
 
     def check_market_cap(self):
-        return self.yf.info['marketCap'] >= MIN_MARKET_CAP
+        return float(self.yf.info['marketCap']) >= MIN_MARKET_CAP
     
     # TEST 2.1
     # Current Ratio >= 2 & using yahoo finance
@@ -27,7 +27,7 @@ class Stock:
         return self.yf.info['currentRatio']
 
     def check_current_ratio(self):
-        return self.yf.info['currentRatio'] >= MIN_CURRENT_RATIO
+        return float(self.yf.info['currentRatio']) >= MIN_CURRENT_RATIO
     
     # TEST 2.2
     # Long-Term Debt to Working Capital Ratio <= 1 & using yahoo finance
@@ -37,14 +37,14 @@ class Stock:
         current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
         working_capital = current_assets - current_liabilities
         long_term_debt = balance_sheet.loc["Long Term Debt"].iloc[0]
-        return long_term_debt / working_capital
+        return float(long_term_debt / working_capital)
     
     def check_LTDebt_To_WC(self):
         LTDebtToWC = self.calculate_LTDebt_to_WC()
         return (LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO and LTDebtToWC >= 0) 
     
     # TEST 3
-    def get_earnings_from_income_stmt(self):
+    def get_income_stmt_from_alphavantage(self):
         url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
         r = requests.get(url)
 
@@ -63,11 +63,15 @@ class Stock:
     
     # Earnings stability - Positive net income for the past 10 years & using Alpha Vantage
     def check_earnings_stability(self):
-        annual_report = self.get_earnings_from_income_stmt()
+        annual_report = self.get_income_stmt_from_alphavantage()
+        i = 0
         for report in annual_report:
             try:
-                if int(report['netIncome']) < 0:
+                if i >= 10:
+                    break
+                if float(report['netIncome']) < 0:
                     return False
+                i += 1
             except KeyError:
                 print("Error: 'netIncome' or 'fiscalDateEnding' missing key in annual report")
                 continue
@@ -76,14 +80,14 @@ class Stock:
 
     # Get last n years earnings
     def get_last_n_year_earnings(self, n):
-        annual_report = self.get_earnings_from_income_stmt()
+        annual_report = self.get_income_stmt_from_alphavantage()
         earnings = {}
         for i, report in enumerate(annual_report):
             if i >= n:
                 return earnings
             fiscal_date = report['fiscalDateEnding']
             year = fiscal_date[:4]
-            net_income = int(report['netIncome'])
+            net_income = float(report['netIncome'])
             earnings[year] = net_income
 
     # TEST 4
@@ -138,6 +142,12 @@ class Stock:
             df = pd.read_excel(FILE_PATH)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'No Years']
         
+    # GET DGR 1Y from excel file
+    def get_DGR_1Y_from_excel(self):
+        if os.path.exists(FILE_PATH):
+            df = pd.read_excel(FILE_PATH)
+            return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 1Y']
+        
     
     # Get DGR 10Y from excel file
     def get_DGR_10Y_from_excel(self):
@@ -167,7 +177,7 @@ class Stock:
             print(f"Missing earnings data for year: {e.args[0]}")
             return None
 
-        return int((last_3_years_earnings/first_3_years_earnings) * 100)
+        return float((last_3_years_earnings/first_3_years_earnings) * 100)
 
     # Check if the last 3 years earnings did grow more than 33% vs the earnings from the 8,9,10 year from the past
     def check_earnings_growth(self):
@@ -187,7 +197,7 @@ class Stock:
         no_shares = self.yf.info['sharesOutstanding']
         avg_earnings_per_share = sum / no_shares
         current_price_per_share = self.yf.info['currentPrice']
-        return current_price_per_share / avg_earnings_per_share
+        return float(current_price_per_share / avg_earnings_per_share)
 
     def check_PE_ratio(self):
         return self.compute_PE_ratio() <= PE_RATIO_THRESHOLD
@@ -201,7 +211,7 @@ class Stock:
         no_shares = self.yf.info['sharesOutstanding']
         tangible_book_value_per_share = tangible_book_value / no_shares
         current_price_per_share = self.yf.info['currentPrice']
-        return (current_price_per_share / tangible_book_value_per_share)
+        return float(current_price_per_share / tangible_book_value_per_share)
     
     def check_price_to_book_ratio(self):
         return self.compute_price_to_book_ratio < PRICE_TO_BOOK_RATIO
@@ -211,7 +221,7 @@ class Stock:
     def compute_price_to_book_ratio_graham(self):
         price_to_book_ratio = self.yf.info['priceToBook']
         pe_ratio = self.compute_PE_ratio()
-        return (pe_ratio * price_to_book_ratio)
+        return float(pe_ratio * price_to_book_ratio)
     
     def check_price_to_book_ratio_graham(self):
         return self.compute_price_to_book_ratio_graham() < PRICE_TO_BOOK_RATIO_GRAHAM
@@ -222,29 +232,73 @@ class Stock:
         return self.yf.info['dividendYield']
     
     # Get cash flows from the past 10 years
-    def get_cash_flows(self):
-        url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey=0F4NZKNHX3TGXQ78'
-        r = requests.get(url)
-        data = r.json()
+    # def get_cash_flows_from_alphavintage(self):
+    #     url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
+    #     r = requests.get(url)
 
-        print(data)
+    #     # Check for retrive success
+    #     if r.status_code != 200:
+    #         print(f"Error: receive status code {r.status_code}")
+    #         return False
+
+    #     data = r.json()
+    #     if 'annualReports' not in data:
+    #         print("No annual reports found. Response:", data)
+    #         return False
+
+    #     annual_report = data['annualReports']
+    #     return annual_report
+    
+    # Get last n years of cash flows
+    # def get_last_n_years_cash_flows(self, n):
+    #     cash_flows = self.get_cash_flows_from_alphavintage()
+    #     cash_flows_dict = {}
+    #     for i, report in enumerate(cash_flows):
+    #         if i >= n:
+    #             return cash_flows_dict
+    #         fiscal_date = report['fiscalDateEnding']
+    #         year = fiscal_date[:4]
+    #         operating_cash_flows = float(report['operatingCashflow'])
+    #         cash_flows_dict[year] = operating_cash_flows
+
+
+    # ROCE (return on capital employed) = EBIT / (Total Assets - Current Liabilities)
+    # Good indicator to evaluate the managerial economic performance
+    def compute_ROCE(self):
+        ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+        total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
+        current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+        return float(ebit / (total_assets - current_liabilities))
+    
+    # # Get last n years of eps
+    # def get_last_n_years_eps(self, n):
+    #     income_stmt = self.get_income_stmt_from_alphavantage()
+    #     eps = {}
+    #     for i, report in enumerate(income_stmt):
+    #         if i >= n:
+    #             return eps
+    #         fiscal_date = report['fiscalDateEnding']
+    #         year = fiscal_date[:4]
+    #         eps = float(report['eps'])
+    #         eps[year] = eps
+
 
     # print stock indicators value
-    def print_results(self):
-        print(f"Stock: {self.ticker}")
-        print(f"Price: {self.yf.info['currentPrice']}")
-        print(f"52-week low: {self.yf.info['fiftyTwoWeekLow']}")
-        print(f"52-week high: {self.yf.info['fiftyTwoWeekHigh']}")
-        print(f"Sector: {self.yf.info['sector']}")
-        marketcap = convert_to_billion(self.yf.info['marketCap'])
-        print(f"Market Cap: {marketcap:.2f} billions")
-        print(f"Current Ratio: {self.yf.info["currentRatio"]:.2f}")
-        print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
-        # print(f"Dividend Record is: {self.get_dividend_record_from_excel(self.file_path)} consecutive years")
-        # print(f"Dividend Record is: {self.count_consecutive_years_of_dividend_increase()} consecutive years")
-        print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
-        print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.5f}")
-        print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.5f}")
-        print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
-        print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years()}%")
-        print('---------------------------------------------------------')
+    # def print_results(self):
+    #     print(f"Stock: {self.ticker}")
+    #     print(f"Price: {self.yf.info['currentPrice']}")
+    #     print(f"52-week low: {self.yf.info['fiftyTwoWeekLow']}")
+    #     print(f"52-week high: {self.yf.info['fiftyTwoWeekHigh']}")
+    #     print(f"Sector: {self.yf.info['sector']}")
+    #     marketcap = convert_to_billion(self.yf.info['marketCap'])
+    #     print(f"Market Cap: {marketcap:.2f} billions")
+    #     print(f"Current Ratio: {self.yf.info["currentRatio"]:.2f}")
+    #     print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
+    #     print(f"Dividend Record is: {self.get_dividend_record_from_excel(FILE_PATH)} consecutive years")
+    #     # print(f"Dividend Record is: {self.count_consecutive_years_of_dividend_increase()} consecutive years")
+    #     print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
+    #     print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.5f}")
+    #     print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.5f}")
+    #     print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
+    #     print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years()}%")
+    #     print('---------------------------------------------------------')

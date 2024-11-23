@@ -1,3 +1,4 @@
+import numpy as np
 import yfinance as yf
 from Stock import *
 from StockScreener import *
@@ -6,7 +7,6 @@ import pandas as pd
 import time
 import requests
 import matplotlib.pyplot as plt
-import CreateExcelFile
 
 
 # url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=NUE&apikey=0F4NZKNHX3TGXQ78'
@@ -112,12 +112,13 @@ def create_excel_file():
     if os.path.exists(FILE_PATH):
         print("File found, proceeding to read it.")
         df = pd.read_excel(FILE_PATH)
-        tickers = df.iloc[:50, 0].tolist()
+        tickers = df.iloc[:40, 0].tolist()
         screener = StockScreener()
         screening_start_time = time.time()
         screener.screen_stocks(tickers)
         screening_end_time = time.time()
         print(f"Screening time: {(screening_end_time - screening_start_time)/60:.2f} minutes")
+        screener.export_results_to_excel_file(file_name)
     else:
         print("File not found. Check the path:", FILE_PATH)
     
