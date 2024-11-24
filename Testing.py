@@ -112,12 +112,26 @@ def create_excel_file():
     if os.path.exists(FILE_PATH):
         print("File found, proceeding to read it.")
         df = pd.read_excel(FILE_PATH)
-        tickers = df.iloc[:40, 0].tolist()
+        data = df.iloc[1:len(df)]
+        groups = 12
+        prev = 0
         screener = StockScreener()
-        screening_start_time = time.time()
-        screener.screen_stocks(tickers)
-        screening_end_time = time.time()
-        print(f"Screening time: {(screening_end_time - screening_start_time)/60:.2f} minutes")
+        for i in range(groups):
+            if i == groups - 1:
+                next = (i + 1) * 40 + len(data) % groups
+            else:
+                next = (i + 1) * 40
+            tickers = data.iloc[prev:next, 0].tolist()
+            screening_start_time = time.time()
+            screener.screen_stocks(tickers)
+            screening_end_time = time.time()
+            prev = next
+            print(f"Screening {i+1} took: {(screening_end_time - screening_start_time)/60:.2f} minutes")
+            print(f"Sleeping for 90 seconds")
+            time.sleep(65)
+        for i in range(2):
+            print(f"Exporting in {2-i} minutes")
+            time.sleep(60)
         screener.export_results_to_excel_file(file_name)
     else:
         print("File not found. Check the path:", FILE_PATH)

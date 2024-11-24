@@ -200,7 +200,8 @@ class Stock:
         return float(current_price_per_share / avg_earnings_per_share)
 
     def check_PE_ratio(self):
-        return self.compute_PE_ratio() <= PE_RATIO_THRESHOLD
+        pe_ratio = self.compute_PE_ratio()
+        return pe_ratio <= PE_RATIO_THRESHOLD
 
     # TEST 7 - Moderate Price-to-book-ratio
     # 7.1 < 1.5
@@ -214,7 +215,8 @@ class Stock:
         return float(current_price_per_share / tangible_book_value_per_share)
     
     def check_price_to_book_ratio(self):
-        return self.compute_price_to_book_ratio < PRICE_TO_BOOK_RATIO
+        price_to_book_ratio = self.compute_price_to_book_ratio()
+        return price_to_book_ratio < PRICE_TO_BOOK_RATIO
 
     # Graham's suggestion is to multiply the P/E ratio by the price-to-book ratio (which includes intangible assets) and see whether the resulting number is below 22.5
     # 7.2 < 22.5
@@ -224,7 +226,8 @@ class Stock:
         return float(pe_ratio * price_to_book_ratio)
     
     def check_price_to_book_ratio_graham(self):
-        return self.compute_price_to_book_ratio_graham() < PRICE_TO_BOOK_RATIO_GRAHAM
+        price_to_book_ratio_graham = self.compute_price_to_book_ratio_graham()
+        return price_to_book_ratio_graham < PRICE_TO_BOOK_RATIO_GRAHAM
 
 
     # Get Dividend Yield
