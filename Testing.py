@@ -114,21 +114,22 @@ def create_excel_file():
         df = pd.read_excel(FILE_PATH)
         data = df.iloc[1:len(df)]
         groups = 12
+        rows = len(data)
         prev = 0
         screener = StockScreener()
         for i in range(groups):
             if i == groups - 1:
-                next = (i + 1) * 40 + len(data) % groups
+                next = (i + 1) * (rows // groups) + rows % groups
             else:
-                next = (i + 1) * 40
+                next = (i + 1) * (rows // groups)
             tickers = data.iloc[prev:next, 0].tolist()
             screening_start_time = time.time()
             screener.screen_stocks(tickers)
             screening_end_time = time.time()
             prev = next
-            print(f"Screening {i+1} took: {(screening_end_time - screening_start_time)/60:.2f} minutes")
-            print(f"Sleeping for 90 seconds")
-            time.sleep(65)
+            print(f"Screenisng {i+1} took: {(screening_end_time - screening_start_time)/60:.2f} minutes")
+            print(f"Sleeping for 30 seconds")
+            time.sleep(30)
         for i in range(2):
             print(f"Exporting in {2-i} minutes")
             time.sleep(60)

@@ -57,42 +57,42 @@ class StockScreener:
             # All tests passed
             return True
         except Exception as e:
-            print(f"Error occured during screening: {e}")
+            print(f"Error occured during screening for company {stock.ticker}: {e}")
             return False
     
 
     # Export results to a text file
-    # def export_results_to_text_file(self, file_name):
-    #     print(f"Exporting results to {file_name}...")
-    #     if not self.result:
-    #         print("No results to export. Ensure the screening process was completed successfully.")
-    #         return
+    def export_results_to_text_file(self, file_name):
+        print(f"Exporting results to {file_name}...")
+        if not self.result:
+            print("No results to export. Ensure the screening process was completed successfully.")
+            return
         
-    #     # Process each ticker in parallel
-    #     def process_ticker(ticker):
-    #         try:
-    #             if self.result[ticker]:
-    #                 stock = Stock(ticker)
-    #                 data = self.stock_data(stock)
-    #                 result = f"{ticker} passed all tests\n"
-    #                 result += "\n".join([f"{key}: {value}" for key, value in data.items()])
-    #                 result += "\n----------------------\n"
-    #                 return result
-    #             return ""
-    #         except Exception as e:
-    #             return f"Error processing {ticker}: {e}\n"
+        # Process each ticker in parallel
+        def process_ticker(ticker):
+            try:
+                if self.result[ticker]:
+                    stock = Stock(ticker)
+                    data = self.stock_data(stock)
+                    result = f"{ticker} passed all tests\n"
+                    result += "\n".join([f"{key}: {value}" for key, value in data.items()])
+                    result += "\n----------------------\n"
+                    return result
+                return ""
+            except Exception as e:
+                return f"Error processing {ticker}: {e}\n"
 
-    #     try:
-    #         with ThreadPoolExecutor() as executor:
-    #             futures = [executor.submit(process_ticker, ticker) for ticker in self.result]
-    #             results = [future.result() for future in futures]
+        try:
+            with ThreadPoolExecutor() as executor:
+                futures = [executor.submit(process_ticker, ticker) for ticker in self.result]
+                results = [future.result() for future in futures]
 
-    #         with open(file_name, 'w') as file:
-    #             file.writelines(results)
+            with open(file_name, 'w') as file:
+                file.writelines(results)
 
-    #         print(f"Results exported to {file_name}")
-    #     except Exception as e:
-    #         print(f"Error occured during export: {e}")
+            print(f"Results exported to {file_name}")
+        except Exception as e:
+            print(f"Error occured during export: {e}")
 
     # Dividend Record points
     def dividend_record_points(self, stock: Stock):
@@ -379,8 +379,6 @@ class StockScreener:
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
-            data["Earnings Stability"] = ticker.check_earnings_stability()
-            data["Earnings Growth Over the past 10 Years"] = f"{ticker.earnings_growth_last_10_years():.2f}"
             data['Dividend Record'] = ticker.get_dividend_record_from_excel()
             data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
             data["DGR 1Y"] = f"{ticker.get_DGR_1Y_from_excel()}%"
@@ -395,6 +393,8 @@ class StockScreener:
             data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
             data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
             data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
+            data["Earnings Stability"] = ticker.check_earnings_stability()
+            data["Earnings Growth Over the past 10 Years"] = f"{ticker.earnings_growth_last_10_years():.2f}"
             data["Points"] = self.give_points(ticker)
         except Exception as e:
             print(f"Error getting data for {ticker.ticker}: {e}")
