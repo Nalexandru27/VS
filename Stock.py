@@ -234,6 +234,58 @@ class Stock:
     def get_dividend_yield(self):
         return self.yf.info['dividendYield']
     
+    # Compute FCF Payout Ratio
+    def FCF_Payout_Ratio(self):
+        try:
+            free_cash_flow = self.yf.cashflow.loc['Free Cash Flow'].iloc[0]
+            dividens_paid = abs(self.yf.cashflow.loc['Cash Dividends Paid'].iloc[0])
+            if free_cash_flow == 0:
+                return 0
+            return dividens_paid / free_cash_flow
+        except Exception as e:
+            print(f"Error calculating FCF Payout Ratio for {self.ticker}: {e}")
+            return 0  # Ensure a return value even in case of failure
+    
+    # Compute Debt to Total Capital Ratio
+    def Debt_to_Total_Capital_Ratio(self):
+        balance_sheet = self.yf.balance_sheet
+        total_debt = float(balance_sheet.loc['Total Debt'].iloc[0])
+        stockholders_equity = float(balance_sheet.loc['Stockholders Equity'].iloc[0])
+        return float(total_debt / (total_debt + stockholders_equity))
+    
+    # ROCE (return on capital employed) = EBIT / (Total Assets - Current Liabilities)
+    # Good indicator to evaluate the managerial economic performance
+    def compute_ROCE(self):
+        ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+        total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
+        current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+        return float(ebit / (total_assets - current_liabilities))
+    
+    # Get return on equity (ROE)
+    def return_on_equity(self):
+        return float(self.yf.info['returnOnEquity'] * 100)
+    
+    # Get operating income margin
+    def operating_income_margin(self):
+        return float(self.yf.info['operatingMargins'] * 100)
+
+    # Get shares outstanding trend - increase / decrease / consistent decrease
+    def ordinary_shares_number_trend_analysis(self):
+        balance_sheet = self.yf.balance_sheet
+        df = balance_sheet.loc["Ordinary Shares Number"].dropna().tolist()
+
+        if len(df) > 2:
+            cnt = 0
+            for i in range(len(df)-1):
+                if df[i] > df[i+1]:
+                    return "increase"
+                elif df[i] < df[i+1]:
+                    cnt += 1
+            if cnt == len(df)-1:
+                return "consistent decrease"
+            else:
+                return "chaotic or 0 decrease"
+
     # Get cash flows from the past 10 years
     # def get_cash_flows_from_alphavintage(self):
     #     url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
@@ -263,15 +315,6 @@ class Stock:
     #         year = fiscal_date[:4]
     #         operating_cash_flows = float(report['operatingCashflow'])
     #         cash_flows_dict[year] = operating_cash_flows
-
-
-    # ROCE (return on capital employed) = EBIT / (Total Assets - Current Liabilities)
-    # Good indicator to evaluate the managerial economic performance
-    def compute_ROCE(self):
-        ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
-        total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
-        current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
-        return float(ebit / (total_assets - current_liabilities))
     
     # # Get last n years of eps
     # def get_last_n_years_eps(self, n):
@@ -289,20 +332,24 @@ class Stock:
     # print stock indicators value
     def print_results(self):
         print(f"Stock: {self.ticker}")
+        print(f"Sector: {self.yf.info['sector']}")
         print(f"Price: {self.yf.info['currentPrice']}")
         print(f"52-week low: {self.yf.info['fiftyTwoWeekLow']}")
         print(f"52-week high: {self.yf.info['fiftyTwoWeekHigh']}")
-        print(f"Sector: {self.yf.info['sector']}")
         marketcap = convert_to_billion(self.yf.info['marketCap'])
         print(f"Market Cap: {marketcap:.2f} billions")
         print(f"Current Ratio: {self.yf.info["currentRatio"]:.2f}")
         print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
         print(f"Dividend Record is: {self.get_dividend_record_from_excel(FILE_PATH)} consecutive years")
-        print(f"Dividend Yield: {self.get_dividend_yield()}")
-        print(f"ROCE: {self.compute_ROCE()}")
+        print(f"Dividend Yield: {self.get_dividend_yield():.2f}")
+        print(f"Earnings Payout Ratio: {self.yf.info['payoutRatio']:.2f}%")
+        print(f"FCF Payout Ratio: {self.FCF_Payout_Ratio() * 100:.2f}%")
+        print(f"Debt to Total Capital Ratio: {self.Debt_to_Total_Capital_Ratio() * 100:.2f}")
+        print(f"Return on Equity: {self.return_on_equity():.2f}%")
+        print(f"ROCE: {self.compute_ROCE():.2f}")
         print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
-        print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.5f}")
-        print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.5f}")
+        print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.2f}")
+        print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.2f}")
         print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
-        print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years()}%")
+        print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years():.2f}%")
         print('---------------------------------------------------------')

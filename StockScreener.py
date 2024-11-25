@@ -178,19 +178,8 @@ class StockScreener:
                 return 1
             
     # FCF Payout Ratio points
-    def FCF_Payout_Ratio(self, stock: Stock):
-        try:
-            free_cash_flow = stock.yf.cashflow.loc['Free Cash Flow'].iloc[0]
-            dividens_paid = abs(stock.yf.cashflow.loc['Cash Dividends Paid'].iloc[0])
-            if free_cash_flow == 0:
-                return 0
-            return dividens_paid / free_cash_flow
-        except Exception as e:
-            print(f"Error calculating FCF Payout Ratio for {stock.ticker}: {e}")
-            return 0  # Ensure a return value even in case of failure
-    
     def FCF_Payout_Ratio_points(self, stock: Stock):
-        FCF_payout_ratio = self.FCF_Payout_Ratio(stock)
+        FCF_payout_ratio = stock.FCF_Payout_Ratio(stock)
         if stock.yf.info['sector'] == "Real Estate":
             if FCF_payout_ratio < 0.8:
                 return 3
@@ -207,14 +196,8 @@ class StockScreener:
                 return 1
             
     # Debt to Total Capital points
-    def Debt_to_Total_Capital_Ratio(self, stock: Stock):
-        balance_sheet = stock.yf.balance_sheet
-        total_debt = float(balance_sheet.loc['Total Debt'].iloc[0])
-        stockholders_equity = float(balance_sheet.loc['Stockholders Equity'].iloc[0])
-        return float(total_debt / (total_debt + stockholders_equity))
-
     def Debt_to_Total_Capital_points(self, stock: Stock):
-        debt_to_capital_ratio = self.Debt_to_Total_Capital_Ratio(stock)
+        debt_to_capital_ratio = stock.Debt_to_Total_Capital_Ratio(stock)
         if debt_to_capital_ratio < 30:
             return 3
         elif 30 <= debt_to_capital_ratio < 60:
@@ -223,9 +206,6 @@ class StockScreener:
             return 1
         
     # ROE points
-    def return_on_equity(self, stock: Stock):
-        return float(stock.yf.info['returnOnEquity'] * 100)
-    
     def return_on_equity_points(self, stock: Stock):
         roe = self.return_on_equity(stock)
         if roe > 25:
@@ -235,12 +215,9 @@ class StockScreener:
         elif 5 <= roe < 10:
             return 1
         
-    # Operating Income Margin points
-    def operating_income_margin(self, stock: Stock):
-        return float(stock.yf.info['operatingMargins'] * 100)
-    
+    # Operating Income Margin points    
     def operating_income_margin_points(self, stock: Stock):
-        operating_income_margin = self.operating_income_margin(stock)
+        operating_income_margin = stock.operating_income_margin(stock)
         if operating_income_margin > 18:
             return 3
         elif 11 <= operating_income_margin <= 18:
@@ -248,26 +225,9 @@ class StockScreener:
         elif 5 <= operating_income_margin < 11:
             return 1
         
-    # Shares outstanding points
-    def ordinary_shares_number_trend_analysis(self, stock: Stock):
-        balance_sheet = stock.yf.balance_sheet
-        df = balance_sheet.loc["Ordinary Shares Number"].dropna().tolist()
-
-        if len(df) > 2:
-            cnt = 0
-            for i in range(len(df)-1):
-                if df[i] > df[i+1]:
-                    return "increase"
-                elif df[i] < df[i+1]:
-                    cnt += 1
-            if cnt == len(df)-1:
-                return "consistent decrease"
-            else:
-                return "chaotic or 0 decrease"
-
-    
+    # Shares outstanding points    
     def ordinary_shares_number_points(self, stock: Stock):
-        shares_outstanding_trend = self.ordinary_shares_number_trend_analysis(stock)
+        shares_outstanding_trend = stock.ordinary_shares_number_trend_analysis(stock)
         if shares_outstanding_trend == "consistent decrease":
             return 3
         elif shares_outstanding_trend == "chaotic or 0 decrease":
