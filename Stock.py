@@ -16,32 +16,46 @@ class Stock:
     # TEST 1
     # Market Capitalization > 2 billion & using yahoo finance
     def get_market_cap(self):
-        return self.yf.info['marketCap']
+        try:
+            return self.yf.info['marketCap']
+        except Exception as e:
+            print(f"Error getting market cap for {self.ticker}: {e}")
+            return 0
 
     def check_market_cap(self):
-        return float(self.yf.info['marketCap']) >= MIN_MARKET_CAP
+        market_cap = self.get_market_cap()
+        return float(market_cap) >= MIN_MARKET_CAP
     
     # TEST 2.1
     # Current Ratio >= 2 & using yahoo finance
     def get_current_ratio(self):
-        return self.yf.info['currentRatio']
+        try:
+            return self.yf.info['currentRatio']
+        except Exception as e:
+            print(f"Error getting current ratio for {self.ticker}: {e}")
+            return 0
 
     def check_current_ratio(self):
-        return float(self.yf.info['currentRatio']) >= MIN_CURRENT_RATIO
+        current_ratio = self.get_current_ratio()
+        return float(current_ratio) >= MIN_CURRENT_RATIO
     
     # TEST 2.2
     # Long-Term Debt to Working Capital Ratio <= 1 & using yahoo finance
     def calculate_LTDebt_to_WC(self):
-        balance_sheet = self.yf.balance_sheet
-        current_assets = balance_sheet.loc["Current Assets"].iloc[0]
-        current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
-        working_capital = current_assets - current_liabilities
-        long_term_debt = balance_sheet.loc["Long Term Debt"].iloc[0]
-        return float(long_term_debt / working_capital)
+        try:
+            balance_sheet = self.yf.balance_sheet
+            current_assets = balance_sheet.loc["Current Assets"].iloc[0]
+            current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
+            working_capital = current_assets - current_liabilities
+            long_term_debt = balance_sheet.loc["Long Term Debt"].iloc[0]
+            return float(long_term_debt / working_capital)
+        except Exception as e:
+            print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
+            return 0
     
     def check_LTDebt_To_WC(self):
         LTDebtToWC = self.calculate_LTDebt_to_WC()
-        return (LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO and LTDebtToWC >= 0) 
+        return (0 < LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO) 
     
     # TEST 3
     def get_income_stmt_from_alphavantage(self):
@@ -137,22 +151,22 @@ class Stock:
         return self.count_consecutive_years_of_dividend_increase() >= INCREASED_DIVIDEND_RECORD
     
     # Read dividend record from excel file
-    def get_dividend_record_from_excel(self):
-        if os.path.exists(FILE_PATH):
-            df = pd.read_excel(FILE_PATH)
+    def get_dividend_record_from_excel(self, file_path):
+        if os.path.exists(file_path):
+            df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'No Years']
         
     # GET DGR 1Y from excel file
-    def get_DGR_1Y_from_excel(self):
-        if os.path.exists(FILE_PATH):
-            df = pd.read_excel(FILE_PATH)
+    def get_DGR_1Y_from_excel(self, file_path):
+        if os.path.exists(file_path):
+            df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 1Y']
         
     
     # Get DGR 10Y from excel file
-    def get_DGR_10Y_from_excel(self):
-        if os.path.exists(FILE_PATH):
-            df = pd.read_excel(FILE_PATH)
+    def get_DGR_10Y_from_excel(self, file_path):
+        if os.path.exists(file_path):
+            df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 10Y']
 
     # TEST 5
@@ -188,47 +202,58 @@ class Stock:
 
     # TEST 6 - Moderate P/E Ratio <= 15
     def compute_PE_ratio(self):
-        income_stmt = self.yf.income_stmt
-        data = income_stmt.loc["Net Income"]
-        past_3_years_earnings = [value for value in data[0:3]]
-        sum = 0
-        for earnings in past_3_years_earnings:
-            sum += earnings
-        no_shares = self.yf.info['sharesOutstanding']
-        avg_earnings_per_share = sum / no_shares
-        current_price_per_share = self.yf.info['currentPrice']
-        return float(current_price_per_share / avg_earnings_per_share)
+        try:
+            income_stmt = self.yf.income_stmt
+            data = income_stmt.loc["Net Income"]
+            past_3_years_earnings = [value for value in data[0:3]]
+            sum = 0
+            for earnings in past_3_years_earnings:
+                sum += earnings
+            no_shares = self.yf.info['sharesOutstanding']
+            avg_earnings_per_share = sum / no_shares
+            current_price_per_share = self.yf.info['currentPrice']
+            return float(current_price_per_share / avg_earnings_per_share)
+        except Exception as e:
+            print(f"Error calculating PE ratio for {self.ticker}: {e}")
+            return 0
 
     def check_PE_ratio(self):
         pe_ratio = self.compute_PE_ratio()
-        return pe_ratio <= PE_RATIO_THRESHOLD
+        return 0 < pe_ratio <= PE_RATIO_THRESHOLD
 
     # TEST 7 - Moderate Price-to-book-ratio
     # 7.1 < 1.5
     def compute_price_to_book_ratio(self):
         # Tangible book value describes the standard definition of book value because it exclude the intangible assets like franchises, brand name, patents and trademarks
-        balance_sheet = self.yf.balance_sheet
-        tangible_book_value = balance_sheet.loc['Tangible Book Value'].iloc[0]
-        no_shares = self.yf.info['sharesOutstanding']
-        tangible_book_value_per_share = tangible_book_value / no_shares
-        current_price_per_share = self.yf.info['currentPrice']
-        return float(current_price_per_share / tangible_book_value_per_share)
+        try:
+            balance_sheet = self.yf.balance_sheet
+            tangible_book_value = balance_sheet.loc['Tangible Book Value'].iloc[0]
+            no_shares = self.yf.info['sharesOutstanding']
+            tangible_book_value_per_share = tangible_book_value / no_shares
+            current_price_per_share = self.yf.info['currentPrice']
+            return float(current_price_per_share / tangible_book_value_per_share)
+        except Exception as e:
+            print(f"Error calculating price to book ratio for {self.ticker}: {e}")
+            return 0
     
     def check_price_to_book_ratio(self):
         price_to_book_ratio = self.compute_price_to_book_ratio()
-        return price_to_book_ratio < PRICE_TO_BOOK_RATIO
+        return 0 < price_to_book_ratio <= PRICE_TO_BOOK_RATIO
 
     # Graham's suggestion is to multiply the P/E ratio by the price-to-book ratio (which includes intangible assets) and see whether the resulting number is below 22.5
     # 7.2 < 22.5
     def compute_price_to_book_ratio_graham(self):
-        price_to_book_ratio = self.yf.info['priceToBook']
-        pe_ratio = self.compute_PE_ratio()
-        return float(pe_ratio * price_to_book_ratio)
+        try:
+            price_to_book_ratio = self.yf.info['priceToBook']
+            pe_ratio = self.compute_PE_ratio()
+            return float(pe_ratio * price_to_book_ratio)
+        except Exception as e:
+            print(f"Error calculating price to book ratio for {self.ticker}: {e}")
+            return 0
     
     def check_price_to_book_ratio_graham(self):
         price_to_book_ratio_graham = self.compute_price_to_book_ratio_graham()
-        return price_to_book_ratio_graham < PRICE_TO_BOOK_RATIO_GRAHAM
-
+        return 0 < price_to_book_ratio_graham <= PRICE_TO_BOOK_RATIO_GRAHAM
 
     # Get Dividend Yield
     def get_dividend_yield(self):
@@ -248,26 +273,42 @@ class Stock:
     
     # Compute Debt to Total Capital Ratio
     def Debt_to_Total_Capital_Ratio(self):
-        balance_sheet = self.yf.balance_sheet
-        total_debt = float(balance_sheet.loc['Total Debt'].iloc[0])
-        stockholders_equity = float(balance_sheet.loc['Stockholders Equity'].iloc[0])
-        return float(total_debt / (total_debt + stockholders_equity))
+        try:
+            balance_sheet = self.yf.balance_sheet
+            total_debt = float(balance_sheet.loc['Total Debt'].iloc[0])
+            stockholders_equity = float(balance_sheet.loc['Stockholders Equity'].iloc[0])
+            return float(total_debt / (total_debt + stockholders_equity))
+        except Exception as e:
+            print(f"Error calculating Debt to Total Capital Ratio for {self.ticker}: {e}")
+            return 0
     
     # ROCE (return on capital employed) = EBIT / (Total Assets - Current Liabilities)
     # Good indicator to evaluate the managerial economic performance
     def compute_ROCE(self):
-        ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
-        total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
-        current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
-        return float(ebit / (total_assets - current_liabilities))
+        try:
+            ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+            total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
+            current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+            return float(ebit / (total_assets - current_liabilities))
+        except Exception as e:
+            print(f"Error calculating ROCE for {self.ticker}: {e}")
+            return 0
     
     # Get return on equity (ROE)
     def return_on_equity(self):
-        return float(self.yf.info['returnOnEquity'] * 100)
+        try:
+            return float(self.yf.info['returnOnEquity'] * 100)
+        except Exception as e:
+            print(f"Error calculating ROE for {self.ticker}: {e}")
+            return 0
     
     # Get operating income margin
     def operating_income_margin(self):
-        return float(self.yf.info['operatingMargins'] * 100)
+        try:
+            return float(self.yf.info['operatingMargins'] * 100)
+        except Exception as e:
+            print(f"Error calculating operating income margin for {self.ticker}: {e}")
+            return 0
 
     # Get shares outstanding trend - increase / decrease / consistent decrease
     def ordinary_shares_number_trend_analysis(self):
@@ -285,6 +326,8 @@ class Stock:
                 return "consistent decrease"
             else:
                 return "chaotic or 0 decrease"
+            
+    
 
     # Get cash flows from the past 10 years
     # def get_cash_flows_from_alphavintage(self):
@@ -340,7 +383,7 @@ class Stock:
         print(f"Market Cap: {marketcap:.2f} billions")
         print(f"Current Ratio: {self.yf.info["currentRatio"]:.2f}")
         print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
-        print(f"Dividend Record is: {self.get_dividend_record_from_excel(FILE_PATH)} consecutive years")
+        print(f"Dividend Record is: {self.get_dividend_record_from_excel(FILE_PATH_1)} consecutive years")
         print(f"Dividend Yield: {self.get_dividend_yield():.2f}")
         print(f"Earnings Payout Ratio: {self.yf.info['payoutRatio']:.2f}%")
         print(f"FCF Payout Ratio: {self.FCF_Payout_Ratio() * 100:.2f}%")

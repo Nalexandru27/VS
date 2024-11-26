@@ -7,4 +7,5 @@ EARNINGS_GROWTH_THRESHOLD=33
 PRICE_TO_BOOK_RATIO=1.5 
 INCREASED_DIVIDEND_RECORD=10 # correct value=20 (or 10)
 PRICE_TO_BOOK_RATIO_GRAHAM=22.5 # correct value=22.5
-FILE_PATH='D:\FacultyYear3\Licenta\Registru1.xlsx'
+FILE_PATH_1='D:\FacultyYear3\Licenta\Registru1.xlsx'
+FILE_PATH_2='D:\FacultyYear3\Licenta\Companies to evaluate.xlsx'

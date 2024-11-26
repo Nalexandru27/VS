@@ -62,194 +62,40 @@ class StockScreener:
     
 
     # Export results to a text file
-    def export_results_to_text_file(self, file_name):
-        print(f"Exporting results to {file_name}...")
-        if not self.result:
-            print("No results to export. Ensure the screening process was completed successfully.")
-            return
+    # def export_results_to_text_file(self, file_name):
+    #     print(f"Exporting results to {file_name}...")
+    #     if not self.result:
+    #         print("No results to export. Ensure the screening process was completed successfully.")
+    #         return
         
-        # Process each ticker in parallel
-        def process_ticker(ticker):
-            try:
-                if self.result[ticker]:
-                    stock = Stock(ticker)
-                    data = self.stock_data(stock)
-                    result = f"{ticker} passed all tests\n"
-                    result += "\n".join([f"{key}: {value}" for key, value in data.items()])
-                    result += "\n----------------------\n"
-                    return result
-                return ""
-            except Exception as e:
-                return f"Error processing {ticker}: {e}\n"
+    #     # Process each ticker in parallel
+    #     def process_ticker(ticker):
+    #         try:
+    #             if self.result[ticker]:
+    #                 stock = Stock(ticker)
+    #                 data = self.stock_data(stock)
+    #                 result = f"{ticker} passed all tests\n"
+    #                 result += "\n".join([f"{key}: {value}" for key, value in data.items()])
+    #                 result += "\n----------------------\n"
+    #                 return result
+    #             return ""
+    #         except Exception as e:
+    #             return f"Error processing {ticker}: {e}\n"
 
-        try:
-            with ThreadPoolExecutor() as executor:
-                futures = [executor.submit(process_ticker, ticker) for ticker in self.result]
-                results = [future.result() for future in futures]
+    #     try:
+    #         with ThreadPoolExecutor() as executor:
+    #             futures = [executor.submit(process_ticker, ticker) for ticker in self.result]
+    #             results = [future.result() for future in futures]
 
-            with open(file_name, 'w') as file:
-                file.writelines(results)
+    #         with open(file_name, 'w') as file:
+    #             file.writelines(results)
 
-            print(f"Results exported to {file_name}")
-        except Exception as e:
-            print(f"Error occured during export: {e}")
+    #         print(f"Results exported to {file_name}")
+    #     except Exception as e:
+    #         print(f"Error occured during export: {e}")
 
     # Dividend Record points
-    def dividend_record_points(self, stock: Stock):
-        years_of_increasing_dividens = stock.get_dividend_record_from_excel()
-        if years_of_increasing_dividens > 15:
-            return 3
-        elif 10 <= years_of_increasing_dividens <= 15:
-            return 2
-        elif years_of_increasing_dividens < 10:
-            return 1
-        else:
-            return 0
-        
-    # Dividend Yield points
-    def dividend_yield_points(self, stock: Stock):
-        sp500 = yf.Ticker("SPY")
-        sp500_dividend_yield = sp500.info['yield'] * 100
-        stock_dividend_yield = stock.get_dividend_yield() * 100
-        if stock_dividend_yield > 2.5 * sp500_dividend_yield:
-            return 3
-        elif sp500_dividend_yield <= stock_dividend_yield <= 2.5 * sp500_dividend_yield:
-            return 2
-        elif stock_dividend_yield < sp500_dividend_yield:
-            return 1
-        else:
-            return 0
-        
     
-    # Dividend Growth Rate points
-    def DGR_points(self, stock: Stock):
-        DGR_1Y = stock.get_DGR_1Y_from_excel()
-        stock_dividend_yield = stock.get_dividend_yield() * 100
-
-        # Low dividend yield
-        if stock_dividend_yield < 2:
-            if DGR_1Y > 13:
-                return 3
-            elif 9 <= DGR_1Y <= 13:
-                return 2
-            elif 5 <= DGR_1Y < 9:
-                return 1
-            else:
-                return 0
-        
-        # Medium dividend yield
-        if 2 <= stock_dividend_yield <= 4:
-            if DGR_1Y > 10:
-                return 3
-            elif 5 <= DGR_1Y <= 10:
-                return 2
-            elif 2 <= DGR_1Y < 5:
-                return 1
-            else:
-                return 0
-        
-        # High dividend yield
-        if stock_dividend_yield > 4:
-            if DGR_1Y > 7:
-                return 3
-            elif 2 <= DGR_1Y <= 7:
-                return 2
-            elif 1 <= DGR_1Y < 2:
-                return 1
-            else:
-                return 0
-            
-    # EPS and Earnings Payout Ratio points
-    def Earnings_Payout_Ratio_points(self, stock: Stock):
-        earnings_payout_ratio = stock.yf.info["payoutRatio"]
-        if stock.yf.info['sector'] == "Real Estate":
-            if earnings_payout_ratio < 0.8:
-                return 3
-            elif 0.8 <= earnings_payout_ratio <= 0.9:
-                return 2
-            elif earnings_payout_ratio > 0.9:
-                return 1
-        else:
-            if earnings_payout_ratio < 0.4:
-                return 3
-            elif 0.4 <= earnings_payout_ratio <= 0.6:
-                return 2
-            elif earnings_payout_ratio > 0.6:
-                return 1
-            
-    # FCF Payout Ratio points
-    def FCF_Payout_Ratio_points(self, stock: Stock):
-        FCF_payout_ratio = stock.FCF_Payout_Ratio(stock)
-        if stock.yf.info['sector'] == "Real Estate":
-            if FCF_payout_ratio < 0.8:
-                return 3
-            elif 0.8 <= FCF_payout_ratio <= 0.9:
-                return 2
-            elif FCF_payout_ratio > 0.9:
-                return 1
-        else:
-            if FCF_payout_ratio < 0.5:
-                return 3
-            elif 0.5 <= FCF_payout_ratio <= 0.7:
-                return 2
-            elif FCF_payout_ratio > 0.7:
-                return 1
-            
-    # Debt to Total Capital points
-    def Debt_to_Total_Capital_points(self, stock: Stock):
-        debt_to_capital_ratio = stock.Debt_to_Total_Capital_Ratio(stock)
-        if debt_to_capital_ratio < 30:
-            return 3
-        elif 30 <= debt_to_capital_ratio < 60:
-            return 2
-        elif 60 <= debt_to_capital_ratio <= 80:
-            return 1
-        
-    # ROE points
-    def return_on_equity_points(self, stock: Stock):
-        roe = self.return_on_equity(stock)
-        if roe > 25:
-            return 3
-        elif 10 <= roe <= 25:
-            return 2
-        elif 5 <= roe < 10:
-            return 1
-        
-    # Operating Income Margin points    
-    def operating_income_margin_points(self, stock: Stock):
-        operating_income_margin = stock.operating_income_margin(stock)
-        if operating_income_margin > 18:
-            return 3
-        elif 11 <= operating_income_margin <= 18:
-            return 2
-        elif 5 <= operating_income_margin < 11:
-            return 1
-        
-    # Shares outstanding points    
-    def ordinary_shares_number_points(self, stock: Stock):
-        shares_outstanding_trend = stock.ordinary_shares_number_trend_analysis(stock)
-        if shares_outstanding_trend == "consistent decrease":
-            return 3
-        elif shares_outstanding_trend == "chaotic or 0 decrease":
-            return 2
-        elif shares_outstanding_trend == "increase":
-            return 1
-        else:
-            return 0
-        
-    # Give points to each stock
-    def give_points(self, stock: Stock):
-        points = 0
-        points += self.dividend_record_points(stock)
-        points += self.dividend_yield_points(stock)
-        points += self.DGR_points(stock)
-        points += self.Earnings_Payout_Ratio_points(stock)
-        points += self.FCF_Payout_Ratio_points(stock)
-        points += self.Debt_to_Total_Capital_points(stock)
-        points += self.return_on_equity_points(stock)
-        points += self.operating_income_margin_points(stock)
-        points += self.ordinary_shares_number_points(stock)
-        return points
     
 
     # Screen a list of stocks in parallel
@@ -285,7 +131,7 @@ class StockScreener:
             return
         
         try:
-            columns = ['Ticker', 'Price', '52-week low', '52-week high', 'Sector', 'Market Cap', 
+            columns = ['Ticker', 'Sector', 'Market Cap', 
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth Over the past 10 Years',
                         'Dividend Record', 'Dividend Yield', 'DGR 1Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
                         'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
@@ -332,9 +178,6 @@ class StockScreener:
         data = {}
         try:
             data['Ticker'] = ticker.ticker
-            data['Price'] = f"${ticker.yf.info['currentPrice']}"
-            data['52-week low'] = f"${ticker.yf.info['fiftyTwoWeekLow']:.2f}"
-            data['52-week high'] = f"${ticker.yf.info['fiftyTwoWeekHigh']:.2f}"
             data["Sector"] = ticker.yf.info['sector']
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
@@ -343,19 +186,19 @@ class StockScreener:
             data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
             data["DGR 1Y"] = f"{ticker.get_DGR_1Y_from_excel()}%"
             data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel()}%"
-            data["ROCE"] = f"{ticker.compute_ROCE()*100:.2f}%"
-            data["Operating Income Margin"] = f"{self.operating_income_margin(ticker):.2f}%"
-            data["Debt to Total Capital"] = f"{self.Debt_to_Total_Capital_Ratio(ticker):.2f}"
-            data["ROE"] = f"{self.return_on_equity(ticker):.2f}%"
+            data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
+            data["Operating Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
+            data["Debt to Total Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
+            data["ROE"] = f"{ticker.return_on_equity(ticker):.2f}%"
             data["Earnings Payout Ratio"] = f"{ticker.yf.info['payoutRatio'] * 100:.2f}%"
-            data["FCF Payout Ratio"] = f"{self.FCF_Payout_Ratio(ticker) * 100:.2f}%"
-            data["Ordinary Share Number Trend"] = self.ordinary_shares_number_trend_analysis(ticker)
+            data["FCF Payout Ratio"] = f"{ticker.FCF_Payout_Ratio() * 100:.2f}%"
+            data["Ordinary Share Number Trend"] = ticker.ordinary_shares_number_trend_analysis()
             data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
             data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
             data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
             data["Earnings Stability"] = ticker.check_earnings_stability()
             data["Earnings Growth Over the past 10 Years"] = f"{ticker.earnings_growth_last_10_years():.2f}"
-            data["Points"] = self.give_points(ticker)
+            data["Points"] = ticker.give_points(ticker)
         except Exception as e:
             print(f"Error getting data for {ticker.ticker}: {e}")
         return data
