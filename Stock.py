@@ -13,21 +13,15 @@ class Stock:
         self.ticker = ticker
         self.yf = yf.Ticker(ticker)
 
-    # TEST 1
-    # Market Capitalization > 2 billion & using yahoo finance
+    # Get market cap from yahoo finance
     def get_market_cap(self):
         try:
             return self.yf.info['marketCap']
         except Exception as e:
             print(f"Error getting market cap for {self.ticker}: {e}")
             return 0
-
-    def check_market_cap(self):
-        market_cap = self.get_market_cap()
-        return float(market_cap) >= MIN_MARKET_CAP
     
-    # TEST 2.1
-    # Current Ratio >= 2 & using yahoo finance
+    # Get current ratio from yahoo finance
     def get_current_ratio(self):
         try:
             return self.yf.info['currentRatio']
@@ -35,12 +29,7 @@ class Stock:
             print(f"Error getting current ratio for {self.ticker}: {e}")
             return 0
 
-    def check_current_ratio(self):
-        current_ratio = self.get_current_ratio()
-        return float(current_ratio) >= MIN_CURRENT_RATIO
-    
-    # TEST 2.2
-    # Long-Term Debt to Working Capital Ratio <= 1 & using yahoo finance
+    # Get long term debt to working capital ratio from yahoo finance
     def calculate_LTDebt_to_WC(self):
         try:
             balance_sheet = self.yf.balance_sheet
@@ -53,11 +42,8 @@ class Stock:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
             return 0
     
-    def check_LTDebt_To_WC(self):
-        LTDebtToWC = self.calculate_LTDebt_to_WC()
-        return (0 < LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO) 
-    
-    # TEST 3
+     
+    # Get income statement from alphavantage
     def get_income_stmt_from_alphavantage(self):
         url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
         r = requests.get(url)
@@ -75,22 +61,6 @@ class Stock:
         annual_report = data['annualReports']
         return annual_report
     
-    # Earnings stability - Positive net income for the past 10 years & using Alpha Vantage
-    def check_earnings_stability(self):
-        annual_report = self.get_income_stmt_from_alphavantage()
-        i = 0
-        for report in annual_report:
-            try:
-                if i >= 10:
-                    break
-                if float(report['netIncome']) < 0:
-                    return False
-                i += 1
-            except KeyError:
-                print("Error: 'netIncome' or 'fiscalDateEnding' missing key in annual report")
-                continue
-
-        return True
 
     # Get last n years earnings
     def get_last_n_year_earnings(self, n):
@@ -145,10 +115,6 @@ class Stock:
             previous_dividend = dividend
 
         return consecutive_years + 1
-
-    # Check if the stock has increased its dividend for more than 10 years in a row
-    def  check_dividend_record(self):
-        return self.count_consecutive_years_of_dividend_increase() >= INCREASED_DIVIDEND_RECORD
     
     # Read dividend record from excel file
     def get_dividend_record_from_excel(self, file_path):
@@ -193,14 +159,7 @@ class Stock:
 
         return float((last_3_years_earnings/first_3_years_earnings) * 100)
 
-    # Check if the last 3 years earnings did grow more than 33% vs the earnings from the 8,9,10 year from the past
-    def check_earnings_growth(self):
-        earnings_growth = self.earnings_growth_last_10_years()
-        if earnings_growth < EARNINGS_GROWTH_THRESHOLD:
-            return False
-        return True
-
-    # TEST 6 - Moderate P/E Ratio <= 15
+    # Get P/E Ratio using the average earnings per share over the past 3 years
     def compute_PE_ratio(self):
         try:
             income_stmt = self.yf.income_stmt
@@ -217,10 +176,6 @@ class Stock:
             print(f"Error calculating PE ratio for {self.ticker}: {e}")
             return 0
 
-    def check_PE_ratio(self):
-        pe_ratio = self.compute_PE_ratio()
-        return 0 < pe_ratio <= PE_RATIO_THRESHOLD
-
     # TEST 7 - Moderate Price-to-book-ratio
     # 7.1 < 1.5
     def compute_price_to_book_ratio(self):
@@ -235,10 +190,6 @@ class Stock:
         except Exception as e:
             print(f"Error calculating price to book ratio for {self.ticker}: {e}")
             return 0
-    
-    def check_price_to_book_ratio(self):
-        price_to_book_ratio = self.compute_price_to_book_ratio()
-        return 0 < price_to_book_ratio <= PRICE_TO_BOOK_RATIO
 
     # Graham's suggestion is to multiply the P/E ratio by the price-to-book ratio (which includes intangible assets) and see whether the resulting number is below 22.5
     # 7.2 < 22.5
@@ -250,10 +201,6 @@ class Stock:
         except Exception as e:
             print(f"Error calculating price to book ratio for {self.ticker}: {e}")
             return 0
-    
-    def check_price_to_book_ratio_graham(self):
-        price_to_book_ratio_graham = self.compute_price_to_book_ratio_graham()
-        return 0 < price_to_book_ratio_graham <= PRICE_TO_BOOK_RATIO_GRAHAM
 
     # Get Dividend Yield
     def get_dividend_yield(self):
@@ -327,8 +274,6 @@ class Stock:
             else:
                 return "chaotic or 0 decrease"
             
-    
-
     # Get cash flows from the past 10 years
     # def get_cash_flows_from_alphavintage(self):
     #     url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
@@ -370,7 +315,6 @@ class Stock:
     #         year = fiscal_date[:4]
     #         eps = float(report['eps'])
     #         eps[year] = eps
-
 
     # print stock indicators value
     def print_results(self):

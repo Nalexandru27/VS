@@ -3,11 +3,12 @@ import yfinance as yf
 from Tresholds import *
 
 class evaluateStock:
-    def __init__(self, stock: Stock):
+    def __init__(self, stock: Stock, filePath):
         self.stock = stock
+        self.filePath = filePath
 
     def dividend_record_points(self):
-        years_of_increasing_dividens = self.stock.get_dividend_record_from_excel(FILE_PATH_2)
+        years_of_increasing_dividens = self.stock.get_dividend_record_from_excel(self.filePath)
         if years_of_increasing_dividens > 15:
             return 3
         elif 10 <= years_of_increasing_dividens <= 15:
@@ -34,7 +35,7 @@ class evaluateStock:
     
     # Dividend Growth Rate points
     def DGR_points(self):
-        DGR_1Y = self.stock.get_DGR_1Y_from_excel(FILE_PATH_2)
+        DGR_1Y = self.stock.get_DGR_1Y_from_excel(self.filePath)
         stock_dividend_yield = self.stock.get_dividend_yield() * 100
 
         # Low dividend yield
