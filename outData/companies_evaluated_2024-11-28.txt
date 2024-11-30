@@ -1,0 +1,40 @@
+Stock: GPC
+Sector: Consumer Cyclical
+Market Cap: 17.64B
+Current Ratio: 1.17
+LTDebtToWC: 2.00
+P/E Ratio: 5.19
+Price-to-book ratio: -139.39
+Graham's price-to-book ratio: 19.50
+ROCE: 17.82
+Dividend Record: 68
+Dividend Yield: 3.15%
+DGR 1Y: 5.48
+Earnings Payout Ratio: 50.90%
+FCF Payout Ratio: 57.07%
+Debt to Total Capital: 0.53
+ROE: 24.42
+Operating Income Margin: 6.33%
+Ordinary Shares Number: consistent decrease
+Total Points: 21
+-----------------------------------------------------
+Stock: ADM
+Sector: Consumer Defensive
+Market Cap: 26.02B
+Current Ratio: 1.44
+LTDebtToWC: 0.74
+P/E Ratio: 2.47
+Price-to-book ratio: 1.46
+Graham's price-to-book ratio: 2.86
+ROCE: 13.74
+Dividend Record: 49
+Dividend Yield: 3.79%
+DGR 1Y: 11.43
+Earnings Payout Ratio: 54.78%
+FCF Payout Ratio: 32.94%
+Debt to Total Capital: 0.28
+ROE: 10.75
+Operating Income Margin: 2.22%
+Ordinary Shares Number: increase
+Total Points: 20
+-----------------------------------------------------
