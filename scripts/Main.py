@@ -1,13 +1,13 @@
 import numpy as np
 import yfinance as yf
-from Stock import *
-from StockScreener import *
+from scripts.Stock import *
+from scripts.StockScreener import *
 import os
 import pandas as pd
 import time
 import requests
 import matplotlib.pyplot as plt
-from EvalutateStock import *
+from scripts.EvalutateStock import *
 
 
 # url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=NUE&apikey=0F4NZKNHX3TGXQ78'
@@ -127,21 +127,115 @@ from EvalutateStock import *
 #             screening_end_time = time.time()
 #             prev = next
 #             print(f"Screening {i+1} took: {(screening_end_time - screening_start_time)/60:.2f} minutes")
-#             print(f"Sleeping for 120 seconds")
-#             time.sleep(120)
-#         for i in range(5):
-#             print(f"Exporting in {5-i} minutes")
+#             print(f"Sleeping for 60 seconds")
+#             time.sleep(60)
+#         for i in range(2):
+#             print(f"Exporting in {2-i} minutes")
 #             time.sleep(60)
 #         screener.export_results_to_excel_file(file_name)
 #     else:
 #         print("File not found. Check the path:", FILE_PATH_1)
-    
 # create_excel_file()
 
-date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"./outData/companies_evaluated_{date}.txt"
-companies = ['GPC', 'ADM']
-for company in companies:
-    stock = Stock(company)
-    evaluator = evaluateStock(stock, FILE_PATH_1)
-    evaluator.export_results_to_text_file(file_name)
+# date = datetime.now().strftime("%Y-%m-%d")
+# file_name = f"./outData/companies_evaluated_{date}.txt"
+# companies = ['GPC', 'ADM']
+# for company in companies:
+#     stock = Stock(company)
+#     evaluator = evaluateStock(stock, FILE_PATH_1)
+#     evaluator.export_results_to_text_file(file_name)
+
+# Cash Flow Analysis for last 15 years
+def get_cashflow_data(stock):
+    url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={stock}&apikey=demo'
+    r = requests.get(url)
+    data = r.json()
+    annual_reports = data['annualReports']
+    i = 0
+    cashflow_data = {}
+    for report in annual_reports:
+        if i < 15:
+            date = report['fiscalDateEnding']
+            cashflow_data[date] = {
+                'operatingCF': report['operatingCashflow'],
+                'CashFlowInvestment': report['cashflowFromInvestment'],
+                'CashFlowFinancing': report['cashflowFromFinancing'],
+                'dividendPayout': report['dividendPayout'],
+                'capitalExpenditures': report['capitalExpenditures'],
+                'netIncome': report['netIncome']
+            }
+            i += 1
+        else:
+            break
+    df = pd.DataFrame.from_dict(cashflow_data, orient='index')
+    df = df.index.name = 'fiscal_date_ending'
+    return df
+    
+
+def get_income_statement(stock):
+    url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={stock}&apikey=demo'
+    r = requests.get(url)
+    data = r.json()
+    annual_reports = data['annualReports']
+    i = 0
+    income_statement = {}
+    for report in annual_reports:
+        if i < 15:
+            date = report['fiscalDateEnding']
+            income_statement[date] = {
+                'revenue': report['totalRevenue'],
+                'grossProfit': report['grossProfit'],
+                'ebit': report['ebit'],
+                'operatingIncome': report['operatingIncome'],
+                'cogs': report['costofGoodsAndServicesSold'],
+                'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                'researchAndDevelopment': report['researchAndDevelopment']
+            }
+            i += 1
+        else:
+            break
+    df = pd.DataFrame.from_dict(income_statement, orient='index')
+    df.index.name = 'fiscal_date_ending'
+    return df
+
+df = get_income_statement('IBM')
+df.to_excel('IBM_income_statement.xlsx')
+
+def get_balance_sheet(stock):
+    url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={stock}&apikey=demo'
+    r = requests.get(url)
+    data = r.json()
+    annual_reports = data['annualReports']
+    i = 0
+    balance_sheet = {}
+    for report in annual_reports:
+        if i < 15:
+            date = report['fiscalDateEnding']
+            balance_sheet[date] = {
+                'totalAssets': report['totalAssets'],
+                'totalCurrentAssets': report['totalCurrentAssets'],
+                'intagibleAssets': report['intangibleAssets'],
+                'totalLiabilities': report['totalLiabilities'],
+                'totalCurrentLiabilities': report['totalCurrentLiabilities'],
+                'currentDebt': report['currentDebt'],
+                'capitalLeaseObligations': report['capitalLeaseObligations'],
+                'longTermDebt': report['longTermDebt'],
+                'sharesOutstanding': report['commonStockSharesOutstanding'],
+                'totalEquity': report['totalShareholderEquity']
+            }
+            i += 1
+        else:
+            break
+    df = pd.DataFrame.from_dict(balance_sheet, orient='index')
+    df.index.name = 'fiscal_date_ending'
+    return df
+
+# df = get_balance_sheet('IBM')
+# df.to_excel('IBM_balance_sheet.xlsx')
+# print(df)
+
+# url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=IBM&apikey=demo'
+# r = requests.get(url)
+# data = r.json()
+
+# print(data)

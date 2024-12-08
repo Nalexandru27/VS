@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 import yfinance as yf
-from Tresholds import *
+from scripts.Tresholds import *
 import pandas as pd
 import os
 
@@ -128,6 +128,11 @@ class Stock:
             df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 1Y']
         
+    # GET DGR 3Y from excel file
+    def get_DGR_3Y_from_excel(self, file_path):
+        if os.path.exists(file_path):
+            df = pd.read_excel(file_path)
+            return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 3Y']
     
     # Get DGR 10Y from excel file
     def get_DGR_10Y_from_excel(self, file_path):

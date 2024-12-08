@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import EvalutateStock as es
+import scripts.EvalutateStock as es
 import numpy as np
-from Stock import *
+from scripts.Stock import *
 import pandas as pd
 import CreateExcelFile
 import time
@@ -174,8 +174,8 @@ class StockScreener:
         
         try:
             columns = ['Ticker', 'Sector', 'Market Cap', 
-                        'Current Ratio', 'LTDebtToWC',
-                        'Dividend Record', 'Dividend Yield', 'DGR 1Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
+                        'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth over past 10Y',
+                        'Dividend Record', 'Dividend Yield', 'DGR 1Y', 'DGR 3Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
                         'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
                         'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']         
             excel = CreateExcelFile.ExcelFile(file_name, columns)
@@ -188,7 +188,7 @@ class StockScreener:
                     try:
                         print(f"Processing {ticker}...")
                         stock = Stock(ticker)
-                        time.sleep(20)
+                        time.sleep(10)
                         data = self.stock_data(stock)
                         if data is not None:
                             print(f"Data for {ticker} processed successfully.")
@@ -226,9 +226,12 @@ class StockScreener:
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
+            data['Earnings Stability'] = self.check_earnings_stability(ticker)
+            data['Earnings Growth over past 10Y'] = ticker.earnings_growth_last_10_years()
             data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)
             data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
             data["DGR 1Y"] = f"{ticker.get_DGR_1Y_from_excel(FILE_PATH_1)}%"
+            data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILE_PATH_1)}%"
             data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILE_PATH_1)}%"
             data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
             data["Operating Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
@@ -240,8 +243,6 @@ class StockScreener:
             data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
             data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
             data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
-            # data["Earnings Stability"] = self.check_earnings_stability()
-            # data["Earnings Growth Over the past 10 Years"] = f"{ticker.earnings_growth_last_10_years():.2f}"
             data["Points"] = evaluator.give_points()
         except Exception as e:
             print(f"Error getting data for {ticker.ticker}: {e}")
