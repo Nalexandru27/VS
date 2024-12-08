@@ -1,13 +1,13 @@
 import numpy as np
 import yfinance as yf
-from scripts.Stock import *
-from scripts.StockScreener import *
+from Stock import *
+from StockScreener import *
 import os
 import pandas as pd
 import time
 import requests
 import matplotlib.pyplot as plt
-from scripts.EvalutateStock import *
+from EvalutateStock import *
 
 
 # url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=NUE&apikey=0F4NZKNHX3TGXQ78'
@@ -198,9 +198,6 @@ def get_income_statement(stock):
     df.index.name = 'fiscal_date_ending'
     return df
 
-df = get_income_statement('IBM')
-df.to_excel('IBM_income_statement.xlsx')
-
 def get_balance_sheet(stock):
     url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={stock}&apikey=demo'
     r = requests.get(url)
@@ -230,12 +227,9 @@ def get_balance_sheet(stock):
     df.index.name = 'fiscal_date_ending'
     return df
 
-# df = get_balance_sheet('IBM')
-# df.to_excel('IBM_balance_sheet.xlsx')
-# print(df)
 
-# url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=IBM&apikey=demo'
-# r = requests.get(url)
-# data = r.json()
+url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey=demo'
+r = requests.get(url)
+data = r.json()
 
-# print(data)
+print(data)

@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 import yfinance as yf
-from scripts.Tresholds import *
+from Tresholds import *
 import pandas as pd
 import os
 

@@ -1,6 +1,6 @@
-from scripts.Stock import *
+from Stock import *
 import yfinance as yf
-from scripts.Tresholds import *
+from Tresholds import *
 
 class evaluateStock:
     def __init__(self, stock: Stock, filePath):

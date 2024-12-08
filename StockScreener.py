@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import scripts.EvalutateStock as es
+import EvalutateStock as es
 import numpy as np
-from scripts.Stock import *
+from Stock import *
 import pandas as pd
 import CreateExcelFile
 import time
