@@ -15,7 +15,7 @@ class Stock:
 
     # Get cash flow statement
     def get_cashflow_data(self):
-        url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=demo'
+        url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
         annual_reports = data['annualReports']
@@ -36,12 +36,12 @@ class Stock:
             else:
                 break
         df = pd.DataFrame.from_dict(cashflow_data, orient='index')
-        df = df.index.name = 'fiscal_date_ending'
+        df.index.name = 'fiscal_date_ending'
         return df
     
     # Get income statement
     def get_income_statement(self):
-        url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=demo'
+        url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
         annual_reports = data['annualReports']
@@ -69,7 +69,7 @@ class Stock:
 
     # Get balance sheet
     def get_balance_sheet(self):
-        url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=demo'
+        url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
         annual_reports = data['annualReports']
@@ -362,48 +362,6 @@ class Stock:
                 return "consistent decrease"
             else:
                 return "chaotic or 0 decrease"
-            
-    # Get cash flows from the past 10 years
-    # def get_cash_flows_from_alphavintage(self):
-    #     url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
-    #     r = requests.get(url)
-
-    #     # Check for retrive success
-    #     if r.status_code != 200:
-    #         print(f"Error: receive status code {r.status_code}")
-    #         return False
-
-    #     data = r.json()
-    #     if 'annualReports' not in data:
-    #         print("No annual reports found. Response:", data)
-    #         return False
-
-    #     annual_report = data['annualReports']
-    #     return annual_report
-    
-    # Get last n years of cash flows
-    # def get_last_n_years_cash_flows(self, n):
-    #     cash_flows = self.get_cash_flows_from_alphavintage()
-    #     cash_flows_dict = {}
-    #     for i, report in enumerate(cash_flows):
-    #         if i >= n:
-    #             return cash_flows_dict
-    #         fiscal_date = report['fiscalDateEnding']
-    #         year = fiscal_date[:4]
-    #         operating_cash_flows = float(report['operatingCashflow'])
-    #         cash_flows_dict[year] = operating_cash_flows
-    
-    # # Get last n years of eps
-    # def get_last_n_years_eps(self, n):
-    #     income_stmt = self.get_income_stmt_from_alphavantage()
-    #     eps = {}
-    #     for i, report in enumerate(income_stmt):
-    #         if i >= n:
-    #             return eps
-    #         fiscal_date = report['fiscalDateEnding']
-    #         year = fiscal_date[:4]
-    #         eps = float(report['eps'])
-    #         eps[year] = eps
 
     # print stock indicators value
     def print_results(self):

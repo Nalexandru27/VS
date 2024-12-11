@@ -220,10 +220,6 @@ class StockScreener:
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
-        income_statement = ticker.get_income_statement
-        balance_sheet = ticker.get_balance_sheet
-        cash_flows = ticker.get_cashflow_data
-        
         try:
             data['Ticker'] = ticker.ticker
             data["Sector"] = ticker.yf.info['sector']

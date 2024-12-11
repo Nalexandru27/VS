@@ -160,7 +160,6 @@ class evaluateStock:
             return 1
         else:
             return 0
-        
 
     # Sum up stock points 
     def give_points(self):
@@ -175,8 +174,6 @@ class evaluateStock:
         points += self.operating_income_margin_points()
         points += self.ordinary_shares_number_points()
         return points
-    
-    
         
     def export_results_to_text_file(self, file_name):
         print(f"Exporting results for {self.stock.ticker} to {file_name}")
@@ -190,11 +187,11 @@ class evaluateStock:
             file.write(f"Price-to-book ratio: {self.stock.compute_price_to_book_ratio():.2f}\n")
             file.write(f"Graham's price-to-book ratio: {self.stock.compute_price_to_book_ratio_graham():.2f}\n")
             file.write(f"ROCE: {self.stock.compute_ROCE()*100:.2f}\n")
-            # file.write(f"Earnings Stability: {self.stock.check_earnings_stability()}\n")
-            # file.write(f"Earnings Growth over past 10Y: {self.stock.earnings_growth_last_10_years()}\n")
+            file.write(f"Earnings Stability: {self.stock.check_earnings_stability()}\n")
+            file.write(f"Earnings Growth over past 10Y: {self.stock.earnings_growth_last_10_years()}\n")
             file.write(f"Dividend Record: {self.stock.get_dividend_record_from_excel(FILE_PATH_1)}\n")
             file.write(f"Dividend Yield: {self.stock.get_dividend_yield()*100:.2f}%\n")
-            file.write(f"DGR 1Y: {self.stock.get_DGR_1Y_from_excel(FILE_PATH_1)}\n")
+            file.write(f"DGR 1Y: {self.stock.get_DGR_3Y_from_excel(FILE_PATH_1)}\n")
             file.write(f"Earnings Payout Ratio: {self.stock.yf.info['payoutRatio']*100:.2f}%\n")
             file.write(f"FCF Payout Ratio: {self.stock.FCF_Payout_Ratio()*100:.2f}%\n")
             file.write(f"Debt to Total Capital: {self.stock.Debt_to_Total_Capital_Ratio():.2f}\n")
