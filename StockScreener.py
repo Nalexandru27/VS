@@ -220,6 +220,10 @@ class StockScreener:
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
+        income_statement = ticker.get_income_statement
+        balance_sheet = ticker.get_balance_sheet
+        cash_flows = ticker.get_cashflow_data
+        
         try:
             data['Ticker'] = ticker.ticker
             data["Sector"] = ticker.yf.info['sector']
@@ -230,8 +234,8 @@ class StockScreener:
             data['Earnings Growth over past 10Y'] = ticker.earnings_growth_last_10_years()
             data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)
             data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
-            data["DGR 1Y"] = f"{ticker.get_DGR_1Y_from_excel(FILE_PATH_1)}%"
             data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILE_PATH_1)}%"
+            data["DGR 5Y"] = f"{ticker.get_DGR_5Y_from_excel(FILE_PATH_1)}%"
             data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILE_PATH_1)}%"
             data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
             data["Operating Income Margin"] = f"{ticker.operating_income_margin():.2f}%"

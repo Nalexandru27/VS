@@ -13,6 +13,90 @@ class Stock:
         self.ticker = ticker
         self.yf = yf.Ticker(ticker)
 
+    # Get cash flow statement
+    def get_cashflow_data(self):
+        url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=demo'
+        r = requests.get(url)
+        data = r.json()
+        annual_reports = data['annualReports']
+        i = 0
+        cashflow_data = {}
+        for report in annual_reports:
+            if i < 15:
+                date = report['fiscalDateEnding']
+                cashflow_data[date] = {
+                    'operatingCF': report['operatingCashflow'],
+                    'CashFlowInvestment': report['cashflowFromInvestment'],
+                    'CashFlowFinancing': report['cashflowFromFinancing'],
+                    'dividendPayout': report['dividendPayout'],
+                    'capitalExpenditures': report['capitalExpenditures'],
+                    'netIncome': report['netIncome']
+                }
+                i += 1
+            else:
+                break
+        df = pd.DataFrame.from_dict(cashflow_data, orient='index')
+        df = df.index.name = 'fiscal_date_ending'
+        return df
+    
+    # Get income statement
+    def get_income_statement(self):
+        url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=demo'
+        r = requests.get(url)
+        data = r.json()
+        annual_reports = data['annualReports']
+        i = 0
+        income_statement = {}
+        for report in annual_reports:
+            if i < 15:
+                date = report['fiscalDateEnding']
+                income_statement[date] = {
+                    'revenue': report['totalRevenue'],
+                    'grossProfit': report['grossProfit'],
+                    'ebit': report['ebit'],
+                    'operatingIncome': report['operatingIncome'],
+                    'cogs': report['costofGoodsAndServicesSold'],
+                    'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                    'depreciationAndAmortization': report['depreciationAndAmortization'],
+                    'researchAndDevelopment': report['researchAndDevelopment']
+                }
+                i += 1
+            else:
+                break
+        df = pd.DataFrame.from_dict(income_statement, orient='index')
+        df.index.name = 'fiscal_date_ending'
+        return df
+
+    # Get balance sheet
+    def get_balance_sheet(self):
+        url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=demo'
+        r = requests.get(url)
+        data = r.json()
+        annual_reports = data['annualReports']
+        i = 0
+        balance_sheet = {}
+        for report in annual_reports:
+            if i < 15:
+                date = report['fiscalDateEnding']
+                balance_sheet[date] = {
+                    'totalAssets': report['totalAssets'],
+                    'totalCurrentAssets': report['totalCurrentAssets'],
+                    'intagibleAssets': report['intangibleAssets'],
+                    'totalLiabilities': report['totalLiabilities'],
+                    'totalCurrentLiabilities': report['totalCurrentLiabilities'],
+                    'currentDebt': report['currentDebt'],
+                    'capitalLeaseObligations': report['capitalLeaseObligations'],
+                    'longTermDebt': report['longTermDebt'],
+                    'sharesOutstanding': report['commonStockSharesOutstanding'],
+                    'totalEquity': report['totalShareholderEquity']
+                }
+                i += 1
+            else:
+                break
+        df = pd.DataFrame.from_dict(balance_sheet, orient='index')
+        df.index.name = 'fiscal_date_ending'
+        return df
+
     # Get market cap from yahoo finance
     def get_market_cap(self):
         try:
@@ -122,17 +206,17 @@ class Stock:
             df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'No Years']
         
-    # GET DGR 1Y from excel file
-    def get_DGR_1Y_from_excel(self, file_path):
-        if os.path.exists(file_path):
-            df = pd.read_excel(file_path)
-            return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 1Y']
-        
     # GET DGR 3Y from excel file
     def get_DGR_3Y_from_excel(self, file_path):
         if os.path.exists(file_path):
             df = pd.read_excel(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 3Y']
+        
+    # GET DGR 5Y from excel file
+    def get_DGR_5Y_from_excel(self, file_path):
+        if os.path.exists(file_path):
+            df = pd.read_excel(file_path)
+            return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 5Y']
     
     # Get DGR 10Y from excel file
     def get_DGR_10Y_from_excel(self, file_path):

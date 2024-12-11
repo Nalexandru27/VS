@@ -145,91 +145,10 @@ from EvalutateStock import *
 #     evaluator = evaluateStock(stock, FILE_PATH_1)
 #     evaluator.export_results_to_text_file(file_name)
 
-# Cash Flow Analysis for last 15 years
-def get_cashflow_data(stock):
-    url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={stock}&apikey=demo'
-    r = requests.get(url)
-    data = r.json()
-    annual_reports = data['annualReports']
-    i = 0
-    cashflow_data = {}
-    for report in annual_reports:
-        if i < 15:
-            date = report['fiscalDateEnding']
-            cashflow_data[date] = {
-                'operatingCF': report['operatingCashflow'],
-                'CashFlowInvestment': report['cashflowFromInvestment'],
-                'CashFlowFinancing': report['cashflowFromFinancing'],
-                'dividendPayout': report['dividendPayout'],
-                'capitalExpenditures': report['capitalExpenditures'],
-                'netIncome': report['netIncome']
-            }
-            i += 1
-        else:
-            break
-    df = pd.DataFrame.from_dict(cashflow_data, orient='index')
-    df = df.index.name = 'fiscal_date_ending'
-    return df
-    
 
-def get_income_statement(stock):
-    url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={stock}&apikey=demo'
-    r = requests.get(url)
-    data = r.json()
-    annual_reports = data['annualReports']
-    i = 0
-    income_statement = {}
-    for report in annual_reports:
-        if i < 15:
-            date = report['fiscalDateEnding']
-            income_statement[date] = {
-                'revenue': report['totalRevenue'],
-                'grossProfit': report['grossProfit'],
-                'ebit': report['ebit'],
-                'operatingIncome': report['operatingIncome'],
-                'cogs': report['costofGoodsAndServicesSold'],
-                'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
-                'researchAndDevelopment': report['researchAndDevelopment']
-            }
-            i += 1
-        else:
-            break
-    df = pd.DataFrame.from_dict(income_statement, orient='index')
-    df.index.name = 'fiscal_date_ending'
-    return df
-
-def get_balance_sheet(stock):
-    url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={stock}&apikey=demo'
-    r = requests.get(url)
-    data = r.json()
-    annual_reports = data['annualReports']
-    i = 0
-    balance_sheet = {}
-    for report in annual_reports:
-        if i < 15:
-            date = report['fiscalDateEnding']
-            balance_sheet[date] = {
-                'totalAssets': report['totalAssets'],
-                'totalCurrentAssets': report['totalCurrentAssets'],
-                'intagibleAssets': report['intangibleAssets'],
-                'totalLiabilities': report['totalLiabilities'],
-                'totalCurrentLiabilities': report['totalCurrentLiabilities'],
-                'currentDebt': report['currentDebt'],
-                'capitalLeaseObligations': report['capitalLeaseObligations'],
-                'longTermDebt': report['longTermDebt'],
-                'sharesOutstanding': report['commonStockSharesOutstanding'],
-                'totalEquity': report['totalShareholderEquity']
-            }
-            i += 1
-        else:
-            break
-    df = pd.DataFrame.from_dict(balance_sheet, orient='index')
-    df.index.name = 'fiscal_date_ending'
-    return df
-
-
-url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey=demo'
-r = requests.get(url)
-data = r.json()
-
-print(data)
+are = yf.Ticker("ARE")
+income_stmt = are.income_stmt
+basic_EPS = income_stmt.loc['Basic EPS'][0]
+print(basic_EPS)
+# print(are.balance_sheet.index.values)
+# print(are.cash_flow.index.values)

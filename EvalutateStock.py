@@ -175,6 +175,8 @@ class evaluateStock:
         points += self.operating_income_margin_points()
         points += self.ordinary_shares_number_points()
         return points
+    
+    
         
     def export_results_to_text_file(self, file_name):
         print(f"Exporting results for {self.stock.ticker} to {file_name}")
