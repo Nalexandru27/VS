@@ -1,7 +1,7 @@
 from datetime import datetime
 import requests
 import yfinance as yf
-from Tresholds import *
+from utils.Tresholds import *
 import pandas as pd
 import os
 
@@ -23,14 +23,14 @@ class Stock:
         cashflow_data = {}
         for report in annual_reports:
             if i < 15:
-                date = report['fiscalDateEnding']
+                date = report['fiscalDateEnding'].split('-')[0]
                 cashflow_data[date] = {
-                    'operatingCF': report['operatingCashflow'],
-                    'CashFlowInvestment': report['cashflowFromInvestment'],
-                    'CashFlowFinancing': report['cashflowFromFinancing'],
-                    'dividendPayout': report['dividendPayout'],
+                    'operatingCashFow': report['operatingCashflow'],
                     'capitalExpenditures': report['capitalExpenditures'],
-                    'netIncome': report['netIncome']
+                    'cashFlowInvesting': report['cashflowFromInvesting'],
+                    'cashFlowFinancing': report['cashflowFromFinancing'],
+                    'dividendPayout': report['dividendPayout'],
+                    'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock']
                 }
                 i += 1
             else:
@@ -49,16 +49,19 @@ class Stock:
         income_statement = {}
         for report in annual_reports:
             if i < 15:
-                date = report['fiscalDateEnding']
+                date = report['fiscalDateEnding'].split('-')[0]
                 income_statement[date] = {
-                    'revenue': report['totalRevenue'],
                     'grossProfit': report['grossProfit'],
-                    'ebit': report['ebit'],
+                    'revenue': report['totalRevenue'],
+                    'COGS': report['costofGoodsAndServicesSold'],
                     'operatingIncome': report['operatingIncome'],
-                    'cogs': report['costofGoodsAndServicesSold'],
-                    'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                    'SG&A': report['sellingGeneralAndAdministrative'],
+                    'researchAndDevelopment': report['researchAndDevelopment'],
                     'depreciationAndAmortization': report['depreciationAndAmortization'],
-                    'researchAndDevelopment': report['researchAndDevelopment']
+                    'incomeBeforeTax': report['incomeBeforeTax'],
+                    'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                    'ebit': report['ebit'],
+                    'netIncome': report['netIncome']
                 }
                 i += 1
             else:
@@ -77,18 +80,36 @@ class Stock:
         balance_sheet = {}
         for report in annual_reports:
             if i < 15:
-                date = report['fiscalDateEnding']
+                date = report['fiscalDateEnding'].split('-')[0]
                 balance_sheet[date] = {
                     'totalAssets': report['totalAssets'],
                     'totalCurrentAssets': report['totalCurrentAssets'],
+                    'cashAndCashEquivalentsAtCarryingValue': report['cashAndCashEquivalentsAtCarryingValue'],
+                    'cashAndShortTermInvestments': report['cashAndShortTermInvestments'],
+                    'inventory': report['inventory'],
+                    'currentNetReceivables': report['currentNetReceivables'],
+                    'propertyPlantEquipment': report['propertyPlantEquipment'],
                     'intagibleAssets': report['intangibleAssets'],
+                    'goodwill': report['goodwill'],
+                    'longTermInvestments': report['longTermInvestments'],
+                    'shortTermInvestments': report['shortTermInvestments'],
+                    'otherCurrentAssets': report['otherCurrentAssets'],
+                    'otherNonCurrentAssets': report['otherNonCurrentAssets'],
                     'totalLiabilities': report['totalLiabilities'],
                     'totalCurrentLiabilities': report['totalCurrentLiabilities'],
+                    'currentAccountsPayable': report['currentAccountsPayable'],
+                    'deferredRevenue': report['deferredRevenue'],
                     'currentDebt': report['currentDebt'],
+                    'shortTermDebt': report['shortTermDebt'],
                     'capitalLeaseObligations': report['capitalLeaseObligations'],
                     'longTermDebt': report['longTermDebt'],
-                    'sharesOutstanding': report['commonStockSharesOutstanding'],
-                    'totalEquity': report['totalShareholderEquity']
+                    'otherCurrentLiabilities': report['otherCurrentLiabilities'],
+                    'otherNonCurrentLiabilities': report['otherNonCurrentLiabilities'],
+                    'totalEquity': report['totalShareholderEquity'],
+                    'treasuryStock': report['treasuryStock'],
+                    'retainedEarnings': report['retainedEarnings'],
+                    'commonStock': report['commonStock'],
+                    'sharesOutstanding': report['commonStockSharesOutstanding']
                 }
                 i += 1
             else:

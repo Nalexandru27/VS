@@ -1,4 +1,4 @@
-from Stock import *
+from stock.Stock import *
 import matplotlib.pyplot as plt
 
 class historyAnalysis:

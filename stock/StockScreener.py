@@ -1,9 +1,9 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import EvalutateStock as es
+import stock.EvalutateStock as es
 import numpy as np
-from Stock import *
+from stock.Stock import *
 import pandas as pd
-import CreateExcelFile
+import utils.CreateExcelFile as CreateExcelFile
 import time
 
 class StockScreener:
