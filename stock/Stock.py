@@ -27,7 +27,7 @@ class Stock:
                 cashflow_data[date] = {
                     'operatingCashFow': report['operatingCashflow'],
                     'capitalExpenditures': report['capitalExpenditures'],
-                    'cashFlowInvesting': report['cashflowFromInvesting'],
+                    'cashFlowInvesting': report['cashflowFromInvestment'],
                     'cashFlowFinancing': report['cashflowFromFinancing'],
                     'dividendPayout': report['dividendPayout'],
                     'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock']

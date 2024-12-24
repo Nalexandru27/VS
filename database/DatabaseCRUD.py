@@ -6,7 +6,6 @@ class DatabaseCRUD:
         self.connection.execute("PRAGMA journal_mode=WAL")
         self.connection.execute("PRAGMA busy_timeout = 30000")
         self.cursor = self.connection.cursor()
-        self.create_tables()
 
     def create_tables(self):
         self.cursor.execute("""
@@ -89,19 +88,51 @@ class DatabaseCRUD:
             pass  # Ignore duplicate entries
 
     def select_company(self, ticker):
-        return self.cursor.execute("""
-            SELECT * FROM company WHERE ticker = ?                                 
-        """,(ticker)).fetchone()
+        result = self.cursor.execute("""
+            SELECT id FROM company WHERE ticker = ?                                 
+        """, (ticker,)).fetchone()
+        if result is None:
+            raise ValueError(f"No company found with ticker '{ticker}'")
+        return result[0]
     
     def select_financial_statement(self, company_id, statement_type, year):
         return self.cursor.execute("""
-            SELECT * FROM financialStatement WHERE company_id = ? and statement_type = ? and year = ?
-        """, (company_id, statement_type, year)).fetchone()
+            SELECT id FROM financialStatement WHERE company_id = ? and statement_type = ? and year = ?
+        """, (company_id, statement_type, year)).fetchone()[0]
     
     def select_financial_data(self, financial_statement_id, record_type):
         return self.cursor.execute("""
-            SELECT * FROM financialData WHERE financial_statement_id = ? and record_type = ?
-        """, (financial_statement_id, record_type)).fetchone()
+            SELECT record_value FROM financialData WHERE financial_statement_id = ? and record_type = ?
+        """, (financial_statement_id, record_type)).fetchone()[0]
+    
+    def rename_column(self, table_name, old_column_name, new_column_name):
+        self.cursor.execute(f"""
+            ALTER TABLE {table_name} RENAME COLUMN {old_column_name} TO {new_column_name}                    
+        """, (table_name, old_column_name, new_column_name))
+        self.connection.commit()
+
+    def change_value(self, table_name, column_name, old_value, new_value):
+        query = f"UPDATE {table_name} SET {column_name} = ? WHERE {column_name} = ?"
+        self.cursor.execute(query, (new_value, old_value))
+        self.connection.commit()
+    
+    def delete_company(self, ticker):
+        self.cursor.execute("""
+            DELETE FROM company WHERE ticker = ?
+        """, (ticker,))
+        self.connection.commit()
+
+    def delete_all_financial_statement(self):
+        self.cursor.execute("""
+            DELETE FROM financialStatement
+        """)
+        self.connection.commit()
+
+    def delete_all_financial_data(self):
+        self.cursor.execute("""
+            DELETE FROM financialData
+        """)
+        self.connection.commit()
 
     def close(self):
         self.cursor.close()
