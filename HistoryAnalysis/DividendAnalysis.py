@@ -68,8 +68,8 @@ class dividendAnalysis:
         return df
 
 
-    def plot_dividend_sustainability(self):
-        df = self.dividends_stability()
+    def plot_dividend_sustainability(self, start_year, end_year):
+        df = self.dividends_stability(start_year=start_year, end_year=end_year)
         plot_file = "D:/FacultyYear3/Licenta/VS/outData/dividend_plot.png"
 
         eps_per_share = df['eps_per_share']
