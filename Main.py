@@ -8,11 +8,11 @@ from stock.EvalutateStock import *
 from database.DatabaseCRUD import DatabaseCRUD
 from database.PopulateDB import PopulateDB
 from HistoryAnalysis.DividendAnalysis import dividendAnalysis
-from HistoryAnalysis.PriceEstimationEarnings import PERatioEstimator
-from HistoryAnalysis.PriceEstimationEBIT import PEBITRatioEstimator
-from HistoryAnalysis.PriceEstimationOpCF import PriceOpCFRatioEstimator
-from HistoryAnalysis.PriceEstimationFCF import PriceFCFRatioEstimator
-from HistoryAnalysis.PriceEstimationDividend import PriceDividendRatioEstimator
+from PriceEstimators.PriceEstimationEarnings import PERatioEstimator
+from PriceEstimators.PriceEstimationEBIT import PEBITRatioEstimator
+from PriceEstimators.PriceEstimationOpCF import PriceOpCFRatioEstimator
+from PriceEstimators.PriceEstimationFCF import PriceFCFRatioEstimator
+from PriceEstimators.PriceEstimationDividend import PriceDividendRatioEstimator
 
 companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
 lmt = Stock('LMT')

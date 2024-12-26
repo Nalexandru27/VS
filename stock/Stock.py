@@ -14,7 +14,7 @@ class Stock:
         self.yf = yf.Ticker(ticker)
 
     # Get cash flow statement
-    def get_cashflow_data(self):
+    def get_cashflow_data(self, n_years=15):
         url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
@@ -22,7 +22,7 @@ class Stock:
         i = 0
         cashflow_data = {}
         for report in annual_reports:
-            if i < 15:
+            if i < n_years:
                 date = report['fiscalDateEnding'].split('-')[0]
                 cashflow_data[date] = {
                     'operatingCashFow': report['operatingCashflow'],
@@ -40,7 +40,7 @@ class Stock:
         return df
     
     # Get income statement
-    def get_income_statement(self):
+    def get_income_statement(self, n_years=15):
         url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
@@ -48,7 +48,7 @@ class Stock:
         i = 0
         income_statement = {}
         for report in annual_reports:
-            if i < 15:
+            if i < n_years:
                 date = report['fiscalDateEnding'].split('-')[0]
                 income_statement[date] = {
                     'grossProfit': report['grossProfit'],
@@ -71,7 +71,7 @@ class Stock:
         return df
 
     # Get balance sheet
-    def get_balance_sheet(self):
+    def get_balance_sheet(self, n_years=15):
         url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
         r = requests.get(url)
         data = r.json()
@@ -79,7 +79,7 @@ class Stock:
         i = 0
         balance_sheet = {}
         for report in annual_reports:
-            if i < 15:
+            if i < n_years:
                 date = report['fiscalDateEnding'].split('-')[0]
                 balance_sheet[date] = {
                     'totalAssets': report['totalAssets'],
@@ -146,38 +146,6 @@ class Stock:
         except Exception as e:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
             return 0
-    
-     
-    # Get income statement from alphavantage
-    def get_income_stmt_from_alphavantage(self):
-        url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
-        r = requests.get(url)
-
-        # Check for retrive success
-        if r.status_code != 200:
-            print(f"Error: receive status code {r.status_code}")
-            return False
-
-        data = r.json()
-        if 'annualReports' not in data:
-            print("No annual reports found. Response:", data)
-            return False
-
-        annual_report = data['annualReports']
-        return annual_report
-    
-
-    # Get last n years earnings
-    def get_last_n_year_earnings(self, n):
-        annual_report = self.get_income_stmt_from_alphavantage()
-        earnings = {}
-        for i, report in enumerate(annual_report):
-            if i >= n:
-                return earnings
-            fiscal_date = report['fiscalDateEnding']
-            year = fiscal_date[:4]
-            net_income = float(report['netIncome'])
-            earnings[year] = net_income
 
     # TEST 4
     #Get dividend history for a stock using yahoo finance
