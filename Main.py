@@ -7,15 +7,43 @@ import matplotlib.pyplot as plt
 from stock.EvalutateStock import *
 from database.DatabaseCRUD import DatabaseCRUD
 from database.PopulateDB import PopulateDB
-from stock.HistoryAnalysis import historyAnalysis
-
+from HistoryAnalysis.DividendAnalysis import dividendAnalysis
+from HistoryAnalysis.PriceEstimationEarnings import PERatioEstimator
+from HistoryAnalysis.PriceEstimationEBIT import PEBITRatioEstimator
+from HistoryAnalysis.PriceEstimationOpCF import PriceOpCFRatioEstimator
+from HistoryAnalysis.PriceEstimationFCF import PriceFCFRatioEstimator
+from HistoryAnalysis.PriceEstimationDividend import PriceDividendRatioEstimator
 
 companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
 lmt = Stock('LMT')
 db_crud = DatabaseCRUD('companies.db')
 
-lmt_history = historyAnalysis(Stock('LMT'), 'companies.db')
-lmt_history.plot_dividend_sustainability()
+
+pe_ratio = PERatioEstimator(Stock('LMT'), 'companies.db')
+price_pe = pe_ratio.get_pe_ratio_estimation(2009, 2023)
+print(f"{price_pe} is the price estimation using PE ratio")
+
+ebit_price = PEBITRatioEstimator(Stock('LMT'), 'companies.db')
+price_ebit = ebit_price.get_pebit_ratio_estimation(2009, 2023)
+print(f"{price_ebit} is the price estimation using PEBIT ratio")
+
+op_cf_price = PriceOpCFRatioEstimator(Stock('LMT'), 'companies.db')
+price_op_cf = op_cf_price.get_priceOpCF_ratio_estimation(2009, 2023)
+print(f"{price_op_cf} is the price estimation using Price to Operating Cash Flow ratio")
+
+fcf_price_estimator = PriceFCFRatioEstimator(Stock('LMT'), 'companies.db')
+price_fcf = fcf_price_estimator.get_priceFCF_ratio_estimation(2009, 2023)
+print(f"{price_fcf} is the price estimation using Price to Free Cash Flow ratio")
+
+dividend_price_estimator = PriceDividendRatioEstimator(Stock('LMT'), 'companies.db')
+price_dividend = dividend_price_estimator.get_priceDividend_ratio_estimation(2009, 2023)
+print(f"{price_dividend} is the price estimation using Price to Dividend ratio")
+
+avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
+print(f"{avg_price} is the average price estimation")
+
+# lmt_history = dividendAnalysis(Stock('LMT'), 'companies.db')
+# lmt_history.plot_dividend_sustainability()
 
 # current_date = datetime.now().strftime("%Y-%m-%d")
 # file_name = f"./outData/companies_screened_{current_date}.xlsx"

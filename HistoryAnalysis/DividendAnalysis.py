@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from database.DatabaseCRUD import DatabaseCRUD
 
-class historyAnalysis:
+class dividendAnalysis:
     def __init__(self, stock: Stock, db_name):
         self.stock = stock
         self.db_crud = DatabaseCRUD(db_name)
     
-    def dividends_stability(self):
+    def dividends_stability(self, start_year, end_year):
         dict = {}
-        for year in range(2009, 2024):
+        for year in range(start_year, end_year + 1):
             # company id
             company_id = self.db_crud.select_company(self.stock.ticker)
             
@@ -124,7 +124,7 @@ class historyAnalysis:
             df.to_excel(writer, sheet_name='Dividend Data Analysis', index=True)
             worksheet = writer.sheets['Dividend Data Analysis']
             worksheet.insert_image('F2', plot_file, {'x_scale': 0.6, 'y_scale': 0.6})
-    
+
     
 
 
