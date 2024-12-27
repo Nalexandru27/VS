@@ -35,38 +35,38 @@ class evaluateStock:
     
     # Dividend Growth Rate points
     def DGR_points(self):
-        DGR_1Y = self.stock.get_DGR_1Y_from_excel(self.filePath)
+        DGR_10Y = self.stock.get_DGR_10Y_from_excel(self.filePath)
         stock_dividend_yield = self.stock.get_dividend_yield() * 100
 
         # Low dividend yield
         if stock_dividend_yield < 2:
-            if DGR_1Y > 13:
+            if DGR_10Y > 13:
                 return 3
-            elif 9 <= DGR_1Y <= 13:
+            elif 9 <= DGR_10Y <= 13:
                 return 2
-            elif 5 <= DGR_1Y < 9:
+            elif 5 <= DGR_10Y < 9:
                 return 1
             else:
                 return 0
         
         # Medium dividend yield
         if 2 <= stock_dividend_yield <= 4:
-            if DGR_1Y > 10:
+            if DGR_10Y > 10:
                 return 3
-            elif 5 <= DGR_1Y <= 10:
+            elif 5 <= DGR_10Y <= 10:
                 return 2
-            elif 2 <= DGR_1Y < 5:
+            elif 2 <= DGR_10Y < 5:
                 return 1
             else:
                 return 0
         
         # High dividend yield
         if stock_dividend_yield > 4:
-            if DGR_1Y > 7:
+            if DGR_10Y > 7:
                 return 3
-            elif 2 <= DGR_1Y <= 7:
+            elif 2 <= DGR_10Y <= 7:
                 return 2
-            elif 1 <= DGR_1Y < 2:
+            elif 1 <= DGR_10Y < 2:
                 return 1
             else:
                 return 0
@@ -187,7 +187,7 @@ class evaluateStock:
             file.write(f"Price-to-book ratio: {self.stock.compute_price_to_book_ratio():.2f}\n")
             file.write(f"Graham's price-to-book ratio: {self.stock.compute_price_to_book_ratio_graham():.2f}\n")
             file.write(f"ROCE: {self.stock.compute_ROCE()*100:.2f}\n")
-            file.write(f"Earnings Stability: {self.stock.check_earnings_stability()}\n")
+            file.write(f"Earnings Stability: {self.stock.earnings_stability()}\n")
             file.write(f"Earnings Growth over past 10Y: {self.stock.earnings_growth_last_10_years()}\n")
             file.write(f"Dividend Record: {self.stock.get_dividend_record_from_excel(FILE_PATH_1)}\n")
             file.write(f"Dividend Yield: {self.stock.get_dividend_yield()*100:.2f}%\n")

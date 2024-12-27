@@ -31,19 +31,7 @@ class StockScreener:
     # TEST 3
     # Earnings stability - Positive net income for the past 10 years & using Alpha Vantage
     def check_earnings_stability(self, stock: Stock):
-        annual_report = stock.get_income_stmt_from_alphavantage()
-        i = 0
-        for report in annual_report:
-            try:
-                if i >= 10:
-                    break
-                if float(report['netIncome']) < 0:
-                    return False
-                i += 1
-            except KeyError:
-                print("Error: 'netIncome' or 'fiscalDateEnding' missing key in annual report")
-                continue
-        return True
+        return stock.check_earnings_stability()
     
     # TEST 4
     # Check if the stock has increased its dividend for more than 10 years in a row
@@ -128,14 +116,14 @@ class StockScreener:
         #     return False
 
         # Check Earnings Stability
-        # if not stock.check_earnings_stability():
-        #     print(f"-->{stock.ticker} failed the test 'Earnings Stability'")
-        #     return False
+        if not stock.earnings_stability():
+            print(f"-->{stock.ticker} failed the test 'Earnings Stability'")
+            return False
 
-        # # Check Earnings Growth
-        # if not stock.check_earnings_growth():
-        #     print(f"-->{stock.ticker} failed the test 'Earnings Growth'")
-        #     return False
+        # Check Earnings Growth
+        if not stock.earnings_growth_last_10_years():
+            print(f"-->{stock.ticker} failed the test 'Earnings Growth'")
+            return False
 
         # All tests passed
         return True
@@ -146,12 +134,11 @@ class StockScreener:
             print(f"Screening {ticker}...")
             stock = Stock(ticker)
             self.result[ticker] = self.validate_criterias(stock)
-        
+
         with ThreadPoolExecutor() as executor:
             executor.map(process_ticker, tickers)
 
         print("\nScreening done.\n")
-
 
     # Inspect the results of the screening process and print the stocks that passed all tests in the terminal
     def inspect_results_of_screening(self):
@@ -163,7 +150,6 @@ class StockScreener:
             else:
                 print(f"{ticker} did not pass all the test")
                 print("\n")
-
 
     # Export results to an Excel file
     def export_results_to_excel_file(self, file_name):
@@ -215,7 +201,6 @@ class StockScreener:
             excel.save()
         except Exception as e:
             print(f"Error occured during export: {e}")
-
 
     def stock_data(self,ticker: Stock):
         data = {}

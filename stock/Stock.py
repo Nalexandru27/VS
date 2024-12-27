@@ -4,6 +4,7 @@ import yfinance as yf
 from utils.Tresholds import *
 import pandas as pd
 import os
+import database.DatabaseCRUD as db
 
 def convert_to_billion(value):
     return int(value) / BILLION_DIVISION
@@ -118,6 +119,7 @@ class Stock:
         df.index.name = 'fiscal_date_ending'
         return df
 
+    # TEST 1
     # Get market cap from yahoo finance
     def get_market_cap(self):
         try:
@@ -126,23 +128,38 @@ class Stock:
             print(f"Error getting market cap for {self.ticker}: {e}")
             return 0
     
-    # Get current ratio from yahoo finance
+    # TEST 2
+    # Get current ratio from database
     def get_current_ratio(self):
         try:
-            return self.yf.info['currentRatio']
+            db_name = 'companies.db'
+            ticker = self.ticker
+            db_crud = db.DatabaseCRUD(db_name)
+            company_id = db_crud.select_company(ticker)
+            last_year = datetime.now().year - 1
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+            current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
+            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
+            return int(current_assets / current_liabilities)
         except Exception as e:
             print(f"Error getting current ratio for {self.ticker}: {e}")
             return 0
 
-    # Get long term debt to working capital ratio from yahoo finance
+    # TEST 3
+    # Get long term debt to working capital ratio from database
     def calculate_LTDebt_to_WC(self):
         try:
-            balance_sheet = self.yf.balance_sheet
-            current_assets = balance_sheet.loc["Current Assets"].iloc[0]
-            current_liabilities = balance_sheet.loc["Current Liabilities"].iloc[0]
+            db_name = 'companies.db'
+            ticker = self.ticker
+            db_crud = db.DatabaseCRUD(db_name)
+            company_id = db_crud.select_company(ticker)
+            last_year = datetime.now().year - 1
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+            current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
+            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
             working_capital = current_assets - current_liabilities
-            long_term_debt = balance_sheet.loc["Long Term Debt"].iloc[0]
-            return float(long_term_debt / working_capital)
+            long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
+            return int(long_term_debt / working_capital)
         except Exception as e:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
             return 0
@@ -216,26 +233,43 @@ class Stock:
     # TEST 5
     # Compute Earnings Growth
     def earnings_growth_last_10_years(self):
-        last_10_years_earnings = self.get_last_n_year_earnings(11)
+        db_name = 'companies.db'
+        ticker = self.ticker
+        db_crud = db.DatabaseCRUD(db_name)
+        company_id = db_crud.select_company(ticker)
         current_year = datetime.now().year
-
+        last_3_years = []
+        for year in range(current_year - 3, current_year):
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+            net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
+            last_3_years.append(net_income)
+        last_3_years_series = pd.Series(last_3_years)
+        first_3_years = []
+        for year in range(current_year - 10, current_year - 7):
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+            net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
+            first_3_years.append(net_income)
+        first_3_years_series = pd.Series(first_3_years)
         try:
-            last_3_years_earnings = float(
-                last_10_years_earnings[str(current_year - 1)] +
-                last_10_years_earnings[str(current_year - 2)] +
-                last_10_years_earnings[str(current_year - 3)]
-            ) / 3
-
-            first_3_years_earnings = float(
-                last_10_years_earnings[str(current_year - 10)] +
-                last_10_years_earnings[str(current_year - 9)] +
-                last_10_years_earnings[str(current_year - 8)]
-            ) / 3
+            return float(last_3_years_series.mean() / first_3_years_series.mean() * 100)
         except KeyError as e:
             print(f"Missing earnings data for year: {e.args[0]}")
             return None
 
-        return float((last_3_years_earnings/first_3_years_earnings) * 100)
+    # TEST 6
+    # Check earnings stability over the past 10 years
+    def earnings_stability(self):
+        db_name = 'companies.db'
+        ticker = self.ticker
+        db_crud = db.DatabaseCRUD(db_name)
+        company_id = db_crud.select_company(ticker)
+        last_year = datetime.now().year - 1
+        for year in range(last_year - 10, last_year):
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+            net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
+            if net_income < 0:
+                return False
+        return True
 
     # Get P/E Ratio using the average earnings per share over the past 3 years
     def compute_PE_ratio(self):
@@ -373,6 +407,6 @@ class Stock:
         print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
         print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.2f}")
         print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.2f}")
-        print(f"Earnings Stability over the past 10 years: {self.check_earnings_stability()}")
+        print(f"Earnings Stability over the past 10 years: {self.earnings_stability()}")
         print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years():.2f}%")
         print('---------------------------------------------------------')

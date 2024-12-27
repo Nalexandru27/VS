@@ -13,40 +13,45 @@ from PriceEstimators.PriceEstimationEBIT import PEBITRatioEstimator
 from PriceEstimators.PriceEstimationOpCF import PriceOpCFRatioEstimator
 from PriceEstimators.PriceEstimationFCF import PriceFCFRatioEstimator
 from PriceEstimators.PriceEstimationDividend import PriceDividendRatioEstimator
+from utils.SaveDividendData import SaveDocsData
 
-companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
-lmt = Stock('LMT')
-db_crud = DatabaseCRUD('companies.db')
-ticker = 'GPC'
+url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=330805790#gid=330805790"
 
-pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')
-price_pe = pe_ratio.get_pe_ratio_estimation(2009, 2023)
-print(f"{price_pe} is the price estimation using PE ratio")
 
-ebit_price = PEBITRatioEstimator(Stock(ticker), 'companies.db')
-price_ebit = ebit_price.get_pebit_ratio_estimation(2009, 2023)
-print(f"{price_ebit} is the price estimation using PEBIT ratio")
 
-op_cf_price = PriceOpCFRatioEstimator(Stock(ticker), 'companies.db')
-price_op_cf = op_cf_price.get_priceOpCF_ratio_estimation(2009, 2023)
-print(f"{price_op_cf} is the price estimation using Price to Operating Cash Flow ratio")
+# companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
+# lmt = Stock('LMT')
+# db_crud = DatabaseCRUD('companies.db')
+# ticker = 'GPC'
 
-fcf_price_estimator = PriceFCFRatioEstimator(Stock(ticker), 'companies.db')
-price_fcf = fcf_price_estimator.get_priceFCF_ratio_estimation(2009, 2023)
-print(f"{price_fcf} is the price estimation using Price to Free Cash Flow ratio")
+# pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')
+# price_pe = pe_ratio.get_pe_ratio_estimation(2009, 2023)
+# print(f"{price_pe} is the price estimation using PE ratio")
 
-dividend_price_estimator = PriceDividendRatioEstimator(Stock(ticker), 'companies.db')
-price_dividend = dividend_price_estimator.get_priceDividend_ratio_estimation(2009, 2023)
-print(f"{price_dividend} is the price estimation using Price to Dividend ratio")
+# ebit_price = PEBITRatioEstimator(Stock(ticker), 'companies.db')
+# price_ebit = ebit_price.get_pebit_ratio_estimation(2009, 2023)
+# print(f"{price_ebit} is the price estimation using PEBIT ratio")
 
-avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
-print(f"{avg_price} is the average price estimation")
+# op_cf_price = PriceOpCFRatioEstimator(Stock(ticker), 'companies.db')
+# price_op_cf = op_cf_price.get_priceOpCF_ratio_estimation(2009, 2023)
+# print(f"{price_op_cf} is the price estimation using Price to Operating Cash Flow ratio")
+
+# fcf_price_estimator = PriceFCFRatioEstimator(Stock(ticker), 'companies.db')
+# price_fcf = fcf_price_estimator.get_priceFCF_ratio_estimation(2009, 2023)
+# print(f"{price_fcf} is the price estimation using Price to Free Cash Flow ratio")
+
+# dividend_price_estimator = PriceDividendRatioEstimator(Stock(ticker), 'companies.db')
+# price_dividend = dividend_price_estimator.get_priceDividend_ratio_estimation(2009, 2023)
+# print(f"{price_dividend} is the price estimation using Price to Dividend ratio")
+
+# avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
+# print(f"{avg_price} is the average price estimation")
 
 # lmt_history = dividendAnalysis(Stock('LMT'), 'companies.db')
 # lmt_history.plot_dividend_sustainability()
 
-gpc_history = dividendAnalysis(Stock(ticker), 'companies.db')
-gpc_history.plot_dividend_sustainability(2009, 2023)
+# gpc_history = dividendAnalysis(Stock(ticker), 'companies.db')
+# gpc_history.plot_dividend_sustainability(2009, 2023)
 
 # current_date = datetime.now().strftime("%Y-%m-%d")
 # file_name = f"./outData/companies_screened_{current_date}.xlsx"
