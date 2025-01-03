@@ -37,6 +37,9 @@ class SaveDocsData:
             # Convert "No Years" to numeric if necessary
             filtered_df["No Years"] = pd.to_numeric(filtered_df["No Years"], errors="coerce")
 
+            # Filter rows where the symbol does not contain a period
+            filtered_df = filtered_df[~filtered_df["Symbol"].str.contains(r"\.", na=False)]
+
             # Sort by "No Years" in descending order
             sorted_df = filtered_df.sort_values(by="No Years", ascending=False)
 

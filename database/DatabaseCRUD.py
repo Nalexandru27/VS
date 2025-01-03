@@ -88,12 +88,17 @@ class DatabaseCRUD:
             pass  # Ignore duplicate entries
 
     def select_company(self, ticker):
-        result = self.cursor.execute("""
-            SELECT id FROM company WHERE ticker = ?                                 
-        """, (ticker,)).fetchone()
-        if result is None:
-            raise ValueError(f"No company found with ticker '{ticker}'")
-        return result[0]
+    
+            result = self.cursor.execute("""
+                SELECT id FROM company WHERE ticker = ?                                 
+            """, (ticker,)).fetchone()
+            
+            if result is None:
+                print(f"No company found with ticker '{ticker}'")
+                return None
+            return result[0]
+        
+               
     
     def select_financial_statement(self, company_id, statement_type, year):
         return self.cursor.execute("""
