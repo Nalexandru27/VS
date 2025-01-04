@@ -131,38 +131,45 @@ class Stock:
     # TEST 2
     # Get current ratio from database
     def get_current_ratio(self):
-        try:
-            db_name = 'companies.db'
-            ticker = self.ticker
-            db_crud = db.DatabaseCRUD(db_name)
-            company_id = db_crud.select_company(ticker)
-            last_year = datetime.now().year - 1
-            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
-            current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
-            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
-            return int(current_assets / current_liabilities)
-        except Exception as e:
-            print(f"Error getting current ratio for {self.ticker}: {e}")
-            return 0
+        # try:
+        #     db_name = 'companies.db'
+        #     ticker = self.ticker
+        #     db_crud = db.DatabaseCRUD(db_name)
+        #     company_id = db_crud.select_company(ticker)
+        #     last_year = datetime.now().year - 1
+        #     financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+        #     current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
+        #     current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
+        #     return int(current_assets / current_liabilities)
+        # except Exception as e:
+        #     print(f"Error getting current ratio for {self.ticker}: {e}")
+        #     return 0
+        return self.yf.info['currentRatio']
 
     # TEST 3
     # Get long term debt to working capital ratio from database
-    def calculate_LTDebt_to_WC(self):
-        try:
-            db_name = 'companies.db'
-            ticker = self.ticker
-            db_crud = db.DatabaseCRUD(db_name)
-            company_id = db_crud.select_company(ticker)
-            last_year = datetime.now().year - 1
-            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
-            current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
-            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
-            working_capital = current_assets - current_liabilities
-            long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
-            return int(long_term_debt / working_capital)
-        except Exception as e:
-            print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
-            return 0
+    def get_LTDebt_to_WC(self):
+        # try:
+        #     db_name = 'companies.db'
+        #     ticker = self.ticker
+        #     db_crud = db.DatabaseCRUD(db_name)
+        #     company_id = db_crud.select_company(ticker)
+        #     last_year = datetime.now().year - 1
+        #     financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+        #     current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
+        #     current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
+        #     working_capital = current_assets - current_liabilities
+        #     long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
+        #     return int(long_term_debt / working_capital)
+        # except Exception as e:
+        #     print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
+        #     return 0
+        balance_sheet = self.yf.balance_sheet
+        current_assets = balance_sheet.loc['Current Assets'].iloc[0]
+        current_liabilities = balance_sheet.loc['Current Liabilities'].iloc[0]
+        working_capital = current_assets - current_liabilities
+        long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0]
+        return float(long_term_debt / working_capital)
 
     # TEST 4
     #Get dividend history for a stock using yahoo finance

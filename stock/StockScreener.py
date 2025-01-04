@@ -25,13 +25,13 @@ class StockScreener:
     # TEST 2.2
     # Long-Term Debt to Working Capital Ratio <= 1
     def check_LTDebt_To_WC(self, stock: Stock):
-        LTDebtToWC = stock.calculate_LTDebt_to_WC()
+        LTDebtToWC = stock.get_LTDebt_to_WC()
         return 0 < LTDebtToWC and LTDebtToWC <= MAX_LONG_TERM_DEBT_TO_WORKING_CAPITAL_RATIO
 
     # TEST 3
     # Earnings stability - Positive net income for the past 10 years & using Alpha Vantage
     def check_earnings_stability(self, stock: Stock):
-        return stock.check_earnings_stability()
+        return stock.earnings_stability()
     
     # TEST 4
     # Check if the stock has increased its dividend for more than 10 years in a row
@@ -78,7 +78,7 @@ class StockScreener:
             print(f"{stock.ticker} is a utility company. Current ratio test skipped")
 
         # Check Long-Term Debt to Working Capital
-        long_term_debt_to_workin_capital = stock.calculate_LTDebt_to_WC()
+        long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
         if long_term_debt_to_workin_capital == 0:
             print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
         elif not self.check_LTDebt_To_WC(stock):
@@ -110,7 +110,7 @@ class StockScreener:
             print(f"-->{stock.ticker} failed the test 'Price-to-book ratio' and 'Graham's price-to-book ratio'")
             return False
         
-        # Check Dividend Record
+        # # Check Dividend Record
         # if not stock.check_dividend_record():
         #     print(f"-->{stock.ticker} failed the test 'Dividend Record'")
         #     return False
@@ -126,6 +126,7 @@ class StockScreener:
             return False
 
         # All tests passed
+        print(f"{stock.ticker} passed all tests")
         return True
 
     # Screen a list of stocks in parallel
@@ -157,11 +158,10 @@ class StockScreener:
         if not self.result:
             print("No results to export. Ensure the screening process was completed successfully.")
             return
-        
         try:
             columns = ['Ticker', 'Sector', 'Market Cap', 
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth over past 10Y',
-                        'Dividend Record', 'Dividend Yield', 'DGR 1Y', 'DGR 3Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
+                        'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
                         'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
                         'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']         
             excel = CreateExcelFile.ExcelFile(file_name, columns)
@@ -174,7 +174,6 @@ class StockScreener:
                     try:
                         print(f"Processing {ticker}...")
                         stock = Stock(ticker)
-                        time.sleep(10)
                         data = self.stock_data(stock)
                         if data is not None:
                             print(f"Data for {ticker} processed successfully.")
@@ -202,6 +201,12 @@ class StockScreener:
         except Exception as e:
             print(f"Error occured during export: {e}")
 
+
+    # columns = ['Ticker', 'Sector', 'Market Cap', 
+    #                     'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth over past 10Y',
+    #                     'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
+    #                     'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
+    #                     'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']     
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
@@ -210,7 +215,7 @@ class StockScreener:
             data["Sector"] = ticker.yf.info['sector']
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
-            data['LTDebtToWC'] = f"{ticker.calculate_LTDebt_to_WC():.2f}"
+            data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
             data['Earnings Stability'] = self.check_earnings_stability(ticker)
             data['Earnings Growth over past 10Y'] = ticker.earnings_growth_last_10_years()
             data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)

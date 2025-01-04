@@ -15,6 +15,10 @@ class PopulateDB:
                 continue
             statement_type = 'income_statement'
             ticker = company.ticker
+            first_date = df_income_statement.index[0]
+            company_id = self.db_crud.select_company(ticker)
+            if self.db_crud.select_financial_statement(company_id, statement_type, first_date) is not None:
+                continue
             for fiscalDate, row in df_income_statement.iterrows():
                 self.db_crud.insert_financial_statement(ticker, statement_type, fiscalDate)
                 print(f"Inserted {statement_type} for {ticker} from {fiscalDate}")
@@ -33,6 +37,10 @@ class PopulateDB:
                 continue
             statement_type = 'balance_sheet'
             ticker = company.ticker
+            first_date = df_balace_sheet.index[0]
+            company_id = self.db_crud.select_company(ticker)
+            if self.db_crud.select_financial_statement(company_id, statement_type, first_date) is not None:
+                continue
             for fiscalDate, row in df_balace_sheet.iterrows():
                 self.db_crud.insert_financial_statement(ticker, statement_type, fiscalDate)
                 print(f"Inserted {statement_type} for {ticker} from {fiscalDate}")
@@ -51,6 +59,10 @@ class PopulateDB:
                 continue
             statement_type = 'cash_flow_statement'
             ticker = company.ticker
+            first_date = df_cash_flow.index[0]
+            company_id = self.db_crud.select_company(ticker)
+            if self.db_crud.select_financial_statement(company_id, statement_type, first_date) is not None:
+                continue
             for fiscalDate, row in df_cash_flow.iterrows():
                 self.db_crud.insert_financial_statement(ticker, statement_type, fiscalDate)
                 print(f"Inserted {statement_type} for {ticker} from {fiscalDate}")
@@ -76,8 +88,8 @@ class PopulateDB:
     def populate_all(self, list_companies):
         self.populate_company_table(list_companies)
         self.populate_income_statement(list_companies)
-        self.populate_balance_sheet(list_companies)
         self.populate_cash_flow_statement(list_companies)
+        self.populate_balance_sheet(list_companies)
 
 
         

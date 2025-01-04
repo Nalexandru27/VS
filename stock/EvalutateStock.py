@@ -182,7 +182,7 @@ class evaluateStock:
             file.write(f"Sector: {self.stock.yf.info['sector']}\n")
             file.write(f"Market Cap: {self.stock.get_market_cap()/BILLION_DIVISION:.2f}B\n")
             file.write(f"Current Ratio: {self.stock.get_current_ratio():.2f}\n")
-            file.write(f"LTDebtToWC: {self.stock.calculate_LTDebt_to_WC():.2f}\n")
+            file.write(f"LTDebtToWC: {self.stock.get_LTDebt_to_WC():.2f}\n")
             file.write(f"P/E Ratio: {self.stock.compute_PE_ratio():.2f}\n")
             file.write(f"Price-to-book ratio: {self.stock.compute_price_to_book_ratio():.2f}\n")
             file.write(f"Graham's price-to-book ratio: {self.stock.compute_price_to_book_ratio_graham():.2f}\n")
