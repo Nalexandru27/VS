@@ -98,19 +98,28 @@ class DatabaseCRUD:
             return result[0]
     
     def select_company_ticker(self, company_id):
-        return self.cursor.execute("""
+        result = self.cursor.execute("""
             SELECT ticker FROM company WHERE id = ?
-        """, (company_id,)).fetchone()[0]
+        """, (company_id,)).fetchone()
+        if result is None:
+            return None
+        return result[0]
     
     def select_financial_statement(self, company_id, statement_type, year):
-        return self.cursor.execute("""
+        result = self.cursor.execute("""
             SELECT id FROM financialStatement WHERE company_id = ? and statement_type = ? and year = ?
-        """, (company_id, statement_type, year)).fetchone()[0]
+        """, (company_id, statement_type, year)).fetchone()
+        if result is None:
+            return None
+        return result[0]
     
     def select_financial_data(self, financial_statement_id, record_type):
-        return self.cursor.execute("""
+        result = self.cursor.execute("""
             SELECT record_value FROM financialData WHERE financial_statement_id = ? and record_type = ?
-        """, (financial_statement_id, record_type)).fetchone()[0]
+        """, (financial_statement_id, record_type)).fetchone()
+        if result is None:
+            return None
+        return result[0]
     
     def rename_column(self, table_name, old_column_name, new_column_name):
         self.cursor.execute(f"""

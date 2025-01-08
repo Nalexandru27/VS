@@ -21,9 +21,9 @@ url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
-# obj = SaveDocsData(url)
-# obj.save_data(saved_csv_file_path)
-# obj.process_data(saved_csv_file_path,new_csv_file_path)
+# # obj = SaveDocsData(url)
+# # obj.save_data(saved_csv_file_path)
+# # obj.process_data(saved_csv_file_path,new_csv_file_path)
 
 list_companies = pd.read_csv(new_csv_file_path)
 list_companies = list_companies['Symbol'].tolist()
@@ -31,6 +31,11 @@ list_companies = list_companies['Symbol'].tolist()
 populate = PopulateDB('companies.db')
 populate.populate_all(list_companies)
 
+
+# url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=MSFT&apikey=43KL4PW74AWGDJZI'
+# r = requests.get(url)
+# data = r.json()
+# print(data)
 
 # companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
 # lmt = Stock('LMT')

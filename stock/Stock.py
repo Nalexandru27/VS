@@ -15,109 +15,124 @@ class Stock:
         self.yf = yf.Ticker(ticker)
 
     # Get cash flow statement
-    def get_cashflow_data(self, n_years=15):
-        url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
-        r = requests.get(url)
-        data = r.json()
-        annual_reports = data['annualReports']
-        i = 0
-        cashflow_data = {}
-        for report in annual_reports:
-            if i < n_years:
-                date = report['fiscalDateEnding'].split('-')[0]
-                cashflow_data[date] = {
-                    'operatingCashFow': report['operatingCashflow'],
-                    'capitalExpenditures': report['capitalExpenditures'],
-                    'cashFlowInvesting': report['cashflowFromInvestment'],
-                    'cashFlowFinancing': report['cashflowFromFinancing'],
-                    'dividendPayout': report['dividendPayout'],
-                    'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock']
-                }
-                i += 1
-            else:
-                break
-        df = pd.DataFrame.from_dict(cashflow_data, orient='index')
-        df.index.name = 'fiscal_date_ending'
-        return df
+    def get_cashflow_data(self):
+        try:
+            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            r = requests.get(url)
+            data = r.json()
+            annual_reports = data['annualReports']
+            number_of_years = len(annual_reports)
+            i = 0
+            cashflow_data = {}
+            for report in annual_reports:
+                if i < number_of_years:
+                    date = report['fiscalDateEnding'].split('-')[0]
+                    cashflow_data[date] = {
+                        'operatingCashFow': report['operatingCashflow'],
+                        'capitalExpenditures': report['capitalExpenditures'],
+                        'cashFlowInvesting': report['cashflowFromInvestment'],
+                        'cashFlowFinancing': report['cashflowFromFinancing'],
+                        'dividendPayout': report['dividendPayout'],
+                        'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock']
+                    }
+                    i += 1
+                else:
+                    break
+            df = pd.DataFrame.from_dict(cashflow_data, orient='index')
+            df.index.name = 'fiscal_date_ending'
+            return df
+        except Exception as e:
+            print(f"Error getting income statement for {self.ticker}: {e}")
+            return None
     
     # Get income statement
-    def get_income_statement(self, n_years=15):
-        url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
-        r = requests.get(url)
-        data = r.json()
-        annual_reports = data['annualReports']
-        i = 0
-        income_statement = {}
-        for report in annual_reports:
-            if i < n_years:
-                date = report['fiscalDateEnding'].split('-')[0]
-                income_statement[date] = {
-                    'grossProfit': report['grossProfit'],
-                    'revenue': report['totalRevenue'],
-                    'COGS': report['costofGoodsAndServicesSold'],
-                    'operatingIncome': report['operatingIncome'],
-                    'SG&A': report['sellingGeneralAndAdministrative'],
-                    'researchAndDevelopment': report['researchAndDevelopment'],
-                    'depreciationAndAmortization': report['depreciationAndAmortization'],
-                    'incomeBeforeTax': report['incomeBeforeTax'],
-                    'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
-                    'ebit': report['ebit'],
-                    'netIncome': report['netIncome']
-                }
-                i += 1
-            else:
-                break
-        df = pd.DataFrame.from_dict(income_statement, orient='index')
-        df.index.name = 'fiscal_date_ending'
-        return df
+    def get_income_statement(self):
+        try:
+            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            r = requests.get(url)
+            data = r.json()
+            annual_reports = data['annualReports']
+            number_of_years = len(annual_reports)
+            i = 0
+            income_statement = {}
+            for report in annual_reports:
+                if i < number_of_years:
+                    date = report['fiscalDateEnding'].split('-')[0]
+                    income_statement[date] = {
+                        'grossProfit': report['grossProfit'],
+                        'revenue': report['totalRevenue'],
+                        'COGS': report['costofGoodsAndServicesSold'],
+                        'operatingIncome': report['operatingIncome'],
+                        'SG&A': report['sellingGeneralAndAdministrative'],
+                        'researchAndDevelopment': report['researchAndDevelopment'],
+                        'depreciationAndAmortization': report['depreciationAndAmortization'],
+                        'incomeBeforeTax': report['incomeBeforeTax'],
+                        'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                        'ebit': report['ebit'],
+                        'netIncome': report['netIncome']
+                    }
+                    i += 1
+                else:
+                    break
+            df = pd.DataFrame.from_dict(income_statement, orient='index')
+            df.index.name = 'fiscal_date_ending'
+            return df
+        except Exception as e:
+            print(f"Error getting income statement for {self.ticker}: {e}")
+            return None
 
     # Get balance sheet
-    def get_balance_sheet(self, n_years=15):
-        url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
-        r = requests.get(url)
-        data = r.json()
-        annual_reports = data['annualReports']
-        i = 0
-        balance_sheet = {}
-        for report in annual_reports:
-            if i < n_years:
-                date = report['fiscalDateEnding'].split('-')[0]
-                balance_sheet[date] = {
-                    'totalAssets': report['totalAssets'],
-                    'totalCurrentAssets': report['totalCurrentAssets'],
-                    'cashAndCashEquivalentsAtCarryingValue': report['cashAndCashEquivalentsAtCarryingValue'],
-                    'cashAndShortTermInvestments': report['cashAndShortTermInvestments'],
-                    'inventory': report['inventory'],
-                    'currentNetReceivables': report['currentNetReceivables'],
-                    'propertyPlantEquipment': report['propertyPlantEquipment'],
-                    'intagibleAssets': report['intangibleAssets'],
-                    'goodwill': report['goodwill'],
-                    'longTermInvestments': report['longTermInvestments'],
-                    'shortTermInvestments': report['shortTermInvestments'],
-                    'otherCurrentAssets': report['otherCurrentAssets'],
-                    'otherNonCurrentAssets': report['otherNonCurrentAssets'],
-                    'totalLiabilities': report['totalLiabilities'],
-                    'totalCurrentLiabilities': report['totalCurrentLiabilities'],
-                    'currentAccountsPayable': report['currentAccountsPayable'],
-                    'deferredRevenue': report['deferredRevenue'],
-                    'currentDebt': report['currentDebt'],
-                    'shortTermDebt': report['shortTermDebt'],
-                    'capitalLeaseObligations': report['capitalLeaseObligations'],
-                    'longTermDebt': report['longTermDebt'],
-                    'otherCurrentLiabilities': report['otherCurrentLiabilities'],
-                    'otherNonCurrentLiabilities': report['otherNonCurrentLiabilities'],
-                    'totalEquity': report['totalShareholderEquity'],
-                    'treasuryStock': report['treasuryStock'],
-                    'retainedEarnings': report['retainedEarnings'],
-                    'commonStock': report['commonStock'],
-                    'sharesOutstanding': report['commonStockSharesOutstanding']
-                }
-                i += 1
-            else:
-                break
-        df = pd.DataFrame.from_dict(balance_sheet, orient='index')
-        df.index.name = 'fiscal_date_ending'
-        return df
+    def get_balance_sheet(self):
+        try:
+            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            r = requests.get(url)
+            data = r.json()
+            annual_reports = data['annualReports']
+            number_of_years = len(annual_reports)
+            i = 0
+            balance_sheet = {}
+            for report in annual_reports:
+                if i < number_of_years:
+                    date = report['fiscalDateEnding'].split('-')[0]
+                    balance_sheet[date] = {
+                        'totalAssets': report['totalAssets'],
+                        'totalCurrentAssets': report['totalCurrentAssets'],
+                        'cashAndCashEquivalentsAtCarryingValue': report['cashAndCashEquivalentsAtCarryingValue'],
+                        'cashAndShortTermInvestments': report['cashAndShortTermInvestments'],
+                        'inventory': report['inventory'],
+                        'currentNetReceivables': report['currentNetReceivables'],
+                        'propertyPlantEquipment': report['propertyPlantEquipment'],
+                        'intagibleAssets': report['intangibleAssets'],
+                        'goodwill': report['goodwill'],
+                        'longTermInvestments': report['longTermInvestments'],
+                        'shortTermInvestments': report['shortTermInvestments'],
+                        'otherCurrentAssets': report['otherCurrentAssets'],
+                        'otherNonCurrentAssets': report['otherNonCurrentAssets'],
+                        'totalLiabilities': report['totalLiabilities'],
+                        'totalCurrentLiabilities': report['totalCurrentLiabilities'],
+                        'currentAccountsPayable': report['currentAccountsPayable'],
+                        'deferredRevenue': report['deferredRevenue'],
+                        'currentDebt': report['currentDebt'],
+                        'shortTermDebt': report['shortTermDebt'],
+                        'capitalLeaseObligations': report['capitalLeaseObligations'],
+                        'longTermDebt': report['longTermDebt'],
+                        'otherCurrentLiabilities': report['otherCurrentLiabilities'],
+                        'otherNonCurrentLiabilities': report['otherNonCurrentLiabilities'],
+                        'totalEquity': report['totalShareholderEquity'],
+                        'treasuryStock': report['treasuryStock'],
+                        'retainedEarnings': report['retainedEarnings'],
+                        'commonStock': report['commonStock'],
+                        'sharesOutstanding': report['commonStockSharesOutstanding']
+                    }
+                    i += 1
+                else:
+                    break
+            df = pd.DataFrame.from_dict(balance_sheet, orient='index')
+            df.index.name = 'fiscal_date_ending'
+            return df
+        except Exception as e:
+            print(f"Error getting income statement for {self.ticker}: {e}")
+            return None
 
     # TEST 1
     # Get market cap from yahoo finance
