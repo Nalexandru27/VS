@@ -21,7 +21,8 @@ class PopulateDB:
                     print(f"Company ID not found for {ticker}")
                     continue
 
-                if self.db_crud.select_financial_statement(company_id, statement_type, current_year - 3) > 0:
+                financial_statement_id = self.db_crud.select_financial_statement(company_id, statement_type, current_year - 3)
+                if financial_statement_id is not None:
                     print(f"Skipping {statement_type} for {ticker}, already exists.")
                     continue
 
@@ -55,7 +56,7 @@ class PopulateDB:
                 continue
             
             financial_statement_id = self.db_crud.select_financial_statement(company_id, statement_type, current_year - 3)
-            if financial_statement_id > 0:
+            if financial_statement_id is not None:
                 print(f"Skipping {statement_type} for {ticker}, already exists.")
                 continue
             
@@ -85,8 +86,9 @@ class PopulateDB:
             if company_id is None:
                 print(f"Company ID not found for {ticker}")
                 continue
-
-            if self.db_crud.select_financial_statement(company_id, statement_type, current_year - 3) > 0:
+            
+            financial_statement_id = self.db_crud.select_financial_statement(company_id, statement_type, current_year - 3)
+            if financial_statement_id is not None:
                 print(f"Skipping {statement_type} for {ticker}, already exists.")
                 continue
 

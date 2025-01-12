@@ -25,11 +25,11 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # # obj.save_data(saved_csv_file_path)
 # # obj.process_data(saved_csv_file_path,new_csv_file_path)
 
-list_companies = pd.read_csv(new_csv_file_path)
-list_companies = list_companies['Symbol'].tolist()
+# list_companies = pd.read_csv(new_csv_file_path)
+# list_companies = list_companies['Symbol'].tolist()
 
-populate = PopulateDB('companies.db')
-populate.populate_all(list_companies)
+# populate = PopulateDB('companies.db')
+# populate.populate_all(list_companies)
 
 
 # url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=MSFT&apikey=43KL4PW74AWGDJZI'
@@ -71,24 +71,27 @@ populate.populate_all(list_companies)
 # gpc_history = dividendAnalysis(Stock(ticker), 'companies.db')
 # gpc_history.plot_dividend_sustainability(2009, 2023)
 
-# db_crud = DatabaseCRUD('companies.db')
-# tickers = []
-# for i in range(1, 29):
-#     ticker = db_crud.select_company_ticker(i)
-#     tickers.append(ticker)
+db_crud = DatabaseCRUD('companies.db')
+tickers = []
+for i in range(1, 131):
+    ticker = db_crud.select_company_ticker(i)
+    tickers.append(ticker)
 
-# current_date = datetime.now().strftime("%Y-%m-%d")
-# file_name = f"./outData/companies_screened_{current_date}.xlsx"
-# def create_excel_file():
-#     screener = StockScreener()
-#     screening_start_time = time.time()
-#     screener.screen_stocks(tickers)
-#     screening_end_time = time.time()
-#     screener.export_results_to_excel_file(file_name)
-#     print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
+current_date = datetime.now().strftime("%Y-%m-%d")
+file_name = f"./outData/companies_screened_{current_date}.xlsx"
+def create_excel_file():
+    screener = StockScreener()
+    screening_start_time = time.time()
+    screener.screen_stocks(tickers)
+    screening_end_time = time.time()
+    screener.export_results_to_excel_file(file_name)
+    print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
     
-# create_excel_file()
+create_excel_file()
 
+# ubsi = yf.Ticker('UBSI')
+# print(ubsi.balance_sheet)
+# print(ubsi.financials)
 
 
 

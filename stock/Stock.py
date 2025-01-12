@@ -159,7 +159,22 @@ class Stock:
         # except Exception as e:
         #     print(f"Error getting current ratio for {self.ticker}: {e}")
         #     return 0
-        return self.yf.info['currentRatio']
+        try:
+            if self.yf.info['sector'] == 'Financial Services':
+                balance_sheet = self.yf.balance_sheet
+                cash_and_cash_equivalents = balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+                receivables = balance_sheet.loc['Receivables'].iloc[0]
+                other_short_term_investments  = balance_sheet.loc['Other Short Term Investments'].iloc[0]
+                current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+                current_liabilities = balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+                current_ratio = current_assets / current_liabilities
+                if current_ratio != 0: 
+                    return float(current_assets / current_liabilities)
+            else:
+                return float(self.yf.info['currentRatio'])
+        except Exception as e:
+            print(f"Error getting current ratio for {self.ticker}: {e}")
+            return 0
 
     # TEST 3
     # Get long term debt to working capital ratio from database
@@ -179,12 +194,27 @@ class Stock:
         # except Exception as e:
         #     print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
         #     return 0
-        balance_sheet = self.yf.balance_sheet
-        current_assets = balance_sheet.loc['Current Assets'].iloc[0]
-        current_liabilities = balance_sheet.loc['Current Liabilities'].iloc[0]
-        working_capital = current_assets - current_liabilities
-        long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0]
-        return float(long_term_debt / working_capital)
+        try:
+            balance_sheet = self.yf.balance_sheet
+            long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0]
+            if self.yf.info['sector'] == 'Financial Services':
+                cash_and_cash_equivalents = balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+                receivables = balance_sheet.loc['Receivables'].iloc[0]
+                other_short_term_investments  = balance_sheet.loc['Other Short Term Investments'].iloc[0]
+                current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+                current_liabilities = balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+                working_capital = current_assets - current_liabilities
+                long_term_debt_to_wc = long_term_debt / working_capital
+                if long_term_debt_to_wc != 0:
+                    return float(long_term_debt / working_capital)
+            else:
+                current_assets = balance_sheet.loc['Current Assets'].iloc[0]
+                current_liabilities = balance_sheet.loc['Current Liabilities'].iloc[0]
+                working_capital = current_assets - current_liabilities
+                return float(long_term_debt / working_capital)
+        except Exception as e:
+            print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
+            return 0
 
     # TEST 4
     #Get dividend history for a stock using yahoo finance
@@ -367,10 +397,20 @@ class Stock:
     # Good indicator to evaluate the managerial economic performance
     def compute_ROCE(self):
         try:
-            ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
             total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
-            current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
-            return float(ebit / (total_assets - current_liabilities))
+            if self.yf.info['sector'] == 'Financial Services':
+                net_income = self.yf.financials.loc['Net Income'].iloc[0]
+                interes_expense = self.yf.financials.loc['Interest Expense'].iloc[0]
+                tax_provision = self.yf.financials.loc['Tax Provision'].iloc[0]
+                ebit = net_income + interes_expense + tax_provision
+                current_liabilities = self.yf.balance_sheet.loc['Current Accrued Expenses'].iloc[0]
+                roce = ebit / (total_assets - current_liabilities)
+                if roce != 0:
+                    return 
+            else:
+                ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+                current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+                return float(ebit / (total_assets - current_liabilities))
         except Exception as e:
             print(f"Error calculating ROCE for {self.ticker}: {e}")
             return 0

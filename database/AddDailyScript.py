@@ -1,5 +1,5 @@
 import pandas as pd
-from database.PopulateDB import PopulateDB
+from PopulateDB import PopulateDB
 from utils.SaveDividendData import SaveDocsData
 import sys
 import os
