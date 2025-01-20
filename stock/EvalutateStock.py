@@ -112,7 +112,7 @@ class evaluateStock:
     # Debt to Total Capital points
     def Debt_to_Total_Capital_points(self):
         debt_to_capital_ratio = self.stock.Debt_to_Total_Capital_Ratio()
-        if debt_to_capital_ratio < 30:
+        if 0 < debt_to_capital_ratio < 30:
             return 3
         elif 30 <= debt_to_capital_ratio < 60:
             return 2

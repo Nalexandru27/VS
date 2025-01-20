@@ -160,17 +160,39 @@ class Stock:
         #     print(f"Error getting current ratio for {self.ticker}: {e}")
         #     return 0
         try:
-            if self.yf.info['sector'] == 'Financial Services':
-                balance_sheet = self.yf.balance_sheet
-                cash_and_cash_equivalents = balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
-                receivables = balance_sheet.loc['Receivables'].iloc[0]
-                other_short_term_investments  = balance_sheet.loc['Other Short Term Investments'].iloc[0]
-                current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
-                current_liabilities = balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
-                current_ratio = current_assets / current_liabilities
-                if current_ratio != 0: 
-                    return float(current_assets / current_liabilities)
-            else:
+            if self.yf.info.get('sector') == 'Financial Services':
+                try:
+                    balance_sheet = self.yf.balance_sheet
+                    
+                    # Safely access keys with fallback to 0 if not present
+                    cash_and_cash_equivalents = (
+                        balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+                        if 'Cash And Cash Equivalents' in balance_sheet.index else 0
+                    )
+                    receivables = (
+                        balance_sheet.loc['Receivables'].iloc[0]
+                        if 'Receivables' in balance_sheet.index else 0
+                    )
+                    other_short_term_investments = (
+                        balance_sheet.loc['Other Short Term Investments'].iloc[0]
+                        if 'Other Short Term Investments' in balance_sheet.index else 0
+                    )
+                    
+                    current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+                    current_liabilities = (
+                        balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+                        if 'Payables And Accrued Expenses' in balance_sheet.index else 1
+                    )  # Default to 1 to avoid division by zero
+                    
+                    if current_liabilities == 1:
+                        return 0
+                    else: 
+                        return float(current_assets / current_liabilities)
+                except Exception as e:
+                    print(f"Error calculating current ratio from balance sheet for {self.ticker}: {e}")
+                    return 0
+                
+            if self.yf.info['currentRatio'] is not None:
                 return float(self.yf.info['currentRatio'])
         except Exception as e:
             print(f"Error getting current ratio for {self.ticker}: {e}")
@@ -196,25 +218,60 @@ class Stock:
         #     return 0
         try:
             balance_sheet = self.yf.balance_sheet
-            long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0]
-            if self.yf.info['sector'] == 'Financial Services':
-                cash_and_cash_equivalents = balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
-                receivables = balance_sheet.loc['Receivables'].iloc[0]
-                other_short_term_investments  = balance_sheet.loc['Other Short Term Investments'].iloc[0]
-                current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
-                current_liabilities = balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+            # Check if 'Long Term Debt' exists in the index
+            long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0] if 'Long Term Debt' in balance_sheet.index else 0
+
+            if self.yf.info.get('sector') == 'Financial Services':
+                try:
+                    # Check for the existence of keys before accessing them
+                    cash_and_cash_equivalents = (
+                        balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+                        if 'Cash And Cash Equivalents' in balance_sheet.index else 0
+                    )
+                    receivables = (
+                        balance_sheet.loc['Receivables'].iloc[0]
+                        if 'Receivables' in balance_sheet.index else 0
+                    )
+                    other_short_term_investments = (
+                        balance_sheet.loc['Other Short Term Investments'].iloc[0]
+                        if 'Other Short Term Investments' in balance_sheet.index else 0
+                    )
+                    
+                    current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+                    current_liabilities = (
+                        balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+                        if 'Payables And Accrued Expenses' in balance_sheet.index else 1
+                    )  # Default to 1 to avoid division by zero
+                    
+                    working_capital = current_assets - current_liabilities
+                    if working_capital > 0:
+                        long_term_debt_to_wc = long_term_debt / working_capital
+                        return float(long_term_debt_to_wc)
+                except Exception as e:
+                    print(f"Error calculating working capital for financial services sector for {self.ticker}: {e}")
+            
+            # For non-financial services or fallback logic
+            try:
+                current_assets = (
+                    balance_sheet.loc['Current Assets'].iloc[0]
+                    if 'Current Assets' in balance_sheet.index else 0
+                )
+                current_liabilities = (
+                    balance_sheet.loc['Current Liabilities'].iloc[0]
+                    if 'Current Liabilities' in balance_sheet.index else 1
+                )  # Default to 1 to avoid division by zero
+                
                 working_capital = current_assets - current_liabilities
-                long_term_debt_to_wc = long_term_debt / working_capital
-                if long_term_debt_to_wc != 0:
+                if working_capital > 0:
                     return float(long_term_debt / working_capital)
-            else:
-                current_assets = balance_sheet.loc['Current Assets'].iloc[0]
-                current_liabilities = balance_sheet.loc['Current Liabilities'].iloc[0]
-                working_capital = current_assets - current_liabilities
-                return float(long_term_debt / working_capital)
+            except Exception as e:
+                print(f"Error calculating working capital for non-financial services sector for {self.ticker}: {e}")
+            
         except Exception as e:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
-            return 0
+
+        # Final fallback if all else fails
+        return 0
 
     # TEST 4
     #Get dividend history for a stock using yahoo finance
@@ -303,7 +360,7 @@ class Stock:
             first_3_years.append(net_income)
         first_3_years_series = pd.Series(first_3_years)
         try:
-            return float(last_3_years_series.mean() / first_3_years_series.mean() * 100)
+            return float((last_3_years_series.mean() / first_3_years_series.mean()) * 100)
         except KeyError as e:
             print(f"Missing earnings data for year: {e.args[0]}")
             return None
@@ -406,7 +463,7 @@ class Stock:
                 current_liabilities = self.yf.balance_sheet.loc['Current Accrued Expenses'].iloc[0]
                 roce = ebit / (total_assets - current_liabilities)
                 if roce != 0:
-                    return 
+                    return roce
             else:
                 ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
                 current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
@@ -447,6 +504,26 @@ class Stock:
                 return "consistent decrease"
             else:
                 return "chaotic or 0 decrease"
+            
+    def get_fcf_per_share(self):
+        try:
+            free_cash_flow = self.yf.cashflow.loc['Free Cash Flow'].iloc[0]
+            no_shares = self.yf.info['sharesOutstanding']
+            return float(free_cash_flow / no_shares)
+        except Exception as e:
+            print(f"Error calculating FCF per share for {self.ticker}: {e}")
+            return 0
+        
+    def dividends_per_share(self):
+        try:
+            dividens_paid = self.yf.cashflow.loc['Cash Dividends Paid'].iloc[0]
+            if dividens_paid < 0: # If the value is negative, it means that the company is paying dividends
+                dividens_paid = dividens_paid * (-1)
+            no_shares = self.yf.info['sharesOutstanding']
+            return float(dividens_paid / no_shares)
+        except Exception as e:
+            print(f"Error calculating dividends per share for {self.ticker}: {e}")
+            return 0
 
     # print stock indicators value
     def print_results(self):

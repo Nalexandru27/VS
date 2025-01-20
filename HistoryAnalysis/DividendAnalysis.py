@@ -125,6 +125,4 @@ class dividendAnalysis:
             worksheet = writer.sheets['Dividend Data Analysis']
             worksheet.insert_image('F2', plot_file, {'x_scale': 0.6, 'y_scale': 0.6})
 
-    
-
 

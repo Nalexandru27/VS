@@ -31,7 +31,6 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # populate = PopulateDB('companies.db')
 # populate.populate_all(list_companies)
 
-
 # url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=MSFT&apikey=43KL4PW74AWGDJZI'
 # r = requests.get(url)
 # data = r.json()
@@ -73,7 +72,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
 db_crud = DatabaseCRUD('companies.db')
 tickers = []
-for i in range(1, 131):
+for i in range(1, 330):
     ticker = db_crud.select_company_ticker(i)
     tickers.append(ticker)
 
@@ -89,11 +88,17 @@ def create_excel_file():
     
 create_excel_file()
 
-# ubsi = yf.Ticker('UBSI')
-# print(ubsi.balance_sheet)
-# print(ubsi.financials)
-
-
+stock = yf.Ticker('CBSH')
+# print("Income statement")
+# print(stock.income_stmt)
+# print("Info")
+# print(stock.info)
+# print("Balance Sheet")
+# print(stock.balance_sheet)
+# print("Financials")
+# print(stock.financials)
+# print("Cash flow statement")
+# print(stock.cashflow)
 
 
 

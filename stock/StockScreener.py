@@ -66,6 +66,14 @@ class StockScreener:
 
     # Implement testing criterias
     def validate_criterias(self, stock: Stock):
+        # Check Long-Term Debt to Working Capital
+        long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
+        if long_term_debt_to_workin_capital == 0:
+            print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
+        elif not self.check_LTDebt_To_WC(stock):
+            print(f"-->{stock.ticker} failed the test 'Long-Term Debt to Working Capital'")
+            return False
+
         # Check Current Ratio
         if stock.yf.info["sector"] != "Utilities":
             current_ratio = stock.get_current_ratio()
@@ -76,14 +84,6 @@ class StockScreener:
                 return False
         else:
             print(f"{stock.ticker} is a utility company. Current ratio test skipped")
-
-        # Check Long-Term Debt to Working Capital
-        long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
-        if long_term_debt_to_workin_capital == 0:
-            print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
-        elif not self.check_LTDebt_To_WC(stock):
-            print(f"-->{stock.ticker} failed the test 'Long-Term Debt to Working Capital'")
-            return False
 
         # Check Market Cap
         market_cap = stock.get_market_cap()
@@ -159,10 +159,12 @@ class StockScreener:
             print("No results to export. Ensure the screening process was completed successfully.")
             return
         try:
+            # excluded ROCE
             columns = ['Ticker', 'Sector', 'Market Cap', 
-                        'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth over past 10Y',
-                        'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
-                        'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
+                        'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth 10Y',
+                        'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
+                        'Div/share', 'EPS', 'FCF/share', 'Earnings Payout Ratio', 'FCF Payout Ratio',
+                        'Op Income Margin', 'Debt/Capital', 'ROE', 'Ordinary Share Number Trend',
                         'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']         
             excel = CreateExcelFile.ExcelFile(file_name, columns)
 
@@ -201,12 +203,7 @@ class StockScreener:
         except Exception as e:
             print(f"Error occured during export: {e}")
 
-
-    # columns = ['Ticker', 'Sector', 'Market Cap', 
-    #                     'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth over past 10Y',
-    #                     'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', "ROCE", 'Operating Income Margin',
-    #                     'Debt to Total Capital', 'ROE', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'Ordinary Share Number Trend',
-    #                     'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']     
+    
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
@@ -217,18 +214,21 @@ class StockScreener:
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
             data['Earnings Stability'] = self.check_earnings_stability(ticker)
-            data['Earnings Growth over past 10Y'] = ticker.earnings_growth_last_10_years()
+            data['Earnings Growth 10Y'] = f"{ticker.earnings_growth_last_10_years():.2f}"
             data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)
             data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
             data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILE_PATH_1)}%"
             data["DGR 5Y"] = f"{ticker.get_DGR_5Y_from_excel(FILE_PATH_1)}%"
             data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILE_PATH_1)}%"
-            data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
-            data["Operating Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
-            data["Debt to Total Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
-            data["ROE"] = f"{ticker.return_on_equity():.2f}%"
+            data["Div/share"] = f"{ticker.dividends_per_share():.2f}"
+            data["EPS"] = f"{ticker.yf.income_stmt.loc['Basic EPS'].iloc[0]:.2f}"
+            data["FCF/share"] = f"{ticker.get_fcf_per_share():.2f}"
             data["Earnings Payout Ratio"] = f"{ticker.yf.info['payoutRatio'] * 100:.2f}%"
             data["FCF Payout Ratio"] = f"{ticker.FCF_Payout_Ratio() * 100:.2f}%"
+            # data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
+            data["Op Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
+            data["Debt/Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
+            data["ROE"] = f"{ticker.return_on_equity():.2f}%"
             data["Ordinary Share Number Trend"] = ticker.ordinary_shares_number_trend_analysis()
             data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
             data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
