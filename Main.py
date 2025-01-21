@@ -31,10 +31,24 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # populate = PopulateDB('companies.db')
 # populate.populate_all(list_companies)
 
-# url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=MSFT&apikey=43KL4PW74AWGDJZI'
+# url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=ARE&apikey=43KL4PW74AWGDJZI'
 # r = requests.get(url)
 # data = r.json()
-# print(data)
+# annual_income = data['annualReports'][0]
+# print(annual_income)
+
+# url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=ARE&apikey=43KL4PW74AWGDJZI'
+# r = requests.get(url)
+# data = r.json()
+# annual_balance = data['annualReports'][0]
+# print(annual_balance)
+
+# url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=ARE&apikey=43KL4PW74AWGDJZI'
+# r = requests.get(url)
+# data = r.json()
+# annual_cash = data['annualReports'][0]
+# print(annual_cash)
+
 
 # companies = [Stock('GPC'), Stock('TROW'), Stock('LMT')]
 # lmt = Stock('LMT')
@@ -72,7 +86,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
 db_crud = DatabaseCRUD('companies.db')
 tickers = []
-for i in range(1, 330):
+for i in range(1, 354):
     ticker = db_crud.select_company_ticker(i)
     tickers.append(ticker)
 
@@ -83,22 +97,16 @@ def create_excel_file():
     screening_start_time = time.time()
     screener.screen_stocks(tickers)
     screening_end_time = time.time()
+    time.sleep(20)
     screener.export_results_to_excel_file(file_name)
     print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
     
 create_excel_file()
 
-stock = yf.Ticker('CBSH')
-# print("Income statement")
-# print(stock.income_stmt)
-# print("Info")
+# stock = yf.Ticker('ARE')
 # print(stock.info)
-# print("Balance Sheet")
-# print(stock.balance_sheet)
-# print("Financials")
-# print(stock.financials)
-# print("Cash flow statement")
-# print(stock.cashflow)
-
-
+# print(stock.income_stmt.index)
+# print(stock.balance_sheet.index)
+# print(stock.financials.index)
+# print(stock.cashflow.index)
 

@@ -1,9 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import stock.EvalutateStock as es
-import numpy as np
 from stock.Stock import *
-import pandas as pd
 import utils.CreateExcelFile as CreateExcelFile
+import database.DatabaseCRUD as db
 import time
 
 class StockScreener:
@@ -163,8 +162,8 @@ class StockScreener:
             columns = ['Ticker', 'Sector', 'Market Cap', 
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth 10Y',
                         'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
-                        'Div/share', 'EPS', 'FCF/share', 'Earnings Payout Ratio', 'FCF Payout Ratio',
-                        'Op Income Margin', 'Debt/Capital', 'ROE', 'Ordinary Share Number Trend',
+                        'Div/share', 'EPS', 'FCF/share', 'OpCF/share', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'OpCF Payout Ratio',
+                        'Debt/Capital', 'Op Income Margin', 'ROCE', 'ROE', 'Ordinary Share Number Trend',
                         'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']         
             excel = CreateExcelFile.ExcelFile(file_name, columns)
 
@@ -176,6 +175,7 @@ class StockScreener:
                     try:
                         print(f"Processing {ticker}...")
                         stock = Stock(ticker)
+                        time.sleep(5)
                         data = self.stock_data(stock)
                         if data is not None:
                             print(f"Data for {ticker} processed successfully.")
@@ -208,8 +208,10 @@ class StockScreener:
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
         try:
+            db_crud = db.DatabaseCRUD('companies.db')
             data['Ticker'] = ticker.ticker
-            data["Sector"] = ticker.yf.info['sector']
+            sector = db_crud.select_company_sector(ticker.ticker)
+            data["Sector"] = sector
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
@@ -223,11 +225,13 @@ class StockScreener:
             data["Div/share"] = f"{ticker.dividends_per_share():.2f}"
             data["EPS"] = f"{ticker.yf.income_stmt.loc['Basic EPS'].iloc[0]:.2f}"
             data["FCF/share"] = f"{ticker.get_fcf_per_share():.2f}"
+            data["OpCF/share"] = f"{ticker.get_operating_cash_flow_per_share():.2f}"
             data["Earnings Payout Ratio"] = f"{ticker.yf.info['payoutRatio'] * 100:.2f}%"
             data["FCF Payout Ratio"] = f"{ticker.FCF_Payout_Ratio() * 100:.2f}%"
-            # data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
-            data["Op Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
+            data["OpCF Payout Ratio"] = f"{ticker.get_operating_cash_flow_payout_ratio() * 100:.2f}%"
             data["Debt/Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
+            data["Op Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
+            data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
             data["ROE"] = f"{ticker.return_on_equity():.2f}%"
             data["Ordinary Share Number Trend"] = ticker.ordinary_shares_number_trend_analysis()
             data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"

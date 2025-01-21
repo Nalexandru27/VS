@@ -105,6 +105,14 @@ class DatabaseCRUD:
             return None
         return result[0]
     
+    def select_company_sector(self, ticker):
+        result = self.cursor.execute("""
+            SELECT sector FROM company WHERE ticker = ?
+        """, (ticker,)).fetchone()
+        if result is None:
+            return None
+        return result[0]
+    
     def select_financial_statement(self, company_id, statement_type, year):
         result = self.cursor.execute("""
             SELECT id FROM financialStatement WHERE company_id = ? and statement_type = ? and year = ?

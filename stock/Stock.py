@@ -33,7 +33,9 @@ class Stock:
                         'cashFlowInvesting': report['cashflowFromInvestment'],
                         'cashFlowFinancing': report['cashflowFromFinancing'],
                         'dividendPayout': report['dividendPayout'],
-                        'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock']
+                        'dividendPayoutPreferredStock': report['dividendPayoutPreferredStock'],
+                        'changeInOperatingAssets': report['changeInOperatingAssets'],
+                        'changeInOperatingLiabilities': report['changeInOperatingLiabilities']
                     }
                     i += 1
                 else:
@@ -69,7 +71,8 @@ class Stock:
                         'incomeBeforeTax': report['incomeBeforeTax'],
                         'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
                         'ebit': report['ebit'],
-                        'netIncome': report['netIncome']
+                        'netIncome': report['netIncome'],
+                        'interestExpense': report['interestExpense']
                     }
                     i += 1
                 else:
@@ -80,6 +83,18 @@ class Stock:
         except Exception as e:
             print(f"Error getting income statement for {self.ticker}: {e}")
             return None
+        
+    # Compute AFFO
+    # Base FFO = Net Income + Depreciation & Amortization
+    # + Interest Expense
+    # + Change in Operating Liabilities
+    # + Change in Operating Assets
+    # + Depreciation Depletion And Amortization (additional)
+    # Extended FFO
+    # - Capital Expenditures
+    # + Operating Cash Flow Adjustments
+    # - Dividend Payout
+
 
     # Get balance sheet
     def get_balance_sheet(self):
@@ -245,24 +260,27 @@ class Stock:
                     
                     working_capital = current_assets - current_liabilities
                     if working_capital > 0:
-                        long_term_debt_to_wc = long_term_debt / working_capital
-                        return float(long_term_debt_to_wc)
+                        return float(long_term_debt / working_capital)
                 except Exception as e:
                     print(f"Error calculating working capital for financial services sector for {self.ticker}: {e}")
             
             # For non-financial services or fallback logic
             try:
-                current_assets = (
-                    balance_sheet.loc['Current Assets'].iloc[0]
-                    if 'Current Assets' in balance_sheet.index else 0
-                )
-                current_liabilities = (
-                    balance_sheet.loc['Current Liabilities'].iloc[0]
-                    if 'Current Liabilities' in balance_sheet.index else 1
-                )  # Default to 1 to avoid division by zero
-                
-                working_capital = current_assets - current_liabilities
-                if working_capital > 0:
+                working_capital = balance_sheet.loc["Working Capital"].iloc[0] if "Working Capital" in self.yf.balance_sheet.index else 0
+                if working_capital == 0:
+                    current_assets = (
+                        balance_sheet.loc['Current Assets'].iloc[0]
+                        if 'Current Assets' in balance_sheet.index else 0
+                    )
+                    current_liabilities = (
+                        balance_sheet.loc['Current Liabilities'].iloc[0]
+                        if 'Current Liabilities' in balance_sheet.index else 1
+                    )  # Default to 1 to avoid division by zero
+                    
+                    working_capital = current_assets - current_liabilities
+                    if working_capital > 0:
+                        return float(long_term_debt / working_capital)
+                else:
                     return float(long_term_debt / working_capital)
             except Exception as e:
                 print(f"Error calculating working capital for non-financial services sector for {self.ticker}: {e}")
@@ -383,9 +401,13 @@ class Stock:
     # Get P/E Ratio using the average earnings per share over the past 3 years
     def compute_PE_ratio(self):
         try:
-            income_stmt = self.yf.income_stmt
-            data = income_stmt.loc["Net Income"]
-            past_3_years_earnings = [value for value in data[0:3]]
+            db_crud = db.DatabaseCRUD('companies.db')
+            company_id = db_crud.select_company(self.ticker)
+            past_3_years_earnings = []
+            for year in range(datetime.now().year - 4, datetime.now().year - 1):
+                financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+                net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
+                past_3_years_earnings.append(net_income)
             sum = 0
             for earnings in past_3_years_earnings:
                 sum += earnings
@@ -427,18 +449,6 @@ class Stock:
     def get_dividend_yield(self):
         return self.yf.info['dividendYield']
     
-    # Compute FCF Payout Ratio
-    def FCF_Payout_Ratio(self):
-        try:
-            free_cash_flow = self.yf.cashflow.loc['Free Cash Flow'].iloc[0]
-            dividens_paid = abs(self.yf.cashflow.loc['Cash Dividends Paid'].iloc[0])
-            if free_cash_flow == 0:
-                return 0
-            return dividens_paid / free_cash_flow
-        except Exception as e:
-            print(f"Error calculating FCF Payout Ratio for {self.ticker}: {e}")
-            return 0  # Ensure a return value even in case of failure
-    
     # Compute Debt to Total Capital Ratio
     def Debt_to_Total_Capital_Ratio(self):
         try:
@@ -455,19 +465,9 @@ class Stock:
     def compute_ROCE(self):
         try:
             total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
-            if self.yf.info['sector'] == 'Financial Services':
-                net_income = self.yf.financials.loc['Net Income'].iloc[0]
-                interes_expense = self.yf.financials.loc['Interest Expense'].iloc[0]
-                tax_provision = self.yf.financials.loc['Tax Provision'].iloc[0]
-                ebit = net_income + interes_expense + tax_provision
-                current_liabilities = self.yf.balance_sheet.loc['Current Accrued Expenses'].iloc[0]
-                roce = ebit / (total_assets - current_liabilities)
-                if roce != 0:
-                    return roce
-            else:
-                ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
-                current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
-                return float(ebit / (total_assets - current_liabilities))
+            ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+            current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+            return float(ebit / (total_assets - current_liabilities))
         except Exception as e:
             print(f"Error calculating ROCE for {self.ticker}: {e}")
             return 0
@@ -512,6 +512,40 @@ class Stock:
             return float(free_cash_flow / no_shares)
         except Exception as e:
             print(f"Error calculating FCF per share for {self.ticker}: {e}")
+            return 0
+        
+    # Compute FCF Payout Ratio
+    def FCF_Payout_Ratio(self):
+        try:
+            free_cash_flow = self.yf.cashflow.loc['Free Cash Flow'].iloc[0]
+            dividens_paid = abs(self.yf.cashflow.loc['Cash Dividends Paid'].iloc[0])
+            if free_cash_flow == 0:
+                return 0
+            return dividens_paid / free_cash_flow
+        except Exception as e:
+            print(f"Error calculating FCF Payout Ratio for {self.ticker}: {e}")
+            return 0  # Ensure a return value even in case of failure
+        
+    # Compute Operating Cash Flow per Share
+    def get_operating_cash_flow_per_share(self):
+        try:
+            operating_cash_flow = self.yf.cashflow.loc['Operating Cash Flow'].iloc[0]
+            no_shares = self.yf.info['sharesOutstanding']
+            return float(operating_cash_flow / no_shares)
+        except Exception as e:
+            print(f"Error calculating operating cash flow per share for {self.ticker}: {e}")
+            return 0
+        
+    # Compute Operating Cash Flow Payout Ratio
+    def get_operating_cash_flow_payout_ratio(self):
+        try:
+            operating_cash_flow = self.yf.cashflow.loc['Operating Cash Flow'].iloc[0]
+            dividens_paid = abs(self.yf.cashflow.loc['Cash Dividends Paid'].iloc[0])
+            if operating_cash_flow == 0:
+                return 0
+            return dividens_paid / operating_cash_flow
+        except Exception as e:
+            print(f"Error calculating operating cash flow payout ratio for {self.ticker}: {e}")
             return 0
         
     def dividends_per_share(self):
