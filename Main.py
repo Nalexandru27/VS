@@ -84,29 +84,44 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # gpc_history = dividendAnalysis(Stock(ticker), 'companies.db')
 # gpc_history.plot_dividend_sustainability(2009, 2023)
 
-db_crud = DatabaseCRUD('companies.db')
-tickers = []
-for i in range(1, 354):
-    ticker = db_crud.select_company_ticker(i)
-    tickers.append(ticker)
+# db_crud = DatabaseCRUD('companies.db')
+# tickers = []
+# for i in range(1, 450):
+#     ticker = db_crud.select_company_ticker(i)
+#     tickers.append(ticker)
 
-current_date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"./outData/companies_screened_{current_date}.xlsx"
-def create_excel_file():
-    screener = StockScreener()
-    screening_start_time = time.time()
-    screener.screen_stocks(tickers)
-    screening_end_time = time.time()
-    time.sleep(20)
-    screener.export_results_to_excel_file(file_name)
-    print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
+# def chunk_list(list, no_chunks):
+#     chunk_size = len(list) // no_chunks
+#     return [list[i * chunk_size:(i+1) * chunk_size] for i in range(no_chunks - 1)] + [list[(no_chunks - 1) * chunk_size:]]
+
+# current_date = datetime.now().strftime("%Y-%m-%d")
+# file_name = f"./outData/companies_screened_{current_date}.xlsx"
+
+# def create_excel_file():
+#     screener = StockScreener()
+#     screening_start_time = time.time()
+#     all_results = {}
+
+#     chunks = chunk_list(tickers, 4)
+
+#     for i, chunk in enumerate(chunks):
+#         print(f"Processing chunk {i + 1} out of {len(chunks)}")
+#         results = screener.screen_stocks(chunk)
+#         all_results.update(results)
+#         time.sleep(60)
+        
+#     screening_end_time = time.time()
+
+#     screener.result = all_results
+#     screener.export_results_to_excel_file(file_name)
+#     print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
     
-create_excel_file()
+# create_excel_file()
 
-# stock = yf.Ticker('ARE')
+stock = yf.Ticker('IOSP')
 # print(stock.info)
-# print(stock.income_stmt.index)
-# print(stock.balance_sheet.index)
+print(stock.income_stmt)
+# print(stock.balance_sheet)
 # print(stock.financials.index)
 # print(stock.cashflow.index)
 

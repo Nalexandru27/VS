@@ -139,6 +139,7 @@ class StockScreener:
             executor.map(process_ticker, tickers)
 
         print("\nScreening done.\n")
+        return self.result
 
     # Inspect the results of the screening process and print the stocks that passed all tests in the terminal
     def inspect_results_of_screening(self):
@@ -158,7 +159,6 @@ class StockScreener:
             print("No results to export. Ensure the screening process was completed successfully.")
             return
         try:
-            # excluded ROCE
             columns = ['Ticker', 'Sector', 'Market Cap', 
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth 10Y',
                         'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
@@ -207,6 +207,7 @@ class StockScreener:
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
+        time.sleep(5)
         try:
             db_crud = db.DatabaseCRUD('companies.db')
             data['Ticker'] = ticker.ticker

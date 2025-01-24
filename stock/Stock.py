@@ -194,24 +194,38 @@ class Stock:
                     )
                     
                     current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
-                    current_liabilities = (
-                        balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
-                        if 'Payables And Accrued Expenses' in balance_sheet.index else 1
-                    )  # Default to 1 to avoid division by zero
                     
-                    if current_liabilities == 1:
-                        return 0
-                    else: 
-                        return float(current_assets / current_liabilities)
+                    if current_assets != 0:
+                        total_liabilities_net_minority_interest = (
+                            balance_sheet.loc['Total Liabilities Net Minority Interest'].iloc[0]
+                            if 'Total Liabilities Net Minority Interest' in balance_sheet.index else 1
+                        )  # Default to 1 to avoid division by zero
+
+                        long_term_debt_and_capital_lease_obligations = (
+                            balance_sheet.loc['Long Term Debt And Capital Lease Obligations'].iloc[0]
+                            if 'Long Term Debt And Capital Lease Obligations' in balance_sheet.index else 0
+                        )
+
+                        if total_liabilities_net_minority_interest != 0 and long_term_debt_and_capital_lease_obligations != 0:
+                            current_liabilities = total_liabilities_net_minority_interest - long_term_debt_and_capital_lease_obligations
+                            return float(current_assets / current_liabilities)
+                        else:
+                            current_liabilities = (
+                                balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+                                if 'Payables And Accrued Expenses' in balance_sheet.index else 1
+                            )  # Default to 1 to avoid division by zero
+                            if current_liabilities != 1:
+                                return float(current_assets / current_liabilities)
                 except Exception as e:
                     print(f"Error calculating current ratio from balance sheet for {self.ticker}: {e}")
-                    return 0
                 
             if self.yf.info['currentRatio'] is not None:
                 return float(self.yf.info['currentRatio'])
+            
         except Exception as e:
             print(f"Error getting current ratio for {self.ticker}: {e}")
-            return 0
+            
+        return 0
 
     # TEST 3
     # Get long term debt to working capital ratio from database
