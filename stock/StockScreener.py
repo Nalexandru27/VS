@@ -175,7 +175,6 @@ class StockScreener:
                     try:
                         print(f"Processing {ticker}...")
                         stock = Stock(ticker)
-                        time.sleep(5)
                         data = self.stock_data(stock)
                         if data is not None:
                             print(f"Data for {ticker} processed successfully.")

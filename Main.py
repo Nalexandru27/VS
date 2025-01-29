@@ -21,15 +21,15 @@ url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
-# # obj = SaveDocsData(url)
-# # obj.save_data(saved_csv_file_path)
-# # obj.process_data(saved_csv_file_path,new_csv_file_path)
+# # # obj = SaveDocsData(url)
+# # # obj.save_data(saved_csv_file_path)
+# # # obj.process_data(saved_csv_file_path,new_csv_file_path)
 
-# list_companies = pd.read_csv(new_csv_file_path)
-# list_companies = list_companies['Symbol'].tolist()
+list_companies = pd.read_csv(new_csv_file_path)
+list_companies = list_companies['Symbol'].tolist()
 
-# populate = PopulateDB('companies.db')
-# populate.populate_all(list_companies)
+populate = PopulateDB('companies.db')
+populate.populate_all(list_companies)
 
 # url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=ARE&apikey=43KL4PW74AWGDJZI'
 # r = requests.get(url)
@@ -43,7 +43,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # annual_balance = data['annualReports'][0]
 # print(annual_balance)
 
-# url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=ARE&apikey=43KL4PW74AWGDJZI'
+# url = 'https://www.alphavantage.co/query?function=CASH_FLOW&symbol=IBM&apikey=demo'
 # r = requests.get(url)
 # data = r.json()
 # annual_cash = data['annualReports'][0]
@@ -86,7 +86,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
 # db_crud = DatabaseCRUD('companies.db')
 # tickers = []
-# for i in range(1, 450):
+# for i in range(1, 502):
 #     ticker = db_crud.select_company_ticker(i)
 #     tickers.append(ticker)
 
@@ -102,7 +102,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 #     screening_start_time = time.time()
 #     all_results = {}
 
-#     chunks = chunk_list(tickers, 4)
+#     chunks = chunk_list(tickers, 5)
 
 #     for i, chunk in enumerate(chunks):
 #         print(f"Processing chunk {i + 1} out of {len(chunks)}")
@@ -118,9 +118,9 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
     
 # create_excel_file()
 
-stock = yf.Ticker('IOSP')
+# stock = yf.Ticker('IOSP')
 # print(stock.info)
-print(stock.income_stmt)
+# print(stock.income_stmt)
 # print(stock.balance_sheet)
 # print(stock.financials.index)
 # print(stock.cashflow.index)
