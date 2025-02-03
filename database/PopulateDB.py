@@ -137,20 +137,20 @@ class PopulateDB:
         #     print(f"Error populating income statements: {e}")
 
         # Populate cash flow statement
-        try:
-            print("Starting cash flow statement population...")
-            self.populate_cash_flow_statement(list_companies)
-            print("Finished cash flow statement population.")
-        except Exception as e:
-            print(f"Error populating cash flow statements: {e}")
-        
-        # # Populate balance sheet
         # try:
-        #     print("Starting balance sheet population...")
-        #     self.populate_balance_sheet(list_companies)
-        #     print("Finished balance sheet population.")
+        #     print("Starting cash flow statement population...")
+        #     self.populate_cash_flow_statement(list_companies)
+        #     print("Finished cash flow statement population.")
         # except Exception as e:
-        #     print(f"Error populating balance sheets: {e}")
+        #     print(f"Error populating cash flow statements: {e}")
+        
+        # Populate balance sheet
+        try:
+            print("Starting balance sheet population...")
+            self.populate_balance_sheet(list_companies)
+            print("Finished balance sheet population.")
+        except Exception as e:
+            print(f"Error populating balance sheets: {e}")
 
 
         
