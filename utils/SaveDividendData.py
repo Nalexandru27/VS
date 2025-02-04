@@ -11,7 +11,7 @@ class SaveDocsData:
 
         response = requests.get(csv_url)
 
-        with open(csv_file_path, "w", encoding="ISO-8859-1") as f:
+        with open(csv_file_path, "w", encoding="utf-8") as f:
             f.write(response.text)
 
         print("File saved as 'spreadsheet_data.csv'")
