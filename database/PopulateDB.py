@@ -110,7 +110,7 @@ class PopulateDB:
             return
         for company in list_companies:
             company = Stock(company)
-            if self.db_crud.select_company(company.ticker) > 0:
+            if self.db_crud.select_company(company.ticker) is not None:
                 print(f"Company {company.ticker} is already inserted")
                 continue
             if company.yf.info['quoteType'] == 'NONE':
@@ -121,12 +121,12 @@ class PopulateDB:
             print(f"Inserted {company.ticker} company from sector {sector}")
 
     def populate_all(self, list_companies):
-        # # Populate company table
-        # try:
-        #     self.populate_company_table(list_companies)
-        #     print("Company table populated.")
-        # except Exception as e:
-        #     print(f"Error populating company table: {e}")
+        # Populate company table
+        try:
+            self.populate_company_table(list_companies)
+            print("Company table populated.")
+        except Exception as e:
+            print(f"Error populating company table: {e}")
 
         # # Populate income statement
         # try:
