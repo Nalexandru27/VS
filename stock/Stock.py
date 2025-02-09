@@ -44,7 +44,7 @@ class Stock:
             df.index.name = 'fiscal_date_ending'
             return df
         except Exception as e:
-            print(f"Error getting income statement for {self.ticker}: {e}")
+            print(f"Error getting cashflow statement for {self.ticker}: {e}")
             return None
     
     # Get income statement
@@ -99,7 +99,7 @@ class Stock:
     # Get balance sheet
     def get_balance_sheet(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
+            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=H03ZN6G32VUTNCGT'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -146,7 +146,7 @@ class Stock:
             df.index.name = 'fiscal_date_ending'
             return df
         except Exception as e:
-            print(f"Error getting income statement for {self.ticker}: {e}")
+            print(f"Error getting balance sheet for {self.ticker}: {e}")
             return None
 
     # TEST 1
