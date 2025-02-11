@@ -31,13 +31,13 @@ list_companies = list_companies['Symbol'].tolist()
 populate = PopulateDB('companies.db')
 populate.populate_all(list_companies)
 
-# url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=ARE&apikey=43KL4PW74AWGDJZI'
+# url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=IBM&apikey=demo'
 # r = requests.get(url)
 # data = r.json()
 # annual_income = data['annualReports'][0]
 # print(annual_income)
 
-# url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=ARE&apikey=43KL4PW74AWGDJZI'
+# url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=IBM&apikey=demo'
 # r = requests.get(url)
 # data = r.json()
 # annual_balance = data['annualReports'][0]

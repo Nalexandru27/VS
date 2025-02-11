@@ -32,7 +32,7 @@ class SaveDocsData:
 
         # Filter the dataframe: 'No Years' >= 10
         if "No Years" in df.columns:
-            filtered_df = df[df["No Years"] >= 10][columns_of_interest]
+            filtered_df = df[df["No Years"] >= 5][columns_of_interest]
 
             # Convert "No Years" to numeric if necessary
             filtered_df["No Years"] = pd.to_numeric(filtered_df["No Years"], errors="coerce")
