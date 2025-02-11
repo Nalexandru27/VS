@@ -122,11 +122,11 @@ class PopulateDB:
 
     def populate_all(self, list_companies):
         # Populate company table
-        try:
-            self.populate_company_table(list_companies)
-            print("Company table populated.")
-        except Exception as e:
-            print(f"Error populating company table: {e}")
+        # try:
+        #     self.populate_company_table(list_companies)
+        #     print("Company table populated.")
+        # except Exception as e:
+        #     print(f"Error populating company table: {e}")
 
         # Populate income statement
         try:

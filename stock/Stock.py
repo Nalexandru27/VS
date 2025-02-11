@@ -50,7 +50,7 @@ class Stock:
     # Get income statement
     def get_income_statement(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
+            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=H03ZN6G32VUTNCGT'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
