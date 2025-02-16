@@ -25,11 +25,11 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # obj.save_data(saved_csv_file_path)
 # obj.process_data(saved_csv_file_path,new_csv_file_path)
 
-# list_companies = pd.read_csv(new_csv_file_path)
-# list_companies = list_companies['Symbol'].tolist()
+list_companies = pd.read_csv(new_csv_file_path)
+list_companies = list_companies['Symbol'].tolist()
 
-# populate = PopulateDB('companies.db')
-# populate.populate_all(list_companies)
+populate = PopulateDB('companies.db')
+populate.populate_all(list_companies)
 
 # url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=IBM&apikey=demo'
 # r = requests.get(url)
@@ -89,39 +89,39 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 # screener.export_results_to_excel_file('outData/screened_companies.xlsx')
 
 
-db_crud = DatabaseCRUD('companies.db')
-tickers = []
-for i in range(1, 701):
-    ticker = db_crud.select_company_ticker(i)
-    tickers.append(ticker)
+# db_crud = DatabaseCRUD('companies.db')
+# tickers = []
+# for i in range(1, 701):
+#     ticker = db_crud.select_company_ticker(i)
+#     tickers.append(ticker)
 
-def chunk_list(list, no_chunks):
-    chunk_size = len(list) // no_chunks
-    return [list[i * chunk_size:(i+1) * chunk_size] for i in range(no_chunks - 1)] + [list[(no_chunks - 1) * chunk_size:]]
+# def chunk_list(list, no_chunks):
+#     chunk_size = len(list) // no_chunks
+#     return [list[i * chunk_size:(i+1) * chunk_size] for i in range(no_chunks - 1)] + [list[(no_chunks - 1) * chunk_size:]]
 
-current_date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"./outData/companies_screened_{current_date}.xlsx"
+# current_date = datetime.now().strftime("%Y-%m-%d")
+# file_name = f"./outData/companies_screened_{current_date}.xlsx"
 
-def create_excel_file():
-    screener = StockScreener()
-    screening_start_time = time.time()
-    all_results = {}
+# def create_excel_file():
+#     screener = StockScreener()
+#     screening_start_time = time.time()
+#     all_results = {}
 
-    chunks = chunk_list(tickers, 10)
+#     chunks = chunk_list(tickers, 10)
 
-    for i, chunk in enumerate(chunks):
-        print(f"Processing chunk {i + 1} out of {len(chunks)}")
-        results = screener.screen_stocks(chunk)
-        all_results.update(results)
-        time.sleep(60)
+#     for i, chunk in enumerate(chunks):
+#         print(f"Processing chunk {i + 1} out of {len(chunks)}")
+#         results = screener.screen_stocks(chunk)
+#         all_results.update(results)
+#         time.sleep(60)
         
-    screening_end_time = time.time()
+#     screening_end_time = time.time()
 
-    screener.result = all_results
-    screener.export_results_to_excel_file(file_name)
-    print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
+#     screener.result = all_results
+#     screener.export_results_to_excel_file(file_name)
+#     print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
     
-create_excel_file()
+# create_excel_file()
 
 # stock = yf.Ticker('IOSP')
 # print(stock.info)
