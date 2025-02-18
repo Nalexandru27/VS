@@ -17,7 +17,7 @@ class Stock:
     # Get cash flow statement
     def get_cashflow_data(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=0F4NZKNHX3TGXQ78'
+            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
