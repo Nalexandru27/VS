@@ -1,6 +1,7 @@
 from stock.Stock import *
 import yfinance as yf
 from utils.Tresholds import *
+from database.DatabaseCRUD import DatabaseCRUD
 
 class evaluateStock:
     def __init__(self, stock: Stock, filePath):
@@ -73,8 +74,11 @@ class evaluateStock:
             
     # EPS and Earnings Payout Ratio points
     def Earnings_Payout_Ratio_points(self):
-        earnings_payout_ratio = self.stock.yf.info["payoutRatio"]
-        if self.stock.yf.info['sector'] == "Real Estate":
+        earnings_payout_ratio = self.stock.earnings_payout_ratio()
+        db_name = 'companies.db'
+        db_crud = DatabaseCRUD(db_name)
+        sector = db_crud.select_company_sector(self.stock.ticker)
+        if sector == "Real Estate":
             if earnings_payout_ratio < 0.8:
                 return 3
             elif 0.8 <= earnings_payout_ratio <= 0.9:
@@ -93,7 +97,10 @@ class evaluateStock:
     # FCF Payout Ratio points
     def FCF_Payout_Ratio_points(self):
         FCF_payout_ratio = self.stock.FCF_Payout_Ratio()
-        if self.stock.yf.info['sector'] == "Real Estate":
+        db_name = 'companies.db'
+        db_crud = DatabaseCRUD(db_name)
+        sector = db_crud.select_company_sector(self.stock.ticker)
+        if sector == "Real Estate":
             if FCF_payout_ratio < 0.8:
                 return 3
             elif 0.8 <= FCF_payout_ratio <= 0.9:
@@ -165,8 +172,8 @@ class evaluateStock:
     def give_points(self):
         points = 0
         points += self.dividend_record_points()
-        points += self.dividend_yield_points()
-        points += self.DGR_points()
+        # points += self.dividend_yield_points()
+        # points += self.DGR_points()
         points += self.Earnings_Payout_Ratio_points()
         points += self.FCF_Payout_Ratio_points()
         points += self.Debt_to_Total_Capital_points()

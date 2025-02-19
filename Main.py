@@ -21,9 +21,9 @@ url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
-# obj = SaveDocsData(url)
-# obj.save_data(saved_csv_file_path)
-# obj.process_data(saved_csv_file_path,new_csv_file_path)
+obj = SaveDocsData(url)
+obj.save_data(saved_csv_file_path)
+obj.process_data(saved_csv_file_path,new_csv_file_path)
 
 # list_companies = pd.read_csv(new_csv_file_path)
 # list_companies = list_companies['Symbol'].tolist()
@@ -91,7 +91,7 @@ new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
 db_crud = DatabaseCRUD('companies.db')
 tickers = []
-for i in range(1, 100):
+for i in range(1, 558):
     ticker = db_crud.select_company_ticker(i)
     tickers.append(ticker)
 
@@ -107,13 +107,12 @@ def create_excel_file():
     screening_start_time = time.time()
     all_results = {}
 
-    chunks = chunk_list(tickers, 3)
+    chunks = chunk_list(tickers, 1)
 
     for i, chunk in enumerate(chunks):
         print(f"Processing chunk {i + 1} out of {len(chunks)}")
         results = screener.screen_stocks(chunk)
         all_results.update(results)
-        time.sleep(60)
         
     screening_end_time = time.time()
 
@@ -123,10 +122,12 @@ def create_excel_file():
     
 create_excel_file()
 
-# stock = yf.Ticker('IOSP')
-# print(stock.info)
-# print(stock.income_stmt)
-# print(stock.balance_sheet)
-# print(stock.financials.index)
-# print(stock.cashflow.index)
+# session = requests.Session()
+# try:
+#     stock = yf.Ticker('TROW', session=session)
+#     print(stock.info)
+# except Exception as e:
+#     print(e)
+ 
+
 

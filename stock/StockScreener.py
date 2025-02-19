@@ -74,7 +74,7 @@ class StockScreener:
             return False
 
         # Check Current Ratio
-        if stock.yf.info["sector"] != "Utilities":
+        if stock.get_sector() != "Utilities":
             current_ratio = stock.get_current_ratio()
             if current_ratio == 0:
                 print(f"{stock.ticker} has no data available for the current ratio. Test skipped")
@@ -85,29 +85,29 @@ class StockScreener:
             print(f"{stock.ticker} is a utility company. Current ratio test skipped")
 
         # Check Market Cap
-        market_cap = stock.get_market_cap()
-        if market_cap == 0:
-            print(f"{stock.ticker} has no data available for the market capitalization. Test skipped")
-        elif not self.check_market_cap(stock):
-            print(f"-->{stock.ticker} failed the test 'Market Cap'")
-            return False
+        # market_cap = stock.get_market_cap()
+        # if market_cap == 0:
+        #     print(f"{stock.ticker} has no data available for the market capitalization. Test skipped")
+        # elif not self.check_market_cap(stock):
+        #     print(f"-->{stock.ticker} failed the test 'Market Cap'")
+        #     return False
 
         # Check P/E Ratio
-        pe_ratio = stock.compute_PE_ratio()
-        if pe_ratio == 0:
-            print(f"{stock.ticker} has no data available for the P/E ratio. Test skipped")
-        elif not self.check_PE_ratio(stock):
-            print(f"-->{stock.ticker} failed the test 'P/E Ratio'")
-            return False
+        # pe_ratio = stock.compute_PE_ratio()
+        # if pe_ratio == 0:
+        #     print(f"{stock.ticker} has no data available for the P/E ratio. Test skipped")
+        # elif not self.check_PE_ratio(stock):
+        #     print(f"-->{stock.ticker} failed the test 'P/E Ratio'")
+        #     return False
 
         # Check Price_To_Book_Ratio normal and using Graham's formula
-        price_to_book_ratio = stock.compute_price_to_book_ratio()
-        price_to_book_ratio_graham = stock.compute_price_to_book_ratio_graham()
-        if price_to_book_ratio == 0 and price_to_book_ratio_graham == 0:
-            print(f"{stock.ticker} has no data available for the price-to-book ratio (normal and graham). Test skipped")
-        elif not self.check_price_to_book_ratio(stock) and not self.check_price_to_book_ratio_graham(stock):
-            print(f"-->{stock.ticker} failed the test 'Price-to-book ratio' and 'Graham's price-to-book ratio'")
-            return False
+        # price_to_book_ratio = stock.compute_price_to_book_ratio()
+        # price_to_book_ratio_graham = stock.compute_price_to_book_ratio_graham()
+        # if price_to_book_ratio == 0 and price_to_book_ratio_graham == 0:
+        #     print(f"{stock.ticker} has no data available for the price-to-book ratio (normal and graham). Test skipped")
+        # elif not self.check_price_to_book_ratio(stock) and not self.check_price_to_book_ratio_graham(stock):
+        #     print(f"-->{stock.ticker} failed the test 'Price-to-book ratio' and 'Graham's price-to-book ratio'")
+        #     return False
         
         # # Check Dividend Record
         # if not stock.check_dividend_record():
@@ -159,12 +159,12 @@ class StockScreener:
             print("No results to export. Ensure the screening process was completed successfully.")
             return
         try:
-            columns = ['Ticker', 'Sector', 'Market Cap', 
+            columns = ['Ticker', 'Sector',  
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth 10Y',
-                        'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
+                        'Dividend Record', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
                         'Div/share', 'EPS', 'FCF/share', 'OpCF/share', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'OpCF Payout Ratio',
                         'Debt/Capital', 'Op Income Margin', 'ROCE', 'ROE', 'Ordinary Share Number Trend',
-                        'P/E Ratio', 'Price-to-book ratio', "Graham's price-to-book ratio", 'Points']         
+                        'Points']         
             excel = CreateExcelFile.ExcelFile(file_name, columns)
 
             stock_data_list = []
@@ -206,27 +206,26 @@ class StockScreener:
     def stock_data(self,ticker: Stock):
         data = {}
         evaluator = es.evaluateStock(ticker, FILE_PATH_1)
-        time.sleep(5)
         try:
             db_crud = db.DatabaseCRUD('companies.db')
             data['Ticker'] = ticker.ticker
             sector = db_crud.select_company_sector(ticker.ticker)
             data["Sector"] = sector
-            data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
+            # data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
             data['Earnings Stability'] = self.check_earnings_stability(ticker)
             data['Earnings Growth 10Y'] = f"{ticker.earnings_growth_last_10_years():.2f}"
             data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)
-            data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
+            # data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
             data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILE_PATH_1)}%"
             data["DGR 5Y"] = f"{ticker.get_DGR_5Y_from_excel(FILE_PATH_1)}%"
             data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILE_PATH_1)}%"
             data["Div/share"] = f"{ticker.dividends_per_share():.2f}"
-            data["EPS"] = f"{ticker.yf.income_stmt.loc['Basic EPS'].iloc[0]:.2f}"
+            data["EPS"] = f"{ticker.get_EPS():.2f}"
             data["FCF/share"] = f"{ticker.get_fcf_per_share():.2f}"
             data["OpCF/share"] = f"{ticker.get_operating_cash_flow_per_share():.2f}"
-            data["Earnings Payout Ratio"] = f"{ticker.yf.info['payoutRatio'] * 100:.2f}%"
+            data["Earnings Payout Ratio"] = f"{ticker.earnings_payout_ratio() * 100:.2f}%"
             data["FCF Payout Ratio"] = f"{ticker.FCF_Payout_Ratio() * 100:.2f}%"
             data["OpCF Payout Ratio"] = f"{ticker.get_operating_cash_flow_payout_ratio() * 100:.2f}%"
             data["Debt/Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
@@ -234,9 +233,9 @@ class StockScreener:
             data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
             data["ROE"] = f"{ticker.return_on_equity():.2f}%"
             data["Ordinary Share Number Trend"] = ticker.ordinary_shares_number_trend_analysis()
-            data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
-            data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
-            data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
+            # data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
+            # data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
+            # data["Graham's price-to-book ratio"] = f"{ticker.compute_price_to_book_ratio_graham():.2f}"
             data["Points"] = evaluator.give_points()
         except Exception as e:
             print(f"Error getting data for {ticker.ticker}: {e}")
