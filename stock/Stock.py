@@ -99,7 +99,7 @@ class Stock:
     # Get balance sheet
     def get_balance_sheet(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=H03ZN6G32VUTNCGT'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -161,149 +161,149 @@ class Stock:
     # TEST 2
     # Get current ratio from database
     def get_current_ratio(self):
-        # try:
-        #     db_name = 'companies.db'
-        #     ticker = self.ticker
-        #     db_crud = db.DatabaseCRUD(db_name)
-        #     company_id = db_crud.select_company(ticker)
-        #     last_year = datetime.now().year - 1
-        #     financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
-        #     current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
-        #     current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
-        #     return int(current_assets / current_liabilities)
-        # except Exception as e:
-        #     print(f"Error getting current ratio for {self.ticker}: {e}")
-        #     return 0
         try:
-            if self.yf.info.get('sector') == 'Financial Services':
-                try:
-                    balance_sheet = self.yf.balance_sheet
-                    
-                    # Safely access keys with fallback to 0 if not present
-                    cash_and_cash_equivalents = (
-                        balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
-                        if 'Cash And Cash Equivalents' in balance_sheet.index else 0
-                    )
-                    receivables = (
-                        balance_sheet.loc['Receivables'].iloc[0]
-                        if 'Receivables' in balance_sheet.index else 0
-                    )
-                    other_short_term_investments = (
-                        balance_sheet.loc['Other Short Term Investments'].iloc[0]
-                        if 'Other Short Term Investments' in balance_sheet.index else 0
-                    )
-                    
-                    current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
-                    
-                    if current_assets != 0:
-                        total_liabilities_net_minority_interest = (
-                            balance_sheet.loc['Total Liabilities Net Minority Interest'].iloc[0]
-                            if 'Total Liabilities Net Minority Interest' in balance_sheet.index else 1
-                        )  # Default to 1 to avoid division by zero
-
-                        long_term_debt_and_capital_lease_obligations = (
-                            balance_sheet.loc['Long Term Debt And Capital Lease Obligations'].iloc[0]
-                            if 'Long Term Debt And Capital Lease Obligations' in balance_sheet.index else 0
-                        )
-
-                        if total_liabilities_net_minority_interest != 0 and long_term_debt_and_capital_lease_obligations != 0:
-                            current_liabilities = total_liabilities_net_minority_interest - long_term_debt_and_capital_lease_obligations
-                            return float(current_assets / current_liabilities)
-                        else:
-                            current_liabilities = (
-                                balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
-                                if 'Payables And Accrued Expenses' in balance_sheet.index else 1
-                            )  # Default to 1 to avoid division by zero
-                            if current_liabilities != 1:
-                                return float(current_assets / current_liabilities)
-                except Exception as e:
-                    print(f"Error calculating current ratio from balance sheet for {self.ticker}: {e}")
-                
-            if self.yf.info['currentRatio'] is not None:
-                return float(self.yf.info['currentRatio'])
-            
+            db_name = 'companies.db'
+            ticker = self.ticker
+            db_crud = db.DatabaseCRUD(db_name)
+            company_id = db_crud.select_company(ticker)
+            last_year = datetime.now().year - 2
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+            current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
+            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
+            return int(current_assets / current_liabilities)
         except Exception as e:
             print(f"Error getting current ratio for {self.ticker}: {e}")
+            return 0
+        # try:
+        #     if self.yf.info.get('sector') == 'Financial Services':
+        #         try:
+        #             balance_sheet = self.yf.balance_sheet
+                    
+        #             # Safely access keys with fallback to 0 if not present
+        #             cash_and_cash_equivalents = (
+        #                 balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+        #                 if 'Cash And Cash Equivalents' in balance_sheet.index else 0
+        #             )
+        #             receivables = (
+        #                 balance_sheet.loc['Receivables'].iloc[0]
+        #                 if 'Receivables' in balance_sheet.index else 0
+        #             )
+        #             other_short_term_investments = (
+        #                 balance_sheet.loc['Other Short Term Investments'].iloc[0]
+        #                 if 'Other Short Term Investments' in balance_sheet.index else 0
+        #             )
+                    
+        #             current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+                    
+        #             if current_assets != 0:
+        #                 total_liabilities_net_minority_interest = (
+        #                     balance_sheet.loc['Total Liabilities Net Minority Interest'].iloc[0]
+        #                     if 'Total Liabilities Net Minority Interest' in balance_sheet.index else 1
+        #                 )  # Default to 1 to avoid division by zero
+
+        #                 long_term_debt_and_capital_lease_obligations = (
+        #                     balance_sheet.loc['Long Term Debt And Capital Lease Obligations'].iloc[0]
+        #                     if 'Long Term Debt And Capital Lease Obligations' in balance_sheet.index else 0
+        #                 )
+
+        #                 if total_liabilities_net_minority_interest != 0 and long_term_debt_and_capital_lease_obligations != 0:
+        #                     current_liabilities = total_liabilities_net_minority_interest - long_term_debt_and_capital_lease_obligations
+        #                     return float(current_assets / current_liabilities)
+        #                 else:
+        #                     current_liabilities = (
+        #                         balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+        #                         if 'Payables And Accrued Expenses' in balance_sheet.index else 1
+        #                     )  # Default to 1 to avoid division by zero
+        #                     if current_liabilities != 1:
+        #                         return float(current_assets / current_liabilities)
+        #         except Exception as e:
+        #             print(f"Error calculating current ratio from balance sheet for {self.ticker}: {e}")
+                
+        #     if self.yf.info['currentRatio'] is not None:
+        #         return float(self.yf.info['currentRatio'])
             
-        return 0
+        # except Exception as e:
+        #     print(f"Error getting current ratio for {self.ticker}: {e}")
+            
+        # return 0
 
     # TEST 3
     # Get long term debt to working capital ratio from database
     def get_LTDebt_to_WC(self):
-        # try:
-        #     db_name = 'companies.db'
-        #     ticker = self.ticker
-        #     db_crud = db.DatabaseCRUD(db_name)
-        #     company_id = db_crud.select_company(ticker)
-        #     last_year = datetime.now().year - 1
-        #     financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
-        #     current_assets = db_crud.select_financial_data(financial_statement_id, 'current_assets')
-        #     current_liabilities = db_crud.select_financial_data(financial_statement_id, 'current_liabilities')
-        #     working_capital = current_assets - current_liabilities
-        #     long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
-        #     return int(long_term_debt / working_capital)
-        # except Exception as e:
-        #     print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
-        #     return 0
         try:
-            balance_sheet = self.yf.balance_sheet
-            # Check if 'Long Term Debt' exists in the index
-            long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0] if 'Long Term Debt' in balance_sheet.index else 0
-
-            if self.yf.info.get('sector') == 'Financial Services':
-                try:
-                    # Check for the existence of keys before accessing them
-                    cash_and_cash_equivalents = (
-                        balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
-                        if 'Cash And Cash Equivalents' in balance_sheet.index else 0
-                    )
-                    receivables = (
-                        balance_sheet.loc['Receivables'].iloc[0]
-                        if 'Receivables' in balance_sheet.index else 0
-                    )
-                    other_short_term_investments = (
-                        balance_sheet.loc['Other Short Term Investments'].iloc[0]
-                        if 'Other Short Term Investments' in balance_sheet.index else 0
-                    )
-                    
-                    current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
-                    current_liabilities = (
-                        balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
-                        if 'Payables And Accrued Expenses' in balance_sheet.index else 1
-                    )  # Default to 1 to avoid division by zero
-                    
-                    working_capital = current_assets - current_liabilities
-                    if working_capital > 0:
-                        return float(long_term_debt / working_capital)
-                except Exception as e:
-                    print(f"Error calculating working capital for financial services sector for {self.ticker}: {e}")
-            
-            # For non-financial services or fallback logic
-            try:
-                working_capital = balance_sheet.loc["Working Capital"].iloc[0] if "Working Capital" in self.yf.balance_sheet.index else 0
-                if working_capital == 0:
-                    current_assets = (
-                        balance_sheet.loc['Current Assets'].iloc[0]
-                        if 'Current Assets' in balance_sheet.index else 0
-                    )
-                    current_liabilities = (
-                        balance_sheet.loc['Current Liabilities'].iloc[0]
-                        if 'Current Liabilities' in balance_sheet.index else 1
-                    )  # Default to 1 to avoid division by zero
-                    
-                    working_capital = current_assets - current_liabilities
-                    if working_capital > 0:
-                        return float(long_term_debt / working_capital)
-                else:
-                    return float(long_term_debt / working_capital)
-            except Exception as e:
-                print(f"Error calculating working capital for non-financial services sector for {self.ticker}: {e}")
-            
+            db_name = 'companies.db'
+            ticker = self.ticker
+            db_crud = db.DatabaseCRUD(db_name)
+            company_id = db_crud.select_company(ticker)
+            last_year = datetime.now().year - 2
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
+            current_assets = db_crud.select_financial_data(financial_statement_id, 'totalCurrentAssets')
+            current_liabilities = db_crud.select_financial_data(financial_statement_id, 'totalCurrentLiabilities')
+            working_capital = current_assets - current_liabilities
+            long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
+            return int(long_term_debt / working_capital)
         except Exception as e:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
+            return 0
+        # try:
+        #     balance_sheet = self.yf.balance_sheet
+        #     # Check if 'Long Term Debt' exists in the index
+        #     long_term_debt = balance_sheet.loc['Long Term Debt'].iloc[0] if 'Long Term Debt' in balance_sheet.index else 0
 
-        # Final fallback if all else fails
-        return 0
+        #     if self.yf.info.get('sector') == 'Financial Services':
+        #         try:
+        #             # Check for the existence of keys before accessing them
+        #             cash_and_cash_equivalents = (
+        #                 balance_sheet.loc['Cash And Cash Equivalents'].iloc[0]
+        #                 if 'Cash And Cash Equivalents' in balance_sheet.index else 0
+        #             )
+        #             receivables = (
+        #                 balance_sheet.loc['Receivables'].iloc[0]
+        #                 if 'Receivables' in balance_sheet.index else 0
+        #             )
+        #             other_short_term_investments = (
+        #                 balance_sheet.loc['Other Short Term Investments'].iloc[0]
+        #                 if 'Other Short Term Investments' in balance_sheet.index else 0
+        #             )
+                    
+        #             current_assets = cash_and_cash_equivalents + receivables + other_short_term_investments
+        #             current_liabilities = (
+        #                 balance_sheet.loc['Payables And Accrued Expenses'].iloc[0]
+        #                 if 'Payables And Accrued Expenses' in balance_sheet.index else 1
+        #             )  # Default to 1 to avoid division by zero
+                    
+        #             working_capital = current_assets - current_liabilities
+        #             if working_capital > 0:
+        #                 return float(long_term_debt / working_capital)
+        #         except Exception as e:
+        #             print(f"Error calculating working capital for financial services sector for {self.ticker}: {e}")
+            
+        #     # For non-financial services or fallback logic
+        #     try:
+        #         working_capital = balance_sheet.loc["Working Capital"].iloc[0] if "Working Capital" in self.yf.balance_sheet.index else 0
+        #         if working_capital == 0:
+        #             current_assets = (
+        #                 balance_sheet.loc['Current Assets'].iloc[0]
+        #                 if 'Current Assets' in balance_sheet.index else 0
+        #             )
+        #             current_liabilities = (
+        #                 balance_sheet.loc['Current Liabilities'].iloc[0]
+        #                 if 'Current Liabilities' in balance_sheet.index else 1
+        #             )  # Default to 1 to avoid division by zero
+                    
+        #             working_capital = current_assets - current_liabilities
+        #             if working_capital > 0:
+        #                 return float(long_term_debt / working_capital)
+        #         else:
+        #             return float(long_term_debt / working_capital)
+        #     except Exception as e:
+        #         print(f"Error calculating working capital for non-financial services sector for {self.ticker}: {e}")
+            
+        # except Exception as e:
+        #     print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
+
+        # # Final fallback if all else fails
+        # return 0
 
     # TEST 4
     #Get dividend history for a stock using yahoo finance
@@ -378,7 +378,7 @@ class Stock:
         ticker = self.ticker
         db_crud = db.DatabaseCRUD(db_name)
         company_id = db_crud.select_company(ticker)
-        current_year = datetime.now().year
+        current_year = datetime.now().year - 1
         last_3_years = []
         for year in range(current_year - 3, current_year):
             financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
@@ -404,7 +404,7 @@ class Stock:
         ticker = self.ticker
         db_crud = db.DatabaseCRUD(db_name)
         company_id = db_crud.select_company(ticker)
-        last_year = datetime.now().year - 1
+        last_year = datetime.now().year - 2
         for year in range(last_year - 10, last_year):
             financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
             net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
@@ -418,7 +418,7 @@ class Stock:
             db_crud = db.DatabaseCRUD('companies.db')
             company_id = db_crud.select_company(self.ticker)
             past_3_years_earnings = []
-            for year in range(datetime.now().year - 4, datetime.now().year - 1):
+            for year in range(datetime.now().year - 5, datetime.now().year - 2):
                 financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
                 net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
                 past_3_years_earnings.append(net_income)
@@ -478,9 +478,18 @@ class Stock:
     # Good indicator to evaluate the managerial economic performance
     def compute_ROCE(self):
         try:
-            total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
-            ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
-            current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
+            db_name = 'companies.db'
+            db_crud = db.DatabaseCRUD(db_name)
+            company_id = db_crud.select_company(self.ticker)
+            current_year = datetime.now().year
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', current_year - 2)
+            total_assets = db_crud.select_financial_data(balance_sheet_id, 'totalAssets')
+            current_liabilities = db_crud.select_financial_data(balance_sheet_id, 'totalCurrentLiabilities')
+            income_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', current_year - 2)
+            ebit = db_crud.select_financial_data(income_statement_id, 'ebit')
+            # total_assets = float(self.yf.balance_sheet.loc['Total Assets'].iloc[0])
+            # ebit = float(self.yf.financials.loc['EBIT'].iloc[0])
+            # current_liabilities = float(self.yf.balance_sheet.loc['Current Liabilities'].iloc[0])
             return float(ebit / (total_assets - current_liabilities))
         except Exception as e:
             print(f"Error calculating ROCE for {self.ticker}: {e}")
