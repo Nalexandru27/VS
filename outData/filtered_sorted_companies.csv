@@ -2,476 +2,666 @@ Symbol,Company,Sector,No Years,DGR 1Y,DGR 3Y,DGR 5Y,DGR 10Y
 AWR,American States Water Company,Utilities,70,8.22,8.56,9.08,7.99
 PG,The Procter & Gamble Company,Consumer Staples,69,6.02,5.22,6.04,4.58
 PH,Parker-Hannifin Corporation,Industrials,69,10.4,17.08,13.38,11.9
-DOV,Dover Corporation,Industrials,69,0.99,1.0,1.11,2.84
 NWN,Northwest Natural Holding Company,Utilities,69,0.52,0.52,0.53,0.57
+DOV,Dover Corporation,Industrials,69,0.99,1.0,1.11,2.84
 GPC,Genuine Parts Company,Consumer Discretionary,68,5.27,7.06,5.58,5.69
 EMR,Emerson Electric Co.,Industrials,67,0.84,1.18,1.32,1.8
 CINF,Cincinnati Financial Corporation,Financials,64,8.01,8.74,7.67,6.3
-LOW,"Lowe's Companies, Inc.",Consumer Discretionary,63,4.66,17.14,16.92,18.57
 JNJ,Johnson & Johnson,Health Care,63,4.47,5.43,5.54,5.93
-NDSN,Nordson Corporation,Industrials,62,-19.55,5.94,7.95,10.34
+LOW,"Lowe's Companies, Inc.",Consumer Discretionary,63,4.66,17.14,16.92,18.57
+CL,Colgate-Palmolive Company,Consumer Staples,62,3.67,3.43,2.98,3.39
 KO,The Coca-Cola Company,Consumer Staples,62,5.44,4.92,3.93,4.75
 LANC,Lancaster Colony Corporation,Consumer Staples,62,5.8,6.17,6.62,7.45
-CL,Colgate-Palmolive Company,Consumer Staples,62,3.67,3.43,2.98,3.39
+NDSN,Nordson Corporation,Industrials,62,-19.55,5.94,7.95,10.34
 ITW,Illinois Tool Works Inc.,Industrials,61,7.02,7.11,6.98,12.36
 HRL,Hormel Foods Corporation,Consumer Staples,59,2.73,4.87,6.12,10.95
+FRT,Federal Realty Investment Trust,Real Estate,58,-24.43,-8.35,-4.56,-0.07
 TGT,Target Corporation,Consumer Discretionary,58,1.84,12.01,11.3,8.86
 TR,"Tootsie Roll Industries, Inc.",Consumer Staples,58,3.0,3.0,3.0,4.22
-FRT,Federal Realty Investment Trust,Real Estate,58,-24.43,-8.35,-4.56,-0.07
-SJW,SJW Group,Utilities,57,5.27,5.57,5.93,7.88
-SWK,"Stanley Black & Decker, Inc.",Industrials,57,1.25,3.04,3.85,4.8
 CWT,California Water Service Group,Utilities,57,7.7,6.78,7.24,5.6
+SWK,"Stanley Black & Decker, Inc.",Industrials,57,1.25,3.04,3.85,4.8
 ABM,ABM Industries Incorporated,Industrials,57,2.28,5.8,-0.12,3.72
-CBSH,"Commerce Bancshares, Inc.",Financials,56,6.32,5.99,6.06,7.07
+SJW,SJW Group,Utilities,57,5.27,5.57,5.93,7.88
 SCL,Stepan Company,Materials,56,2.73,6.51,8.06,8.15
+CBSH,"Commerce Bancshares, Inc.",Financials,56,6.32,5.99,6.06,7.07
 SYY,Sysco Corporation,Consumer Staples,55,2.03,3.17,5.31,5.62
 FUL,H.B. Fuller Company,Materials,55,8.39,9.48,6.57,6.62
-BKH,Black Hills Corporation,Utilities,54,4.01,4.33,4.87,5.25
-NFG,National Fuel Gas Company,Utilities,54,4.09,4.07,3.36,2.92
 MSA,MSA Safety Incorporated,Industrials,54,6.96,4.56,4.05,4.99
 MO,"Altria Group, Inc.",Consumer Staples,54,4.17,4.36,4.05,7.18
+NFG,National Fuel Gas Company,Utilities,54,4.09,4.07,3.36,2.92
+BKH,Black Hills Corporation,Utilities,54,4.01,4.33,4.87,5.25
 UVV,Universal Corporation,Consumer Staples,54,1.26,1.28,1.3,4.68
-PPG,"PPG Industries, Inc.",Materials,53,4.73,5.59,6.09,7.34
 GWW,"W.W. Grainger, Inc.",Industrials,53,9.73,7.83,7.12,6.75
-TNC,Tennant Company,Industrials,52,5.59,6.49,5.23,3.83
+PPG,"PPG Industries, Inc.",Materials,53,4.73,5.59,6.09,7.34
 BDX,"Becton, Dickinson and Company",Health Care,52,5.71,5.01,4.65,5.7
 KMB,Kimberly-Clark Corporation,Consumer Staples,52,3.4,2.29,3.45,3.81
+TNC,Tennant Company,Industrials,52,5.59,6.49,5.23,3.83
 PEP,"PepsiCo, Inc.",Consumer Staples,52,7.79,7.87,7.05,7.73
-WMT,Walmart Inc.,Consumer Staples,51,9.22,4.22,3.27,2.64
-SPGI,S&P Global Inc.,Financials,51,1.12,5.73,9.81,11.74
-RPM,RPM International Inc.,Materials,51,9.89,7.07,6.04,6.79
 NUE,Nucor Corporation,Materials,51,4.84,8.16,6.26,3.89
+RPM,RPM International Inc.,Materials,51,9.89,7.07,6.04,6.79
+SPGI,S&P Global Inc.,Financials,51,1.12,5.73,9.81,11.74
+WMT,Walmart Inc.,Consumer Staples,51,9.22,4.22,3.27,2.64
 UBSI,"United Bankshares, Inc.",Financials,50,2.07,1.63,1.56,1.47
 ADP,"Automatic Data Processing, Inc.",Information Technology,50,11.46,14.44,11.85,11.52
 ED,"Consolidated Edison, Inc.",Utilities,50,2.47,2.32,2.33,2.8
-RLI,RLI Corp.,Financials,49,6.55,4.82,4.61,4.85
-MCD,McDonald's Corporation,Consumer Discretionary,49,8.83,8.9,7.47,7.54
 MGEE,"MGE Energy, Inc.",Utilities,49,5.09,5.03,4.93,4.71
 ADM,Archer-Daniels-Midland Company,Consumer Staples,49,11.12,10.56,7.4,7.62
-CLX,The Clorox Company,Consumer Staples,48,1.69,2.16,3.68,5.26
+RLI,RLI Corp.,Financials,49,6.55,4.82,4.61,4.85
+MCD,McDonald's Corporation,Consumer Discretionary,49,8.83,8.9,7.47,7.54
 CSL,Carlisle Companies Incorporated,Industrials,48,15.63,20.22,15.51,14.69
+CLX,The Clorox Company,Consumer Staples,48,1.69,2.16,3.68,5.26
 MDT,Medtronic plc,Health Care,47,1.46,4.15,5.65,8.85
 SHW,The Sherwin-Williams Company,Materials,46,18.19,9.14,13.68,14.58
-BEN,"Franklin Resources, Inc.",Financials,44,73.34,11.35,8.24,11.83
 CTBI,"Community Trust Bancorp, Inc.",Financials,44,3.34,5.82,4.68,4.65
-ORI,Old Republic International Corporation,Financials,43,8.17,6.4,5.79,3.81
+BEN,"Franklin Resources, Inc.",Financials,44,73.34,11.35,8.24,11.83
 AFL,Aflac Incorporated,Financials,43,19.05,14.86,13.12,10.31
+ORI,Old Republic International Corporation,Financials,43,8.17,6.4,5.79,3.81
 APD,"Air Products and Chemicals, Inc.",Materials,43,-24.15,-4.0,2.74,5.6
-SON,Sonoco Products Company,Materials,42,2.48,4.77,4.02,5.01
 XOM,Exxon Mobil Corporation,Energy,42,4.35,3.24,2.29,3.59
+SON,Sonoco Products Company,Materials,42,2.48,4.77,4.02,5.01
 CTAS,Cintas Corporation,Industrials,41,16.4,19.63,17.95,21.22
 ATO,Atmos Energy Corporation,Utilities,40,8.6,8.74,8.85,8.16
 BRC,Brady Corporation,Industrials,40,2.17,2.22,2.03,1.88
 UHT,Universal Health Realty Income Trust,Real Estate,39,1.39,1.41,1.43,1.49
+DCI,"Donaldson Company, Inc.",Industrials,38,8.17,6.81,5.27,5.26
 TROW,"T. Rowe Price Group, Inc.",Financials,38,1.64,4.72,10.29,10.92
 TMP,Tompkins Financial Corporation,Financials,38,1.67,3.67,3.86,4.19
-DCI,"Donaldson Company, Inc.",Industrials,38,8.17,6.81,5.27,5.26
 CVX,Chevron Corporation,Energy,37,7.95,7.09,6.5,4.48
+THFF,First Financial Corporation,Financials,37,-11.77,8.4,5.56,3.37
 SRCE,1st Source Corporation,Financials,37,7.7,4.99,4.95,8.06
 UGI,UGI Corporation,Utilities,37,1.02,3.2,4.4,6.23
-THFF,First Financial Corporation,Financials,37,-11.77,8.4,5.56,3.37
 NNN,"National Retail Properties, Inc.",Real Estate,36,2.7,2.93,2.44,3.34
 JKHY,"Jack Henry & Associates, Inc.",Information Technology,34,32.22,14.34,11.45,12.07
-WTRG,"Essential Utilities, Inc.",Utilities,34,6.49,6.83,6.9,7.16
 ERIE,Erie Indemnity Company,Financials,34,7.15,7.2,7.22,7.22
+WTRG,"Essential Utilities, Inc.",Utilities,34,6.49,6.83,6.9,7.16
 SEIC,SEI Investments Company,Financials,33,6.75,7.26,6.92,7.53
-CBU,"Community Bank System, Inc.",Financials,33,2.25,2.3,2.87,4.61
 MGRC,McGrath RentCorp,Industrials,33,2.17,3.1,5.23,6.85
 GD,General Dynamics Corporation,Industrials,33,6.9,6.12,6.94,8.72
+CBU,"Community Bank System, Inc.",Financials,33,2.25,2.3,2.87,4.61
 WABC,Westamerica Bancorporation,Financials,32,2.33,2.18,1.55,1.48
-FELE,"Franklin Electric Co., Inc.",Industrials,32,11.12,12.63,11.52,11.15
-ECL,Ecolab Inc.,Materials,32,9.27,6.57,5.0,7.41
-O,Realty Income Corporation,Real Estate,32,-6.22,0.29,1.1,2.73
 BMI,"Badger Meter, Inc.",Information Technology,32,23.24,17.09,13.78,12.68
-SYK,Stryker Corporation,Health Care,32,6.24,7.82,8.71,9.91
 UMBF,UMB Financial Corporation,Financials,32,2.62,4.4,5.35,5.61
-CFR,"Cullen/Frost Bankers, Inc.",Financials,31,30.17,16.6,10.73,8.67
-RTX,Raytheon Technologies Corporation,Industrials,31,6.9,7.35,6.04,5.27
-CB,Chubb Limited,Financials,31,5.28,4.13,3.8,1.13
+ECL,Ecolab Inc.,Materials,32,9.27,6.57,5.0,7.41
+SYK,Stryker Corporation,Health Care,32,6.24,7.82,8.71,9.91
+O,Realty Income Corporation,Real Estate,32,-6.22,0.29,1.1,2.73
+FELE,"Franklin Electric Co., Inc.",Industrials,32,11.12,12.63,11.52,11.15
 ESS,"Essex Property Trust, Inc.",Real Estate,31,-20.46,-4.21,-1.19,3.71
-ROP,"Roper Technologies, Inc.",Industrials,31,9.9,10.07,10.16,14.14
-WST,"West Pharmaceutical Services, Inc.",Health Care,31,5.2,5.5,5.84,7.05
-AOS,A. O. Smith Corporation,Industrials,31,6.56,7.05,7.64,15.8
-AROW,Arrow Financial Corporation,Financials,31,3.18,4.37,3.82,3.64
+CFR,"Cullen/Frost Bankers, Inc.",Financials,31,30.17,16.6,10.73,8.67
 LIN,Linde plc,Materials,31,9.03,9.46,9.7,7.9
-BANF,BancFirst Corporation,Financials,31,7.23,8.34,7.5,10.6
-ATR,"AptarGroup, Inc.",Materials,31,8.87,4.67,3.91,4.67
 CAT,Caterpillar Inc.,Industrials,31,36.61,16.86,12.57,10.14
+BANF,BancFirst Corporation,Financials,31,7.23,8.34,7.5,10.6
+ROP,"Roper Technologies, Inc.",Industrials,31,9.9,10.07,10.16,14.14
+RTX,Raytheon Technologies Corporation,Industrials,31,6.9,7.35,6.04,5.27
+AOS,A. O. Smith Corporation,Industrials,31,6.56,7.05,7.64,15.8
+WST,"West Pharmaceutical Services, Inc.",Health Care,31,5.2,5.5,5.84,7.05
+AROW,Arrow Financial Corporation,Financials,31,3.18,4.37,3.82,3.64
+CB,Chubb Limited,Financials,31,5.28,4.13,3.8,1.13
+ATR,"AptarGroup, Inc.",Materials,31,8.87,4.67,3.91,4.67
+SBSI,"Southside Bancshares, Inc.",Financials,30,2.86,3.21,3.21,6.71
 CAH,"Cardinal Health, Inc.",Health Care,30,-24.32,-8.27,-4.67,1.29
-BRO,"Brown & Brown, Inc.",Financials,30,13.69,12.43,10.69,10.18
 EBTC,"Enterprise Bancorp, Inc.",Financials,30,30.44,17.49,13.4,9.6
 ALB,Albemarle Corporation,Materials,30,0.63,1.06,1.84,3.89
 NEE,"NextEra Energy, Inc.",Utilities,30,10.17,10.19,10.51,11.01
 EXPD,"Expeditors International of Washington, Inc.",Industrials,30,5.8,7.97,7.87,8.6
-SBSI,"Southside Bancshares, Inc.",Financials,30,2.86,3.21,3.21,6.71
-NJR,New Jersey Resources Corporation,Utilities,29,7.41,7.78,7.54,7.18
-PII,Polaris Inc.,Consumer Discretionary,29,1.54,1.57,1.59,3.24
-OZK,Bank OZK,Financials,29,11.27,11.74,10.95,12.9
-RNR,RenaissanceRe Holdings Ltd.,Financials,29,2.64,2.71,2.79,3.01
+BRO,"Brown & Brown, Inc.",Financials,30,13.69,12.43,10.69,10.18
 LECO,"Lincoln Electric Holdings, Inc.",Industrials,29,9.51,11.28,8.68,11.39
 MATW,Matthews International Corporation,Industrials,29,4.31,3.9,3.68,7.75
-CNI,Canadian National Railway Company,Industrials,29,5.84,7.7,8.75,10.52
 IBM,International Business Machines Corporation,Information Technology,29,0.61,0.61,0.74,4.62
-EPD,Enterprise Products Partners L.P.,Energy,28,5.06,4.94,3.46,3.82
-CHD,"Church & Dwight Co., Inc.",Consumer Staples,28,4.15,3.98,4.53,6.24
+OZK,Bank OZK,Financials,29,11.27,11.74,10.95,12.9
+RNR,RenaissanceRe Holdings Ltd.,Financials,29,2.64,2.71,2.79,3.01
+PII,Polaris Inc.,Consumer Discretionary,29,1.54,1.57,1.59,3.24
+NJR,New Jersey Resources Corporation,Utilities,29,7.41,7.78,7.54,7.18
+CNI,Canadian National Railway Company,Industrials,29,5.84,7.7,8.75,10.52
 ANDE,"The Andersons, Inc.",Consumer Staples,28,-23.49,-6.84,-3.61,1.95
 ENB,Enbridge Inc.,Energy,28,1.3,-0.18,3.75,7.69
+CHD,"Church & Dwight Co., Inc.",Consumer Staples,28,4.15,3.98,4.53,6.24
+EPD,Enterprise Products Partners L.P.,Energy,28,5.06,4.94,3.46,3.82
 SJM,The J. M. Smucker Company,Consumer Staples,27,2.89,4.23,4.35,5.79
-GGG,Graco Inc.,Industrials,27,8.52,10.8,9.78,10.78
 YORW,The York Water Company,Utilities,27,4.0,4.0,4.0,3.94
-ALRS,Alerus Financial Corporation,Financials,26,5.34,7.84,6.75,7.5
-ES,Eversource Energy,Utilities,26,5.93,5.88,5.98,6.19
+GGG,Graco Inc.,Industrials,27,8.52,10.8,9.78,10.78
 CHRW,"C.H. Robinson Worldwide, Inc.",Industrials,26,0.82,5.76,4.13,5.58
-PB,"Prosperity Bancshares, Inc.",Financials,26,2.27,4.34,5.99,8.58
-FDS,FactSet Research Systems Inc.,Financials,26,7.06,8.28,7.93,10.44
+ES,Eversource Energy,Utilities,26,5.93,5.88,5.98,6.19
 CASY,"Casey's General Stores, Inc.",Consumer Staples,26,14.82,10.73,8.81,9.37
-FAST,Fastenal Company,Industrials,25,11.43,11.68,12.39,12.06
+ALRS,Alerus Financial Corporation,Financials,26,5.34,7.84,6.75,7.5
+FDS,FactSet Research Systems Inc.,Financials,26,7.06,8.28,7.93,10.44
+PB,"Prosperity Bancshares, Inc.",Financials,26,2.27,4.34,5.99,8.58
 RGCO,"RGC Resources, Inc.",Utilities,25,1.27,2.64,3.93,4.96
-NWFL,Norwood Financial Corp.,Financials,25,3.45,4.89,4.57,4.14
+FAST,Fastenal Company,Industrials,25,11.43,11.68,12.39,12.06
 WLY,"John Wiley & Sons, Inc.",Communication Services,25,0.72,0.73,0.84,2.32
 WLYB,"John Wiley & Sons, Inc.",Communication Services,25,0.72,0.73,0.84,2.32
+NWFL,Norwood Financial Corp.,Financials,25,3.45,4.89,4.57,4.14
 MKC,"McCormick & Company, Incorporated",Consumer Staples,25,7.55,7.16,7.98,8.52
-QCOM,QUALCOMM Incorporated,Information Technology,23,6.35,7.2,6.2,7.61
-RGLD,"Royal Gold, Inc.",Materials,23,33.34,18.57,13.54,8.94
-CASS,"Cass Information Systems, Inc.",Information Technology,23,3.42,3.55,2.88,7.03
-WRB,W. R. Berkley Corporation,Financials,23,9.3,11.4,10.39,9.42
-MSFT,Microsoft Corporation,Information Technology,23,10.4,10.23,10.26,10.36
 LNN,Lindsay Corporation,Industrials,23,2.9,2.73,2.75,2.97
-LARK,"Landmark Bancorp, Inc.",Financials,23,5.0,6.72,6.03,6.06
 LHX,"L3Harris Technologies, Inc.",Industrials,23,1.76,4.39,10.09,10.06
+WRB,W. R. Berkley Corporation,Financials,23,9.3,11.4,10.39,9.42
+QCOM,QUALCOMM Incorporated,Information Technology,23,6.35,7.2,6.2,7.61
+LARK,"Landmark Bancorp, Inc.",Financials,23,5.0,6.72,6.03,6.06
+MSFT,Microsoft Corporation,Information Technology,23,10.4,10.23,10.26,10.36
 SO,The Southern Company,Utilities,23,2.88,2.97,3.06,3.23
 NKE,"NIKE, Inc.",Consumer Discretionary,23,8.64,10.15,10.79,11.69
-ADI,"Analog Devices, Inc.",Information Technology,22,6.98,10.07,11.25,9.54
-XEL,Xcel Energy Inc.,Utilities,22,-21.04,-3.54,0.28,3.19
+RGLD,"Royal Gold, Inc.",Materials,23,33.34,18.57,13.54,8.94
+CASS,"Cass Information Systems, Inc.",Information Technology,23,3.42,3.55,2.88,7.03
 ROL,"Rollins, Inc.",Industrials,22,13.89,21.85,17.05,17.33
-RSG,"Republic Services, Inc.",Industrials,22,-19.91,-2.32,1.13,4.33
-AVA,Avista Corporation,Utilities,22,3.27,3.99,4.16,4.12
-PRGO,Perrigo Company plc,Health Care,22,1.1,4.77,6.13,10.15
-TRV,"The Travelers Companies, Inc.",Financials,22,5.6,5.95,5.15,6.8
+XEL,Xcel Energy Inc.,Utilities,22,-21.04,-3.54,0.28,3.19
 LMT,Lockheed Martin Corporation,Industrials,22,4.94,6.35,7.22,8.8
-MCHP,Microchip Technology Incorporated,Information Technology,22,13.91,28.58,19.88,9.8
-WEC,"WEC Energy Group, Inc.",Utilities,22,7.06,7.22,7.2,7.92
+TRV,"The Travelers Companies, Inc.",Financials,22,5.6,5.95,5.15,6.8
+RSG,"Republic Services, Inc.",Industrials,22,-19.91,-2.32,1.13,4.33
 FLO,"Flowers Foods, Inc.",Consumer Staples,22,4.4,4.61,4.85,6.96
+ADI,"Analog Devices, Inc.",Information Technology,22,6.98,10.07,11.25,9.54
+PRGO,Perrigo Company plc,Health Care,22,1.1,4.77,6.13,10.15
+WEC,"WEC Energy Group, Inc.",Utilities,22,7.06,7.22,7.2,7.92
+AVA,Avista Corporation,Utilities,22,3.27,3.99,4.16,4.12
+MCHP,Microchip Technology Incorporated,Information Technology,22,13.91,28.58,19.88,9.8
 ODC,Oil-Dri Corporation of America,Consumer Staples,22,5.27,4.23,4.14,4.41
 EIX,Edison International,Utilities,22,-21.81,-4.52,-1.12,4.68
-WM,"Waste Management, Inc.",Industrials,21,7.15,9.27,7.92,7.18
-VZ,Verizon Communications Inc.,Communication Services,21,1.91,1.95,1.99,2.25
-LNT,Alliant Energy Corporation,Utilities,21,6.08,6.05,6.22,6.53
+MSEX,Middlesex Water Company,Utilities,21,4.16,5.9,6.14,5.61
 TTC,The Toro Company,Industrials,21,5.8,10.32,9.56,13.14
-BBY,"Best Buy Co., Inc.",Consumer Discretionary,21,2.18,10.33,13.46,17.98
+SR,Spire Inc.,Utilities,21,4.64,5.0,4.92,5.54
+LNT,Alliant Energy Corporation,Utilities,21,6.08,6.05,6.22,6.53
+TXN,Texas Instruments Incorporated,Information Technology,21,4.79,7.71,10.39,15.55
+NOC,Northrop Grumman Corporation,Industrials,21,9.68,9.33,9.31,11.51
+CPK,Chesapeake Utilities Corporation,Utilities,21,8.9,10.12,9.63,8.94
 SRE,Sempra Energy,Utilities,21,4.21,4.08,5.09,6.51
+RBA,Ritchie Bros. Auctioneers Incorporated,Industrials,21,3.71,6.02,8.07,7.57
+WM,"Waste Management, Inc.",Industrials,21,7.15,9.27,7.92,7.18
 EVRG,"Evergy, Inc.",Utilities,21,4.64,6.03,6.11,6.37
 JBHT,"J.B. Hunt Transport Services, Inc.",Industrials,21,2.39,13.39,10.59,7.96
+NHC,National HealthCare Corporation,Health Care,21,3.42,4.68,3.28,6.09
 BHB,Bar Harbor Bankshares,Financials,21,7.28,7.88,6.54,6.95
 DUK,Duke Energy Corporation,Utilities,21,1.98,2.02,2.03,2.78
-RBA,Ritchie Bros. Auctioneers Incorporated,Industrials,21,3.71,6.02,8.07,7.57
-CPK,Chesapeake Utilities Corporation,Utilities,21,8.9,10.12,9.63,8.94
-NOC,Northrop Grumman Corporation,Industrials,21,9.68,9.33,9.31,11.51
-NHC,National HealthCare Corporation,Health Care,21,3.42,4.68,3.28,6.09
-SR,Spire Inc.,Utilities,21,4.64,5.0,4.92,5.54
-MSEX,Middlesex Water Company,Utilities,21,4.16,5.9,6.14,5.61
-TXN,Texas Instruments Incorporated,Information Technology,21,4.79,7.71,10.39,15.55
-AFG,"American Financial Group, Inc.",Financials,20,12.7,12.47,12.18,12.41
-NWE,NorthWestern Corporation,Utilities,20,1.57,1.59,2.49,4.98
-R,"Ryder System, Inc.",Industrials,20,14.29,10.07,6.69,7.91
-SLGN,Silgan Holdings Inc.,Materials,20,5.56,10.72,11.56,9.75
-RHI,Robert Half International Inc.,Industrials,20,10.42,11.73,11.33,11.41
-COR,"Cencora, Inc.",Health Care,20,5.86,5.33,5.39,7.66
-CSX,CSX Corporation,Industrials,20,9.1,8.75,8.45,8.62
-COST,Costco Wholesale Corporation,Consumer Staples,20,13.64,13.6,12.3,12.59
-ELS,"Equity LifeStyle Properties, Inc.",Real Estate,20,6.71,9.62,9.29,11.39
-AIZ,"Assurant, Inc.",Financials,20,4.97,3.63,4.03,10.82
+BBY,"Best Buy Co., Inc.",Consumer Discretionary,21,2.18,10.33,13.46,17.98
+VZ,Verizon Communications Inc.,Communication Services,21,1.91,1.95,1.99,2.25
 THG,"The Hanover Insurance Group, Inc.",Financials,20,5.19,6.58,7.09,8.55
-JJSF,J & J Snack Foods Corp.,Consumer Staples,20,5.58,7.0,7.87,8.67
-GL,Globe Life Inc.,Financials,20,7.09,6.61,6.89,6.44
-WLK,Westlake Chemical Corporation,Materials,20,19.61,21.79,14.87,13.42
+NWE,NorthWestern Corporation,Utilities,20,1.57,1.59,2.49,4.98
+SLGN,Silgan Holdings Inc.,Materials,20,5.56,10.72,11.56,9.75
+CSX,CSX Corporation,Industrials,20,9.1,8.75,8.45,8.62
+R,"Ryder System, Inc.",Industrials,20,14.29,10.07,6.69,7.91
 HWKN,"Hawkins, Inc.",Materials,20,9.68,10.43,8.14,6.28
+WLK,Westlake Chemical Corporation,Materials,20,19.61,21.79,14.87,13.42
+AIZ,"Assurant, Inc.",Financials,20,4.97,3.63,4.03,10.82
 HEI,HEICO Corporation,Industrials,20,5.01,7.3,8.45,12.18
+AFG,"American Financial Group, Inc.",Financials,20,12.7,12.47,12.18,12.41
+RHI,Robert Half International Inc.,Industrials,20,10.42,11.73,11.33,11.41
+JJSF,J & J Snack Foods Corp.,Consumer Staples,20,5.58,7.0,7.87,8.67
+COR,"Cencora, Inc.",Health Care,20,5.86,5.33,5.39,7.66
+ELS,"Equity LifeStyle Properties, Inc.",Real Estate,20,6.71,9.62,9.29,11.39
+GL,Globe Life Inc.,Financials,20,7.09,6.61,6.89,6.44
+COST,Costco Wholesale Corporation,Consumer Staples,20,13.64,13.6,12.3,12.59
 BOKF,BOK Financial Corporation,Financials,19,2.31,2.04,2.01,3.21
 OGE,OGE Energy Corp.,Utilities,19,0.93,1.19,2.49,6.13
-WSM,"Williams-Sonoma, Inc.",Consumer Discretionary,19,23.86,21.22,18.18,12.74
-AMP,"Ameriprise Financial, Inc.",Financials,19,9.25,9.34,8.74,9.87
 STE,STERIS plc,Health Care,19,10.11,9.51,8.96,9.5
 CMI,Cummins Inc.,Industrials,19,7.7,7.73,7.39,9.56
-UNP,Union Pacific Corporation,Industrials,18,1.54,7.17,7.38,10.71
-EVR,Evercore Inc.,Financials,18,5.34,6.05,7.13,11.87
-CMS,CMS Energy Corporation,Utilities,18,5.65,5.79,6.13,6.68
-GRC,The Gorman-Rupp Company,Industrials,18,2.84,4.52,5.69,6.96
-KWR,Quaker Chemical Corporation,Materials,18,5.12,4.96,4.15,5.34
-KR,The Kroger Co.,Consumer Staples,18,10.91,16.08,15.26,13.63
-POR,Portland General Electric Company,Utilities,18,5.2,5.18,5.42,5.89
+AMP,"Ameriprise Financial, Inc.",Financials,19,9.25,9.34,8.74,9.87
+WSM,"Williams-Sonoma, Inc.",Consumer Discretionary,19,23.86,21.22,18.18,12.74
 BMY,Bristol-Myers Squibb Company,Health Care,18,5.27,17.76,7.92,5.17
-BR,"Broadridge Financial Solutions, Inc.",Information Technology,17,10.17,11.41,10.39,13.35
+GRC,The Gorman-Rupp Company,Industrials,18,2.84,4.52,5.69,6.96
+EVR,Evercore Inc.,Financials,18,5.34,6.05,7.13,11.87
+KWR,Quaker Chemical Corporation,Materials,18,5.12,4.96,4.15,5.34
+CMS,CMS Energy Corporation,Utilities,18,5.65,5.79,6.13,6.68
+KR,The Kroger Co.,Consumer Staples,18,10.91,16.08,15.26,13.63
+UNP,Union Pacific Corporation,Industrials,18,1.54,7.17,7.38,10.71
+POR,Portland General Electric Company,Utilities,18,5.2,5.18,5.42,5.89
+CMCSA,Comcast Corporation,Communication Services,17,7.02,7.58,14.14,13.72
+HUBB,Hubbell Incorporated,Industrials,17,8.74,7.67,7.75,9.23
 THO,"Thor Industries, Inc.",Consumer Discretionary,17,-21.51,-4.58,-1.57,3.86
 AWK,"American Water Works Company, Inc.",Utilities,17,8.11,8.4,8.97,9.52
-ENSG,"The Ensign Group, Inc.",Health Care,17,4.31,4.51,4.73,5.47
-MCK,McKesson Corporation,Health Care,17,14.66,14.33,10.71,10.73
-FNV,Franco-Nevada Corporation,Materials,17,32.71,15.79,12.72,8.73
-HUBB,Hubbell Incorporated,Industrials,17,8.74,7.67,7.75,9.23
 UNM,Unum Group,Financials,17,12.95,10.3,7.58,9.74
+MCK,McKesson Corporation,Health Care,17,14.66,14.33,10.71,10.73
+ENSG,"The Ensign Group, Inc.",Health Care,17,4.31,4.51,4.73,5.47
 BIP,Brookfield Infrastructure Partners L.P.,Utilities,17,5.79,6.0,6.08,7.75
-CMCSA,Comcast Corporation,Communication Services,17,7.02,7.58,14.14,13.72
-MMC,"Marsh & McLennan Companies, Inc.",Financials,16,17.31,15.11,11.88,11.15
-HI,"Hillenbrand, Inc.",Industrials,16,1.14,1.15,1.16,1.2
+FNV,Franco-Nevada Corporation,Materials,17,32.71,15.79,12.72,8.73
+BR,"Broadridge Financial Solutions, Inc.",Information Technology,17,10.17,11.41,10.39,13.35
 V,Visa Inc.,Information Technology,16,14.98,17.22,15.42,17.74
-WDFC,WD-40 Company,Consumer Staples,16,6.03,7.55,7.61,7.3
 IEX,IDEX Corporation,Industrials,16,7.54,8.53,7.03,9.74
-PFG,"Principal Financial Group, Inc.",Financials,16,9.62,5.32,5.51,8.34
-UDR,"UDR, Inc.",Real Estate,16,3.36,5.41,4.66,5.27
+WDFC,WD-40 Company,Consumer Staples,16,6.03,7.55,7.61,7.3
 CHE,Chemed Corporation,Health Care,16,15.39,8.74,7.74,7.92
+HI,"Hillenbrand, Inc.",Industrials,16,1.14,1.15,1.16,1.2
+MMC,"Marsh & McLennan Companies, Inc.",Financials,16,17.31,15.11,11.88,11.15
+UDR,"UDR, Inc.",Real Estate,16,3.36,5.41,4.66,5.27
+PFG,"Principal Financial Group, Inc.",Financials,16,9.62,5.32,5.51,8.34
 SGU,"Star Group, L.P.",Utilities,16,6.25,6.69,6.67,7.03
 PRU,"Prudential Financial, Inc.",Financials,16,4.01,4.18,5.39,9.14
 PM,Philip Morris International Inc.,Consumer Staples,16,3.12,2.66,2.79,3.17
-BK,The Bank of New York Mellon Corporation,Financials,15,12.66,11.05,8.57,10.44
-HIG,"The Hartford Financial Services Group, Inc.",Financials,15,10.61,10.39,9.98,11.33
-TSCO,Tractor Supply Company,Consumer Discretionary,15,6.8,28.37,26.47,21.85
-LII,Lennox International Inc.,Industrials,15,4.36,8.83,9.06,14.85
-HSY,The Hershey Company,Consumer Staples,15,22.99,17.14,12.89,10.39
-TRN,"Trinity Industries, Inc.",Industrials,15,7.7,10.07,11.85,12.34
-SYBT,"Stock Yards Bancorp, Inc.",Financials,15,3.4,3.52,3.25,7.6
-MAA,"Mid-America Apartment Communities, Inc.",Real Estate,15,5.01,12.78,8.9,7.26
-BCPC,Balchem Corporation,Materials,15,10.13,10.78,10.85,11.24
-JPM,JPMorgan Chase & Co.,Financials,15,13.59,7.53,6.87,11.43
-PNC,"The PNC Financial Services Group, Inc.",Financials,15,3.28,9.49,8.45,12.86
-SBUX,Starbucks Corporation,Consumer Discretionary,15,7.41,8.04,9.26,15.49
-RGA,"Reinsurance Group of America, Incorporated",Financials,15,5.46,6.76,6.01,10.7
-CNS,"Cohen & Steers, Inc.",Financials,15,3.51,9.45,10.39,10.37
-SNA,Snap-on Incorporated,Industrials,15,14.89,14.75,14.46,15.36
-ETN,Eaton Corporation plc,Industrials,15,9.31,7.35,5.78,6.74
-ORCL,Oracle Corporation,Information Technology,15,5.27,10.07,11.95,12.8
-PAYX,"Paychex, Inc.",Information Technology,15,10.7,13.79,9.62,10.13
-CPT,Camden Property Trust,Real Estate,15,3.01,6.15,5.19,4.56
-PFE,Pfizer Inc.,Health Care,15,2.44,2.51,3.14,4.92
 MCO,Moody's Corporation,Financials,15,10.4,11.1,11.2,11.75
-MKTX,MarketAxess Holdings Inc.,Financials,15,2.78,3.89,7.73,16.55
-STT,State Street Corporation,Financials,15,-18.94,-0.62,1.57,6.32
-AIT,"Applied Industrial Technologies, Inc.",Industrials,15,5.72,3.89,3.61,4.0
-NRIM,"Northrim BanCorp, Inc.",Financials,15,2.5,17.93,14.32,13.4
-AVGO,Broadcom Inc.,Information Technology,15,13.92,13.36,14.15,33.25
-EMN,Eastman Chemical Company,Materials,15,2.52,4.83,5.29,8.44
-FMAO,"Farmers & Merchants Bancorp, Inc.",Financials,15,3.84,7.53,7.67,7.71
-MGA,Magna International Inc.,Consumer Discretionary,15,3.27,3.38,5.41,9.6
-CUBE,CubeSmart,Real Estate,15,-22.73,1.81,3.48,10.78
-IBOC,International Bancshares Corporation,Financials,15,4.77,4.71,4.69,9.77
-HD,"The Home Depot, Inc.",Consumer Discretionary,15,7.66,10.9,10.6,16.96
-HMN,Horace Mann Educators Corporation,Financials,15,3.04,3.13,3.42,3.99
-WAFD,"Washington Federal, Inc.",Financials,15,4.01,4.18,4.87,11.3
-UNH,UnitedHealth Group Incorporated,Health Care,15,12.21,13.47,14.6,19.27
 AEP,"American Electric Power Company, Inc.",Utilities,15,5.94,5.97,5.67,5.81
-HPQ,HP Inc.,Information Technology,15,5.0,10.32,11.19,5.97
+HD,"The Home Depot, Inc.",Consumer Discretionary,15,7.66,10.9,10.6,16.96
+AIT,"Applied Industrial Technologies, Inc.",Industrials,15,5.72,3.89,3.61,4.0
+AVGO,Broadcom Inc.,Information Technology,15,13.92,13.36,14.15,33.25
+MGA,Magna International Inc.,Consumer Discretionary,15,3.27,3.38,5.41,9.6
+STT,State Street Corporation,Financials,15,-18.94,-0.62,1.57,6.32
+CPT,Camden Property Trust,Real Estate,15,3.01,6.15,5.19,4.56
+EMN,Eastman Chemical Company,Materials,15,2.52,4.83,5.29,8.44
+BK,The Bank of New York Mellon Corporation,Financials,15,12.66,11.05,8.57,10.44
+SBUX,Starbucks Corporation,Consumer Discretionary,15,7.41,8.04,9.26,15.49
+ORCL,Oracle Corporation,Information Technology,15,5.27,10.07,11.95,12.8
+ETN,Eaton Corporation plc,Industrials,15,9.31,7.35,5.78,6.74
+SNA,Snap-on Incorporated,Industrials,15,14.89,14.75,14.46,15.36
+LII,Lennox International Inc.,Industrials,15,4.36,8.83,9.06,14.85
+TRN,"Trinity Industries, Inc.",Industrials,15,7.7,10.07,11.85,12.34
+TSCO,Tractor Supply Company,Consumer Discretionary,15,6.8,28.37,26.47,21.85
+SYBT,"Stock Yards Bancorp, Inc.",Financials,15,3.4,3.52,3.25,7.6
+NRIM,"Northrim BanCorp, Inc.",Financials,15,2.5,17.93,14.32,13.4
+CUBE,CubeSmart,Real Estate,15,-22.73,1.81,3.48,10.78
+CNS,"Cohen & Steers, Inc.",Financials,15,3.51,9.45,10.39,10.37
+FMAO,"Farmers & Merchants Bancorp, Inc.",Financials,15,3.84,7.53,7.67,7.71
+JPM,JPMorgan Chase & Co.,Financials,15,13.59,7.53,6.87,11.43
+PFE,Pfizer Inc.,Health Care,15,2.44,2.51,3.14,4.92
+IBOC,International Bancshares Corporation,Financials,15,4.77,4.71,4.69,9.77
 UPS,"United Parcel Service, Inc.",Industrials,15,0.62,16.92,11.17,9.3
-KLAC,KLA Corporation,Information Technology,15,13.09,15.77,14.31,12.28
-INGR,Ingredion Incorporated,Consumer Staples,15,-20.81,-2.93,-1.23,3.46
+UNH,UnitedHealth Group Incorporated,Health Care,15,12.21,13.47,14.6,19.27
 ROK,"Rockwell Automation, Inc.",Industrials,15,5.64,5.34,5.19,7.79
-TSN,"Tyson Foods, Inc.",Consumer Staples,14,2.08,3.15,4.99,19.75
-LMAT,"LeMaitre Vascular, Inc.",Health Care,14,14.29,13.31,13.49,16.42
-AVY,Avery Dennison Corporation,Materials,14,8.5,9.06,8.83,9.92
-MA,Mastercard Incorporated,Information Technology,14,15.79,14.48,14.87,19.63
-TXNM,"PNM Resources, Inc.",Utilities,14,5.45,5.77,5.97,7.68
-WCN,"Waste Connections, Inc.",Industrials,14,11.43,11.46,11.97,13.97
-ACN,Accenture plc,Information Technology,14,15.06,14.02,18.81,10.62
-USB,U.S. Bancorp,Financials,14,2.6,4.01,4.62,7.46
-HOMB,"Home Bancshares, Inc. (Conway, AR)",Financials,14,4.17,10.23,8.02,15.67
-HON,Honeywell International Inc.,Industrials,14,4.8,5.05,5.4,8.88
-HNI,HNI Corporation,Industrials,14,2.35,1.99,1.61,2.85
-CBOE,"Cboe Global Markets, Inc.",Financials,14,12.39,9.45,11.99,11.71
-CHDN,Churchill Downs Incorporated,Consumer Discretionary,14,7.07,7.04,7.09,9.4
-AMT,American Tower Corporation (REIT),Real Estate,14,0.47,7.55,11.39,16.56
-SCI,Service Corporation International,Consumer Discretionary,14,7.15,10.9,10.76,13.45
-AMGN,Amgen Inc.,Health Care,14,5.64,8.54,9.19,13.95
-CBT,Cabot Corporation,Materials,14,7.65,5.98,4.14,6.99
-XRAY,DENTSPLY SIRONA Inc.,Health Care,14,14.29,14.18,11.29,9.21
-CME,CME Group Inc.,Financials,14,136.37,42.43,28.23,18.66
-CHCO,City Holding Company,Financials,14,10.14,8.16,6.33,6.46
-APOG,"Apogee Enterprises, Inc.",Industrials,14,4.17,7.73,7.4,9.6
-PNW,Pinnacle West Capital Corporation,Utilities,14,1.73,1.91,3.38,4.41
-PRI,"Primerica, Inc.",Financials,14,26.93,20.63,19.4,21.27
-RS,Reliance Steel & Aluminum Co.,Materials,14,10.01,16.97,14.87,12.14
+MAA,"Mid-America Apartment Communities, Inc.",Real Estate,15,5.01,12.78,8.9,7.26
+PAYX,"Paychex, Inc.",Information Technology,15,10.7,13.79,9.62,10.13
+KLAC,KLA Corporation,Information Technology,15,13.09,15.77,14.31,12.28
+HSY,The Hershey Company,Consumer Staples,15,22.99,17.14,12.89,10.39
+INGR,Ingredion Incorporated,Consumer Staples,15,-20.81,-2.93,-1.23,3.46
+MKTX,MarketAxess Holdings Inc.,Financials,15,2.78,3.89,7.73,16.55
+WAFD,"Washington Federal, Inc.",Financials,15,4.01,4.18,4.87,11.3
+BCPC,Balchem Corporation,Materials,15,10.13,10.78,10.85,11.24
+HPQ,HP Inc.,Information Technology,15,5.0,10.32,11.19,5.97
+RGA,"Reinsurance Group of America, Incorporated",Financials,15,5.46,6.76,6.01,10.7
+HIG,"The Hartford Financial Services Group, Inc.",Financials,15,10.61,10.39,9.98,11.33
+HMN,Horace Mann Educators Corporation,Financials,15,3.04,3.13,3.42,3.99
+PNC,"The PNC Financial Services Group, Inc.",Financials,15,3.28,9.49,8.45,12.86
 WSBC,"WesBanco, Inc.",Financials,14,2.84,3.19,3.18,5.13
-CSCO,"Cisco Systems, Inc.",Information Technology,14,2.59,2.66,2.88,7.95
+AJG,Arthur J. Gallagher & Co.,Financials,14,9.1,7.73,6.89,5.25
+ACN,Accenture plc,Information Technology,14,15.06,14.02,18.81,10.62
+WCN,"Waste Connections, Inc.",Industrials,14,11.43,11.46,11.97,13.97
+INTU,Intuit Inc.,Information Technology,14,15.44,15.15,14.03,16.39
+HON,Honeywell International Inc.,Industrials,14,4.8,5.05,5.4,8.88
+INDB,Independent Bank Corp.,Financials,14,3.64,5.9,5.32,9.04
 POOL,Pool Corporation,Consumer Discretionary,14,9.31,16.41,17.49,18.66
-ARE,"Alexandria Real Estate Equities, Inc.",Real Estate,14,4.64,5.03,5.35,6.07
-ALL,The Allstate Corporation,Financials,14,3.38,4.34,12.98,12.64
+PNW,Pinnacle West Capital Corporation,Utilities,14,1.73,1.91,3.38,4.41
+HNI,HNI Corporation,Industrials,14,2.35,1.99,1.61,2.85
+PRI,"Primerica, Inc.",Financials,14,26.93,20.63,19.4,21.27
+CBT,Cabot Corporation,Materials,14,7.65,5.98,4.14,6.99
+CBOE,"Cboe Global Markets, Inc.",Financials,14,12.39,9.45,11.99,11.71
+AVY,Avery Dennison Corporation,Materials,14,8.5,9.06,8.83,9.92
+USB,U.S. Bancorp,Financials,14,2.6,4.01,4.62,7.46
+MA,Mastercard Incorporated,Information Technology,14,15.79,14.48,14.87,19.63
+MAIN,Main Street Capital Corporation,Financials,14,14.76,8.38,5.38,4.65
+APOG,"Apogee Enterprises, Inc.",Industrials,14,4.17,7.73,7.4,9.6
+HOMB,"Home Bancshares, Inc. (Conway, AR)",Financials,14,4.17,10.23,8.02,15.67
+GATX,GATX Corporation,Industrials,14,5.46,5.08,4.75,5.81
+SCI,Service Corporation International,Consumer Discretionary,14,7.15,10.9,10.76,13.45
 SPTN,SpartanNash Company,Consumer Staples,14,1.17,2.84,2.75,6.13
 FAF,First American Financial Corporation,Financials,14,1.91,3.33,4.96,9.81
-FITB,Fifth Third Bancorp,Financials,14,5.89,8.1,8.91,10.94
-ELV,"Elevance Health, Inc.",Health Care,14,10.14,12.99,15.3,14.06
 FFIN,"First Financial Bankshares, Inc.",Financials,14,1.41,7.48,9.14,10.11
-AON,Aon Plc,Financials,14,9.78,9.88,8.95,11.06
-MRK,"Merck & Co., Inc.",Health Care,14,5.41,5.73,6.67,5.84
-AJG,Arthur J. Gallagher & Co.,Financials,14,9.1,7.73,6.89,5.25
-ALE,"ALLETE, Inc.",Utilities,14,4.06,3.83,3.72,3.71
+RS,Reliance Steel & Aluminum Co.,Materials,14,10.01,16.97,14.87,12.14
+FITB,Fifth Third Bancorp,Financials,14,5.89,8.1,8.91,10.94
+GS,"The Goldman Sachs Group, Inc.",Financials,14,9.53,20.95,22.62,17.73
+FMBH,"First Mid Bancshares, Inc.",Financials,14,2.18,3.42,4.35,5.51
 STLD,"Steel Dynamics, Inc.",Materials,14,35.3,30.29,19.1,17.47
 SXI,Standex International Corporation,Industrials,14,7.02,7.58,8.28,11.26
-MAN,ManpowerGroup Inc.,Industrials,14,4.77,6.92,7.16,12.14
-MAIN,Main Street Capital Corporation,Financials,14,14.76,8.38,5.38,4.65
-LFUS,"Littelfuse, Inc.",Information Technology,14,8.01,10.16,8.21,11.13
-DFS,Discover Financial Services,Financials,14,3.71,14.21,10.76,11.78
-INDB,Independent Bank Corp.,Financials,14,3.64,5.9,5.32,9.04
-TRNO,Terreno Realty Corporation,Real Estate,14,10.59,12.8,13.01,12.68
-DDS,"Dillard's, Inc.",Consumer Discretionary,14,11.12,12.63,14.87,15.34
 LAD,"Lithia Motors, Inc.",Consumer Discretionary,14,8.86,15.4,11.93,13.11
-INTU,Intuit Inc.,Information Technology,14,15.44,15.15,14.03,16.39
-FMBH,"First Mid Bancshares, Inc.",Financials,14,2.18,3.42,4.35,5.51
-GATX,GATX Corporation,Industrials,14,5.46,5.08,4.75,5.81
-GS,"The Goldman Sachs Group, Inc.",Financials,14,9.53,20.95,22.62,17.73
-AUB,Atlantic Union Bankshares Corporation,Financials,14,6.56,6.05,6.26,8.41
-DGX,Quest Diagnostics Incorporated,Health Care,14,6.1,6.95,6.91,8.67
+LFUS,"Littelfuse, Inc.",Information Technology,14,8.01,10.16,8.21,11.13
+MAN,ManpowerGroup Inc.,Industrials,14,4.77,6.92,7.16,12.14
+LMAT,"LeMaitre Vascular, Inc.",Health Care,14,14.29,13.31,13.49,16.42
+TRNO,Terreno Realty Corporation,Real Estate,14,10.59,12.8,13.01,12.68
+CHCO,City Holding Company,Financials,14,10.14,8.16,6.33,6.46
 NSP,"Insperity, Inc.",Industrials,14,6.28,10.64,14.59,20.41
+CME,CME Group Inc.,Financials,14,136.37,42.43,28.23,18.66
+CSCO,"Cisco Systems, Inc.",Information Technology,14,2.59,2.66,2.88,7.95
+DDS,"Dillard's, Inc.",Consumer Discretionary,14,11.12,12.63,14.87,15.34
+DGX,Quest Diagnostics Incorporated,Health Care,14,6.1,6.95,6.91,8.67
+DFS,Discover Financial Services,Financials,14,3.71,14.21,10.76,11.78
+ELV,"Elevance Health, Inc.",Health Care,14,10.14,12.99,15.3,14.06
 AVNT,Avient Corporation,Materials,14,4.25,6.02,5.78,11.86
-ABBV,AbbVie Inc.,Health Care,13,4.73,6.04,7.7,14.09
-AGM,Federal Agricultural Mortgage Corporation,Financials,13,27.28,16.74,14.87,25.9
-BAH,Booz Allen Hamilton Holding Corporation,Information Technology,13,8.52,11.3,16.28,16.85
-A,"Agilent Technologies, Inc.",Health Care,13,4.95,7.21,7.31,12.94
-SSB,South State Corporation,Financials,13,3.93,3.36,4.89,9.97
-STAG,"STAG Industrial, Inc.",Real Estate,13,0.66,0.69,0.68,1.39
-FCBC,"First Community Bankshares, Inc.",Financials,13,3.45,4.89,4.57,9.15
-MET,"MetLife, Inc.",Financials,13,4.62,4.29,4.38,4.99
-MSI,"Motorola Solutions, Inc.",Information Technology,13,11.33,11.34,11.4,11.98
-GFF,Griffon Corporation,Industrials,13,26.0,24.06,16.59,17.1
-FNF,"Fidelity National Financial, Inc.",Financials,13,6.02,7.54,9.02,10.27
+CHDN,Churchill Downs Incorporated,Consumer Discretionary,14,7.07,7.04,7.09,9.4
+TSN,"Tyson Foods, Inc.",Consumer Staples,14,2.08,3.15,4.99,19.75
+TXNM,"PNM Resources, Inc.",Utilities,14,5.45,5.77,5.97,7.68
+AMGN,Amgen Inc.,Health Care,14,5.64,8.54,9.19,13.95
+ALL,The Allstate Corporation,Financials,14,3.38,4.34,12.98,12.64
+AON,Aon Plc,Financials,14,9.78,9.88,8.95,11.06
+MRK,"Merck & Co., Inc.",Health Care,14,5.41,5.73,6.67,5.84
+ARE,"Alexandria Real Estate Equities, Inc.",Real Estate,14,4.64,5.03,5.35,6.07
+AUB,Atlantic Union Bankshares Corporation,Financials,14,6.56,6.05,6.26,8.41
+XRAY,DENTSPLY SIRONA Inc.,Health Care,14,14.29,14.18,11.29,9.21
+ALE,"ALLETE, Inc.",Utilities,14,4.06,3.83,3.72,3.71
+AMT,American Tower Corporation (REIT),Real Estate,14,0.47,7.55,11.39,16.56
 LYB,LyondellBasell Industries N.V.,Materials,13,6.69,5.88,4.9,6.92
-FRME,First Merchants Corporation,Financials,13,29.86,15.48,11.72,19.63
-TOWN,TowneBank,Financials,13,2.05,8.64,7.4,8.81
-AGO,Assured Guaranty Ltd.,Financials,13,10.72,12.12,11.49,10.92
-HFWA,Heritage Financial Corporation,Financials,13,4.55,4.34,4.46,10.47
-IDA,"IDACORP, Inc.",Utilities,13,4.69,5.17,5.53,6.65
-HUM,Humana Inc.,Health Care,13,0.0,8.14,9.99,12.3
-HWBK,"Hawthorn Bancshares, Inc.",Financials,13,10.95,12.03,13.9,18.3
-SFNC,Simmons First National Corporation,Financials,13,5.01,5.28,5.59,6.68
-PEG,Public Service Enterprise Group Incorporated,Utilities,13,5.27,5.57,5.01,4.96
-XYL,Xylem Inc.,Industrials,13,9.1,8.74,8.45,10.9
-SMBC,"Southern Missouri Bancorp, Inc.",Financials,13,4.77,6.92,9.47,10.31
-RJF,"Raymond James Financial, Inc.",Financials,13,-21.06,9.09,3.2,11.87
-CIVB,"Civista Bancshares, Inc.",Financials,13,4.92,7.17,8.79,12.92
-EGP,"EastGroup Properties, Inc.",Real Estate,13,5.96,14.26,12.68,9.18
+ABBV,AbbVie Inc.,Health Care,13,4.73,6.04,7.7,14.09
 ASB,Associated Banc-Corp,Financials,13,4.71,5.41,5.23,9.18
+SSB,South State Corporation,Financials,13,3.93,3.36,4.89,9.97
+XYL,Xylem Inc.,Industrials,13,9.1,8.74,8.45,10.9
 APH,Amphenol Corporation,Information Technology,13,29.42,20.1,18.05,17.2
+MET,"MetLife, Inc.",Financials,13,4.62,4.29,4.38,4.99
+FCBC,"First Community Bankshares, Inc.",Financials,13,3.45,4.89,4.57,9.15
+HUM,Humana Inc.,Health Care,13,0.0,8.14,9.99,12.3
+RJF,"Raymond James Financial, Inc.",Financials,13,-21.06,9.09,3.2,11.87
+FNF,"Fidelity National Financial, Inc.",Financials,13,6.02,7.54,9.02,10.27
+FRME,First Merchants Corporation,Financials,13,29.86,15.48,11.72,19.63
+A,"Agilent Technologies, Inc.",Health Care,13,4.95,7.21,7.31,12.94
+IDA,"IDACORP, Inc.",Utilities,13,4.69,5.17,5.53,6.65
+HWBK,"Hawthorn Bancshares, Inc.",Financials,13,10.95,12.03,13.9,18.3
+HFWA,Heritage Financial Corporation,Financials,13,4.55,4.34,4.46,10.47
+AGO,Assured Guaranty Ltd.,Financials,13,10.72,12.12,11.49,10.92
 AES,The AES Corporation,Utilities,13,3.98,4.66,4.8,13.19
-COFS,"ChoiceOne Financial Services, Inc.",Financials,13,3.82,5.06,6.39,7.38
+AGM,Federal Agricultural Mortgage Corporation,Financials,13,27.28,16.74,14.87,25.9
+GFF,Griffon Corporation,Industrials,13,26.0,24.06,16.59,17.1
+PEG,Public Service Enterprise Group Incorporated,Utilities,13,5.27,5.57,5.01,4.96
+TOWN,TowneBank,Financials,13,2.05,8.64,7.4,8.81
+CIVB,"Civista Bancshares, Inc.",Financials,13,4.92,7.17,8.79,12.92
+SFNC,Simmons First National Corporation,Financials,13,5.01,5.28,5.59,6.68
 EBMT,"Eagle Bancorp Montana, Inc.",Financials,13,1.81,8.29,8.55,6.72
-LKFN,Lakeland Financial Corporation,Financials,12,4.35,12.19,10.61,13.39
-IPG,"The Interpublic Group of Companies, Inc.",Communication Services,12,6.46,6.92,7.03,13.27
-FULT,Fulton Financial Corporation,Financials,12,7.82,7.21,5.83,7.99
-BC,Brunswick Corporation,Consumer Discretionary,12,5.01,9.64,14.07,14.09
-ZION,"Zions Bancorporation, National Association",Financials,12,1.22,4.86,5.34,26.36
-ABT,Abbott Laboratories,Health Care,12,7.85,6.92,11.45,9.6
-ABR,"Arbor Realty Trust, Inc.",Financials,12,2.39,7.62,8.58,12.71
+BAH,Booz Allen Hamilton Holding Corporation,Information Technology,13,8.52,11.3,16.28,16.85
+MSI,"Motorola Solutions, Inc.",Information Technology,13,11.33,11.34,11.4,11.98
+COFS,"ChoiceOne Financial Services, Inc.",Financials,13,3.82,5.06,6.39,7.38
+EGP,"EastGroup Properties, Inc.",Real Estate,13,5.96,14.26,12.68,9.18
+SMBC,"Southern Missouri Bancorp, Inc.",Financials,13,4.77,6.92,9.47,10.31
+STAG,"STAG Industrial, Inc.",Real Estate,13,0.66,0.69,0.68,1.39
 AAPL,Apple Inc.,Information Technology,12,4.22,4.61,5.44,7.94
+ABR,"Arbor Realty Trust, Inc.",Financials,12,2.39,7.62,8.58,12.71
+ZION,"Zions Bancorporation, National Association",Financials,12,1.22,4.86,5.34,26.36
 WOR,"Worthington Industries, Inc.",Materials,12,-47.62,-15.4,-6.83,0.0
-AGCO,AGCO Corporation,Industrials,12,4.51,15.14,12.99,10.18
-TSBK,"Timberland Bancorp, Inc.",Financials,12,5.44,4.92,10.09,18.35
-TCBK,TriCo Bancshares,Financials,12,10.01,9.7,9.99,11.62
-ITT,ITT Inc.,Industrials,12,10.01,13.19,16.77,11.24
-KAI,Kadant Inc.,Industrials,12,10.63,8.09,6.56,8.08
+AL,Air Lease Corporation,Industrials,12,4.94,8.53,9.5,20.66
+ABT,Abbott Laboratories,Health Care,12,7.85,6.92,11.45,9.6
+PSX,Phillips 66,Energy,12,7.15,7.53,5.16,9.07
+IPG,"The Interpublic Group of Companies, Inc.",Communication Services,12,6.46,6.92,7.03,13.27
+POWI,"Power Integrations, Inc.",Information Technology,12,5.2,14.48,18.28,13.93
 HFBL,"Home Federal Bancorp, Inc. of Louisiana",Financials,12,4.09,11.8,11.2,14.65
-GTY,Getty Realty Corp.,Real Estate,12,4.6,4.83,5.09,7.32
+AGCO,AGCO Corporation,Industrials,12,4.51,15.14,12.99,10.18
+RF,Regions Financial Corporation,Financials,12,11.37,14.67,10.69,18.47
 HY,"Hyster-Yale Materials Handling, Inc.",Industrials,12,5.98,2.29,1.73,2.5
 HII,"Huntington Ingalls Industries, Inc.",Industrials,12,4.59,4.51,7.78,18.04
-FNLC,"The First Bancorp, Inc.",Financials,12,2.9,4.07,3.78,3.27
-GABC,"German American Bancorp, Inc.",Financials,12,8.01,8.74,9.7,9.74
-FR,"First Industrial Realty Trust, Inc.",Real Estate,12,15.63,11.08,9.98,13.7
-FSFG,"First Savings Financial Group, Inc.",Financials,12,7.15,12.63,22.98,15.13
-NEU,NewMarket Corporation,Materials,12,13.0,7.73,6.5,7.85
-DKL,"Delek Logistics Partners, LP",Energy,12,10.55,7.03,6.3,9.72
-FIX,"Comfort Systems USA, Inc.",Industrials,12,41.18,35.73,24.89,18.23
-FBIZ,"First Business Financial Services, Inc.",Financials,12,37.37,20.19,15.82,11.53
-MBWM,Mercantile Bank Corporation,Financials,12,5.98,6.37,6.03,11.46
-NXST,"Nexstar Media Group, Inc.",Communication Services,12,25.19,34.16,30.3,27.41
-MPLX,MPLX LP,Energy,12,10.45,8.21,5.77,10.1
-NDAQ,"Nasdaq, Inc.",Financials,12,9.31,10.16,8.8,17.14
-NBTB,NBT Bancorp Inc.,Financials,12,6.46,6.27,4.69,4.63
-STBA,"S&T Bancorp, Inc.",Financials,12,3.11,5.59,4.07,6.94
-SSD,"Simpson Manufacturing Co., Inc.",Industrials,12,3.78,4.65,-0.54,10.51
-AL,Air Lease Corporation,Industrials,12,4.94,8.53,9.5,20.66
-EXPO,"Exponent, Inc.",Industrials,12,7.7,11.87,11.85,16.18
-MTRN,Materion Corporation,Materials,12,3.89,4.05,4.23,4.8
-DPZ,"Domino's Pizza, Inc.",Consumer Discretionary,12,24.8,17.12,18.37,19.71
-PSX,Phillips 66,Energy,12,7.15,7.53,5.16,9.07
-POWI,"Power Integrations, Inc.",Information Technology,12,5.2,14.48,18.28,13.93
-CNO,"CNO Financial Group, Inc.",Financials,12,6.79,7.3,7.94,10.14
 REG,Regency Centers Corporation,Real Estate,12,3.63,4.06,3.02,3.75
 QSR,Restaurant Brands International Inc.,Consumer Discretionary,12,31.82,11.01,7.72,25.47
-CCOI,"Cogent Communications Holdings, Inc.",Communication Services,12,4.26,7.34,9.95,12.86
-RMD,ResMed Inc.,Health Care,12,9.79,7.64,5.86,6.67
-UFPI,"Universal Forest Products, Inc.",Industrials,12,20.0,26.64,26.98,20.57
-RF,Regions Financial Corporation,Financials,12,11.37,14.67,10.69,18.47
-AMSF,"AMERISAFE, Inc.",Financials,12,8.83,9.1,8.16,11.92
-BXS,BancorpSouth Bank,Financials,12,6.39,8.64,7.09,14.87
+GABC,"German American Bancorp, Inc.",Financials,12,8.01,8.74,9.7,9.74
+FULT,Fulton Financial Corporation,Financials,12,7.82,7.21,5.83,7.99
+FSFG,"First Savings Financial Group, Inc.",Financials,12,7.15,12.63,22.98,15.13
+FR,"First Industrial Realty Trust, Inc.",Real Estate,12,15.63,11.08,9.98,13.7
+STBA,"S&T Bancorp, Inc.",Financials,12,3.11,5.59,4.07,6.94
+NXST,"Nexstar Media Group, Inc.",Communication Services,12,25.19,34.16,30.3,27.41
+ITT,ITT Inc.,Industrials,12,10.01,13.19,16.77,11.24
+DPZ,"Domino's Pizza, Inc.",Consumer Discretionary,12,24.8,17.12,18.37,19.71
 SCVL,"Shoe Carnival, Inc.",Consumer Discretionary,12,28.05,27.22,26.05,15.91
+FIX,"Comfort Systems USA, Inc.",Industrials,12,41.18,35.73,24.89,18.23
+EXPO,"Exponent, Inc.",Industrials,12,7.7,11.87,11.85,16.18
+FNLC,"The First Bancorp, Inc.",Financials,12,2.9,4.07,3.78,3.27
+FBIZ,"First Business Financial Services, Inc.",Financials,12,37.37,20.19,15.82,11.53
+KAI,Kadant Inc.,Industrials,12,10.63,8.09,6.56,8.08
+RMD,ResMed Inc.,Health Care,12,9.79,7.64,5.86,6.67
+GTY,Getty Realty Corp.,Real Estate,12,4.6,4.83,5.09,7.32
+TCBK,TriCo Bancshares,Financials,12,10.01,9.7,9.99,11.62
+NEU,NewMarket Corporation,Materials,12,13.0,7.73,6.5,7.85
+SSD,"Simpson Manufacturing Co., Inc.",Industrials,12,3.78,4.65,-0.54,10.51
+DKL,"Delek Logistics Partners, LP",Energy,12,10.55,7.03,6.3,9.72
+CCOI,"Cogent Communications Holdings, Inc.",Communication Services,12,4.26,7.34,9.95,12.86
+MBWM,Mercantile Bank Corporation,Financials,12,5.98,6.37,6.03,11.46
+NBTB,NBT Bancorp Inc.,Financials,12,6.46,6.27,4.69,4.63
+LKFN,Lakeland Financial Corporation,Financials,12,4.35,12.19,10.61,13.39
+BXS,BancorpSouth Bank,Financials,12,6.39,8.64,7.09,14.87
+TSBK,"Timberland Bancorp, Inc.",Financials,12,5.44,4.92,10.09,18.35
+NDAQ,"Nasdaq, Inc.",Financials,12,9.31,10.16,8.8,17.14
+CNO,"CNO Financial Group, Inc.",Financials,12,6.79,7.3,7.94,10.14
+MPLX,MPLX LP,Energy,12,10.45,8.21,5.77,10.1
+MTRN,Materion Corporation,Materials,12,3.89,4.05,4.23,4.8
+UFPI,"Universal Forest Products, Inc.",Industrials,12,20.0,26.64,26.98,20.57
+BC,Brunswick Corporation,Consumer Discretionary,12,5.01,9.64,14.07,14.09
+AMSF,"AMERISAFE, Inc.",Financials,12,8.83,9.1,8.16,11.92
 WTS,"Watts Water Technologies, Inc.",Industrials,12,19.57,17.78,12.89,11.03
 WSO,"Watsco, Inc.",Industrials,12,7.66,11.44,10.52,18.1
 ZTS,Zoetis Inc.,Health Care,12,15.2,20.0,21.38,19.63
-WTFC,Wintrust Financial Corporation,Financials,11,12.5,13.23,12.48,16.24
-SIGI,"Selective Insurance Group, Inc.",Financials,11,14.4,11.56,11.5,10.44
+AEE,Ameren Corporation,Utilities,11,6.35,6.81,6.9,5.23
 VMC,Vulcan Materials Company,Materials,11,6.98,7.53,8.22,23.67
+BFC,Bank First Corporation,Financials,11,6.9,22.18,14.15,16.39
+LLY,Eli Lilly and Company,Health Care,11,15.05,15.22,15.05,10.25
+UNTY,"Unity Bancorp, Inc.",Financials,11,8.34,13.05,10.9,19.05
+BAC,Bank of America Corporation,Financials,11,8.7,8.64,8.67,23.62
+SIGI,"Selective Insurance Group, Inc.",Financials,11,14.4,11.56,11.5,10.44
 SFBS,"ServisFirst Bancshares, Inc.",Financials,11,-21.06,2.74,7.57,33.52
+SBFG,"SB Financial Group, Inc.",Financials,11,7.7,10.15,10.31,13.9
+MATX,"Matson, Inc.",Industrials,11,4.77,7.59,8.95,7.18
+LSTR,"Landstar System, Inc.",Industrials,11,9.53,14.48,14.54,18.17
+MAS,Masco Corporation,Industrials,11,1.76,11.14,18.57,13.4
+OTTR,Otter Tail Corporation,Utilities,11,6.86,6.23,5.97,4.45
 OVLY,Oak Valley Bancorp,Financials,11,40.63,15.78,10.76,10.56
 OTEX,Open Text Corporation,Information Technology,11,3.87,6.74,8.69,11.87
-OSK,Oshkosh Corporation,Industrials,11,12.2,10.61,10.64,11.5
-REXR,"Rexford Industrial Realty, Inc.",Real Estate,11,9.87,20.27,17.68,13.28
-SBFG,"SB Financial Group, Inc.",Financials,11,7.7,10.15,10.31,13.9
+UBCP,"United Bancorp, Inc.",Financials,11,6.02,6.42,5.29,7.89
 CCBG,"Capital City Bank Group, Inc.",Financials,11,15.79,12.39,12.89,25.61
-CSGS,"CSG Systems International, Inc.",Information Technology,11,7.15,6.27,6.16,6.79
-AEE,Ameren Corporation,Utilities,11,6.35,6.81,6.9,5.23
-DHI,"D.R. Horton, Inc.",Consumer Discretionary,11,23.81,16.37,15.78,20.59
-UNTY,"Unity Bancorp, Inc.",Financials,11,8.34,13.05,10.9,19.05
-OTTR,Otter Tail Corporation,Utilities,11,6.86,6.23,5.97,4.45
-PLD,"Prologis, Inc.",Real Estate,11,10.35,15.08,12.62,11.27
-AVT,"Avnet, Inc.",Information Technology,11,6.67,12.05,9.32,7.52
-MORN,"Morningstar, Inc.",Financials,11,62.01,37.01,16.76,13.59
-OC,Owens Corning,Industrials,11,15.39,32.15,22.23,14.14
-JOUT,Johnson Outdoors Inc.,Consumer Discretionary,11,4.77,12.39,17.48,15.97
-MFC,Manulife Financial Corporation,Financials,11,8.77,7.75,9.23,8.51
-MAS,Masco Corporation,Industrials,11,1.76,11.14,18.57,13.4
-MATX,"Matson, Inc.",Industrials,11,4.77,7.59,8.95,7.18
-MDLZ,"Mondelez International, Inc.",Consumer Staples,11,10.5,10.41,10.43,11.93
-MS,Morgan Stanley,Financials,11,9.24,19.13,22.26,26.08
-LAND,Gladstone Land Corporation,Real Estate,11,9.51,3.87,2.55,5.35
-TKR,The Timken Company,Industrials,11,3.85,4.3,3.81,3.05
-LSTR,"Landstar System, Inc.",Industrials,11,9.53,14.48,14.54,18.17
-LLY,Eli Lilly and Company,Health Care,11,15.05,15.22,15.05,10.25
 CFFI,C&F Financial Corporation,Financials,11,0.0,3.67,3.39,4.0
 CDW,CDW Corporation,Information Technology,11,3.98,13.5,14.46,28.99
-UBCP,"United Bancorp, Inc.",Financials,11,6.02,6.42,5.29,7.89
-ALG,Alamo Group Inc.,Industrials,11,18.19,22.92,16.73,14.03
-FSBW,"FS Bancorp, Inc.",Financials,11,6.01,24.08,26.68,24.88
-BAC,Bank of America Corporation,Financials,11,8.7,8.64,8.67,23.62
-GCBC,"Greene County Bancorp, Inc.",Financials,11,13.34,10.8,10.12,6.72
-BFC,Bank First Corporation,Financials,11,6.9,22.18,14.15,16.39
-IOSP,Innospec Inc.,Materials,11,9.93,10.15,8.73,10.92
-ICE,"Intercontinental Exchange, Inc.",Financials,11,7.15,10.9,10.36,13.23
+LAND,Gladstone Land Corporation,Real Estate,11,9.51,3.87,2.55,5.35
+OC,Owens Corning,Industrials,11,15.39,32.15,22.23,14.14
+OSK,Oshkosh Corporation,Industrials,11,12.2,10.61,10.64,11.5
 IBCP,Independent Bank Corporation,Financials,11,4.35,4.56,5.93,18.23
-HVT,"Haverty Furniture Companies, Inc.",Consumer Discretionary,11,6.79,9.12,10.64,14.69
+JOUT,Johnson Outdoors Inc.,Consumer Discretionary,11,4.77,12.39,17.48,15.97
+CSGS,"CSG Systems International, Inc.",Information Technology,11,7.15,6.27,6.16,6.79
+TKR,The Timken Company,Industrials,11,3.85,4.3,3.81,3.05
+DHI,"D.R. Horton, Inc.",Consumer Discretionary,11,23.81,16.37,15.78,20.59
+AVT,"Avnet, Inc.",Information Technology,11,6.67,12.05,9.32,7.52
 ALLE,Allegion plc,Industrials,11,6.67,10.07,12.2,19.63
-SAH,"Sonic Automotive, Inc.",Consumer Discretionary,10,7.76,39.55,25.6,28.74
+ALG,Alamo Group Inc.,Industrials,11,18.19,22.92,16.73,14.03
+MS,Morgan Stanley,Financials,11,9.24,19.13,22.26,26.08
+MORN,"Morningstar, Inc.",Financials,11,62.01,37.01,16.76,13.59
+MDLZ,"Mondelez International, Inc.",Consumer Staples,11,10.5,10.41,10.43,11.93
+PLD,"Prologis, Inc.",Real Estate,11,10.35,15.08,12.62,11.27
+REXR,"Rexford Industrial Realty, Inc.",Real Estate,11,9.87,20.27,17.68,13.28
+ICE,"Intercontinental Exchange, Inc.",Financials,11,7.15,10.9,10.36,13.23
+IOSP,Innospec Inc.,Materials,11,9.93,10.15,8.73,10.92
+HVT,"Haverty Furniture Companies, Inc.",Consumer Discretionary,11,6.79,9.12,10.64,14.69
+FSBW,"FS Bancorp, Inc.",Financials,11,6.01,24.08,26.68,24.88
+MFC,Manulife Financial Corporation,Financials,11,8.77,7.75,9.23,8.51
+WTFC,Wintrust Financial Corporation,Financials,11,12.5,13.23,12.48,16.24
+GCBC,"Greene County Bancorp, Inc.",Financials,11,13.34,10.8,10.12,6.72
+FDBC,"Fidelity D & D Bancorp, Inc.",Financials,10,5.48,7.79,7.76,8.74
 VALU,"Value Line, Inc.",Financials,10,8.26,10.7,8.36,7.0
-UTL,Unitil Corporation,Utilities,10,4.94,3.81,2.82,2.11
 WMS,"Advanced Drainage Systems, Inc.",Industrials,10,14.82,13.87,12.12,31.54
-SNV,Synovus Financial Corp.,Financials,10,0.0,4.82,4.85,17.24
-LOGI,Logitech International S.A.,Information Technology,10,-46.85,13.01,12.97,17.76
-MWA,"Mueller Water Products, Inc.",Industrials,10,4.86,5.12,4.79,13.98
-NNI,"Nelnet, Inc.",Financials,10,5.67,7.57,8.65,10.85
-SONY,Sony Corporation,Consumer Discretionary,10,10.87,4.72,11.02,17.63
-OGS,"ONE Gas, Inc.",Utilities,10,1.54,4.41,5.71,12.14
-NPO,"EnPro Industries, Inc.",Industrials,10,3.45,3.58,3.72,
-MSCI,MSCI Inc.,Financials,10,15.95,20.7,20.5,42.92
-NEP,"NextEra Energy Partners, LP",Utilities,10,6.48,11.41,12.82,34.36
-STZ,"Constellation Brands, Inc.",Consumer Staples,10,12.97,8.97,5.57,
-SWKS,"Skyworks Solutions, Inc.",Information Technology,10,6.16,9.2,10.98,22.94
+EQIX,"Equinix, Inc. (REIT)",Real Estate,10,17.6,14.08,11.61,
 ISTR,Investar Holding Corporation,Financials,10,3.8,9.77,12.5,40.38
-LRCX,Lam Research Corporation,Information Technology,10,15.44,15.38,13.84,31.89
+SWKS,"Skyworks Solutions, Inc.",Information Technology,10,6.16,9.2,10.98,22.94
+STZ,"Constellation Brands, Inc.",Consumer Staples,10,12.97,8.97,5.57,
 FCPT,"Four Corners Property Trust, Inc.",Real Estate,10,1.84,2.66,3.87,
-UCB,"United Community Banks, Inc.",Financials,10,2.18,6.42,6.7,23.93
-HBCP,"Home Bancorp, Inc.",Financials,10,1.01,3.54,3.76,30.6
-FXNC,First National Corporation,Financials,10,0.84,8.03,10.95,23.22
 GLPI,"Gaming and Leisure Properties, Inc.",Real Estate,10,4.83,4.56,10.43,-10.68
-TTEK,"Tetra Tech, Inc.",Industrials,10,11.89,13.64,14.67,18.33
+FXNC,First National Corporation,Financials,10,0.84,8.03,10.95,23.22
+SONY,Sony Corporation,Consumer Discretionary,10,10.87,4.72,11.02,17.63
+EFSC,Enterprise Financial Services Corp,Financials,10,6.01,12.23,11.33,17.58
+DHR,Danaher Corporation,Health Care,10,2.86,8.74,9.7,10.45
+CTRE,"CareTrust REIT, Inc.",Real Estate,10,3.58,3.06,5.21,24.96
+OGS,"ONE Gas, Inc.",Utilities,10,1.54,4.41,5.71,12.14
+HBCP,"Home Bancorp, Inc.",Financials,10,1.01,3.54,3.76,30.6
+SNV,Synovus Financial Corp.,Financials,10,0.0,4.82,4.85,17.24
 DLB,"Dolby Laboratories, Inc.",Information Technology,10,10.82,10.57,9.26,28.53
 DKS,"DICK'S Sporting Goods, Inc.",Consumer Discretionary,10,10.01,40.11,31.96,24.3
-DHR,Danaher Corporation,Health Care,10,2.86,8.74,9.7,10.45
+NNI,"Nelnet, Inc.",Financials,10,5.67,7.57,8.65,10.85
+NEP,"NextEra Energy Partners, LP",Utilities,10,6.48,11.41,12.82,34.36
+TTEK,"Tetra Tech, Inc.",Industrials,10,11.89,13.64,14.67,18.33
+UCB,"United Community Banks, Inc.",Financials,10,2.18,6.42,6.7,23.93
+NPO,"EnPro Industries, Inc.",Industrials,10,3.45,3.58,3.72,
+LRCX,Lam Research Corporation,Information Technology,10,15.44,15.38,13.84,31.89
+MWA,"Mueller Water Products, Inc.",Industrials,10,4.86,5.12,4.79,13.98
+LOGI,Logitech International S.A.,Information Technology,10,-46.85,13.01,12.97,17.76
+UTL,Unitil Corporation,Utilities,10,4.94,3.81,2.82,2.11
+MSCI,MSCI Inc.,Financials,10,15.95,20.7,20.5,42.92
 ETR,Entergy Corporation,Utilities,10,5.77,5.95,4.64,3.3
-EFSC,Enterprise Financial Services Corp,Financials,10,6.01,12.23,11.33,17.58
-EQIX,"Equinix, Inc. (REIT)",Real Estate,10,17.6,14.08,11.61,
-FDBC,"Fidelity D & D Bancorp, Inc.",Financials,10,5.48,7.79,7.76,8.74
-CTRE,"CareTrust REIT, Inc.",Real Estate,10,3.58,3.06,5.21,24.96
+SAH,"Sonic Automotive, Inc.",Consumer Discretionary,10,7.76,39.55,25.6,28.74
+BCE,BCE Inc.,Communication Services,9,0.91,1.25,3.95,2.7
+FSV,FirstService Corporation,Real Estate,9,66.67,27.14,20.12,
+DG,Dollar General Corporation,Consumer Discretionary,9,33.34,13.37,13.56,
+STN,Stantec Inc.,Industrials,9,4.48,5.22,6.79,6.24
+HOFT,Hooker Furniture Corporation,Consumer Discretionary,9,3.38,7.53,8.57,8.69
+HLI,"Houlihan Lokey, Inc.",Financials,9,3.67,11.74,13.5,
+IMO,Imperial Oil Limited,Energy,9,52.91,38.57,28.1,16.64
+SLF,Sun Life Financial Inc.,Financials,9,34.15,17.07,13.42,8.57
+HRB,"H&R Block, Inc.",Consumer Discretionary,9,13.94,9.12,6.18,5.68
+CHCT,Community Healthcare Trust Incorporated,Real Estate,9,2.22,2.27,2.33,
+RY,Royal Bank of Canada,Financials,9,2.92,5.82,5.86,4.71
+MLM,"Martin Marietta Materials, Inc.",Materials,9,9.29,9.05,8.24,6.7
+GILD,"Gilead Sciences, Inc.",Health Care,9,2.67,2.75,4.1,
+LCII,LCI Industries,Consumer Discretionary,9,2.39,7.62,11.02,
+BWXT,"BWX Technologies, Inc.",Industrials,9,4.35,4.56,7.15,9.15
+BMO,Bank of Montreal,Financials,9,3.89,9.53,7.76,4.82
+CGNX,Cognex Corporation,Information Technology,9,7.02,7.58,8.28,
+NBHC,National Bank Holdings Corporation,Financials,9,7.7,8.79,8.36,18.81
+LW,"Lamb Weston Holdings, Inc.",Consumer Staples,9,28.58,15.28,12.48,
+NXRT,"NexPoint Residential Trust, Inc.",Real Estate,9,10.15,10.56,10.78,
+NSA,National Storage Affiliates Trust,Real Estate,9,0.9,12.27,12.12,
+CABO,"Cable One, Inc.",Communication Services,9,1.73,3.97,6.79,
+CSWC,Capital Southwest Corporation,Financials,9,4.55,9.33,7.94,27.67
+TFII,TFI International Inc.,Industrials,9,41.38,28.78,22.55,14.21
+PEBO,Peoples Bancorp Inc.,Financials,9,2.59,3.6,3.8,10.24
+ORRF,"Orrstown Financial Services, Inc.",Financials,9,7.5,5.14,7.47,
+CNQ,Canadian Natural Resources Limited,Energy,9,13.35,24.99,22.41,14.35
+KNSL,"Kinsale Capital Group, Inc.",Financials,8,7.15,10.9,13.4,
+CBAN,"Colony Bankcorp, Inc.",Financials,8,2.28,3.16,8.45,
+CQP,"Cheniere Energy Partners, L.P.",Energy,8,2.26,6.03,5.55,6.43
+CRAI,"CRA International, Inc.",Industrials,8,44.67,25.8,21.2,
+PFIS,Peoples Financial Services Corp.,Financials,8,25.31,11.07,8.45,5.19
+JBSS,"John B. Sanfilippo & Son, Inc.",Consumer Staples,8,6.25,6.69,7.22,
+CTRA,Coterra Energy,Energy,8,5.01,23.59,19.14,26.51
+OLED,Universal Display Corporation,Information Technology,8,14.29,26.0,31.96,
+COP,ConocoPhillips,Energy,8,65.88,26.0,21.27,2.12
+CNA,CNA Financial Corporation,Financials,8,4.77,5.01,4.69,5.82
+ODFL,"Old Dominion Freight Line, Inc.",Industrials,8,30.01,37.51,35.63,
+NI,NiSource Inc.,Utilities,8,6.01,6.4,5.79,0.39
+NOA,North American Construction Group Ltd.,Energy,8,29.23,43.84,33.44,18.13
+UNF,UniFirst Corporation,Industrials,8,6.35,8.47,17.93,24.49
+INVH,Invitation Homes Inc.,Real Estate,8,-14.4,18.45,16.8,
+CW,Curtiss-Wright Corporation,Industrials,8,5.07,5.35,4.7,4.79
+HTH,Hilltop Holdings Inc.,Financials,8,6.25,12.32,16.28,
+SSNC,"SS&C Technologies Holdings, Inc.",Information Technology,8,11.37,12.96,18.19,31.69
+EOG,"EOG Resources, Inc.",Energy,8,10.31,31.18,29.11,21.69
+EQR,Equity Residential,Real Estate,8,-23.59,-5.64,-2.26,0.13
+GWRS,"Global Water Resources, Inc.",Utilities,8,8.96,6.4,4.15,
+SNDR,"Schneider National, Inc.",Industrials,8,5.56,10.72,9.63,
+GIC,Global Industrial Company,Industrials,8,25.0,16.04,15.82,
+GHC,Graham Holdings Company,Consumer Discretionary,8,4.25,4.44,4.36,-3.87
+SUI,"Sun Communities, Inc.",Real Estate,8,1.08,4.24,4.62,3.76
+G,Genpact Limited,Information Technology,8,10.91,12.37,12.41,
+FISI,"Financial Institutions, Inc.",Financials,8,0.0,3.58,3.72,4.54
+FCF,First Commonwealth Financial Corporation,Financials,8,4.05,4.22,5.19,6.29
+GRMN,Garmin Ltd.,Consumer Discretionary,8,2.06,4.39,5.88,4.66
+AMAT,"Applied Materials, Inc.",Information Technology,8,24.6,17.38,12.87,14.29
+MTB,M&T Bank Corporation,Financials,8,2.89,5.94,5.47,6.69
+VRTS,"Virtus Investment Partners, Inc.",Financials,8,16.06,26.16,27.94,24.35
+MSBI,"Midland States Bancorp, Inc.",Financials,8,3.34,3.46,5.04,
+WTW,Willis Towers Watson Public Limited Company,Financials,8,4.77,5.24,6.25,1.03
+YUM,"Yum! Brands, Inc.",Consumer Discretionary,7,10.75,10.25,9.8,5.84
+MOS,The Mosaic Company,Materials,7,5.01,45.1,36.86,-1.73
+MPWR,"Monolithic Power Systems, Inc.",Information Technology,7,25.0,27.72,25.6,27.23
+WD,"Walker & Dunlop, Inc.",Financials,7,3.18,9.14,16.73,
+WGO,"Winnebago Industries, Inc.",Consumer Discretionary,7,13.4,32.99,23.62,30.31
+SAMG,Silvercrest Asset Management Group Inc.,Financials,7,5.41,5.73,5.39,4.98
+GNTY,"Guaranty Bancshares, Inc.",Financials,7,4.35,6.27,8.58,
+FBMS,"The First Bancshares, Inc.",Financials,7,11.12,19.92,26.4,20.9
+EWBC,"East West Bancorp, Inc.",Financials,7,14.59,18.57,15.84,11.82
+FUNC,First United Corporation,Financials,7,5.13,12.24,15.44,
+GOLF,Acushnet Holdings Corp.,Consumer Discretionary,7,10.26,9.23,8.96,
+HESM,Hess Midstream LP,Energy,7,11.17,11.29,11.06,
+HLNE,Hamilton Lane Incorporated,Financials,7,10.38,12.02,13.05,
+PWR,"Quanta Services, Inc.",Industrials,7,-18.19,14.48,9.7,
+HBB,Hamilton Beach Brands Holding Company,Consumer Discretionary,7,4.6,4.83,5.09,
+PRK,Park National Corporation,Financials,7,0.96,0.97,0.98,1.21
+SF,Stifel Financial Corp.,Financials,7,16.67,40.95,33.25,
+DVN,Devon Energy Corporation,Energy,7,37.5,26.0,25.74,1.59
+IIPR,"Innovative Industrial Properties, Inc.",Real Estate,7,4.16,9.55,21.59,
+PHM,"PulteGroup, Inc.",Consumer Discretionary,7,20.59,12.89,12.76,13.56
+NYT,The New York Times Company,Communication Services,7,19.05,22.81,21.36,12.07
+MBIN,Merchants Bancorp,Financials,7,12.5,14.48,14.04,
+VICI,VICI Properties Inc.,Real Estate,7,5.28,7.1,7.7,
+AWI,"Armstrong World Industries, Inc.",Industrials,7,10.18,10.07,9.63,
+LPX,Louisiana-Pacific Corporation,Materials,7,8.34,15.22,14.01,
+WING,Wingstop Inc.,Consumer Discretionary,7,19.52,16.49,19.63,
+ACNB,ACNB Corporation,Financials,7,10.53,7.66,5.16,5.05
+AIN,Albany International Corp.,Industrials,7,3.97,9.04,7.55,5.25
+WMB,"The Williams Companies, Inc.",Energy,7,6.15,5.03,4.57,-0.3
+TPB,"Turning Point Brands, Inc.",Consumer Staples,7,7.7,8.38,9.24,
+OFLX,"Omega Flex, Inc.",Industrials,7,3.06,4.59,4.57,
+KFRC,Kforce Inc.,Industrials,7,5.56,15.76,16.12,14.01
+TMO,Thermo Fisher Scientific Inc.,Health Care,7,11.43,14.48,15.47,10.03
+NTR,Nutrien Ltd.,Materials,7,1.92,5.54,4.19,4.44
+LCNB,LCNB Corp.,Financials,7,3.54,4.56,4.99,3.24
+KMI,"Kinder Morgan, Inc.",Energy,7,1.78,2.21,3.81,-3.88
+BCC,Boise Cascade Company,Materials,7,17.15,24.99,17.26,
+OMF,"OneMain Holdings, Inc.",Financials,6,3.01,17.35,32.74,
+BKU,"BankUnited, Inc.",Financials,6,7.55,7.41,6.3,0.83
+KOF,"Coca-Cola FEMSA, S.A.B. de C.V.",Consumer Staples,6,23.37,17.87,16.89,6.4
+NC,"NACCO Industries, Inc.",Energy,6,4.66,4.67,4.14,-1.27
+J,Jacobs Engineering Group Inc.,Industrials,6,11.54,11.36,11.28,
+OVV,Ovintiv Inc.,Energy,6,4.35,36.92,74.02,15.67
+CSWI,"CSW Industrials, Inc.",Industrials,6,14.87,13.27,15.99,
+PCB,PCB Bancorp,Financials,6,30.44,26.94,29.2,
+KLIC,"Kulicke and Soffa Industries, Inc.",Information Technology,6,4.55,10.92,10.9,
+NXPI,NXP Semiconductors N.V.,Information Technology,6,0.0,21.71,26.55,
+VOYA,"Voya Financial, Inc.",Financials,6,75.0,41.9,45.69,48.6
+CNOB,"ConnectOne Bancorp, Inc.",Financials,6,6.77,17.3,15.53,9.0
+HTBI,"HomeTrust Bancshares, Inc.",Financials,6,9.76,10.9,12.48,
+HTGC,"Hercules Capital, Inc.",Financials,6,1.27,7.45,4.73,2.59
+RICK,"RCI Hospitality Holdings, Inc.",Consumer Discretionary,6,8.34,17.57,14.87,
+PNR,Pentair plc,Industrials,6,4.55,4.77,5.03,-1.78
+ETD,Ethan Allen Interiors Inc.,Consumer Discretionary,6,9.29,5.86,14.43,13.81
+PSTL,"Postal Realty Trust, Inc.",Real Estate,6,1.06,2.75,36.45,
+EQH,"Equitable Holdings, Inc.",Financials,6,9.31,9.81,10.14,
+EBAY,eBay Inc.,Consumer Discretionary,6,8.01,14.48,14.04,
+FBP,First BanCorp.,Financials,6,14.29,27.34,35.53,
+EPRT,"Essential Properties Realty Trust, Inc.",Real Estate,6,29.47,13.19,10.51,
+FBK,FB Financial Corporation,Financials,6,13.34,15.62,16.28,
+FANG,"Diamondback Energy, Inc.",Energy,6,53.66,42.28,48.95,
+VST,Vistra Energy Corp.,Utilities,6,32.97,22.06,16.89,
+ASH,Ashland Global Holdings Inc.,Materials,6,7.39,10.84,8.28,1.64
+VRSK,"Verisk Analytics, Inc.",Industrials,6,14.71,10.38,9.31,
+GIS,"General Mills, Inc.",Consumer Staples,6,5.31,5.28,3.96,3.99
+BFST,"Business First Bancshares, Inc.",Financials,6,12.01,6.78,8.07,
+LDOS,"Leidos Holdings, Inc.",Information Technology,6,5.48,3.23,3.14,1.87
+WKC,World Kinect Corporation,Energy,6,21.43,12.32,13.57,16.32
+PLBC,Plumas Bancorp,Financials,5,8.01,24.48,18.62,
+DRI,"Darden Restaurants, Inc.",Consumer Discretionary,5,7.54,16.26,10.71,9.44
+PINE,"Alpine Income Property Trust, Inc.",Real Estate,5,0.92,3.03,80.46,
+CZWI,"Citizens Community Bancorp, Inc.",Financials,5,10.35,11.64,9.86,23.12
+INFY,Infosys Limited,Information Technology,5,35.96,13.14,17.24,14.6
+RDN,Radian Group Inc.,Financials,5,8.89,21.61,150.18,58.17
+SPFI,"South Plains Financial, Inc.",Financials,5,7.7,23.13,56.32,
+RPRX,Royalty Pharma plc,Health Care,5,5.01,7.3,,
+SNX,SYNNEX Corporation,Information Technology,5,14.29,26.0,1.3,29.04
+ESNT,Essent Group Ltd.,Financials,5,12.01,16.97,30.15,
+EME,"EMCOR Group, Inc.",Industrials,5,34.79,21.39,23.79,11.26
+SSTK,"Shutterstock, Inc.",Consumer Discretionary,5,11.12,12.63,,
+CWEN,"Clearway Energy, Inc.",Utilities,5,7.32,7.62,15.65,
+MTG,MGIC Investment Corporation,Financials,5,13.96,20.51,32.5,
+WHD,"Cactus, Inc.",Energy,5,34.79,17.73,47.11,
+ALSN,"Allison Transmission Holdings, Inc.",Industrials,5,8.7,9.58,10.76,6.97
+AMCR,Amcor plc,Materials,5,2.04,2.08,16.42,
+ARES,Ares Management Corporation,Financials,5,20.78,25.55,23.79,24.38
+ADC,Agree Realty Corporation,Real Estate,5,2.78,4.84,5.65,5.6
+MUSA,Murphy USA Inc.,Consumer Discretionary,5,15.49,19.85,,
+WAL,Western Alliance Bancorporation,Financials,5,2.76,7.49,24.41,
+FLNG,Flex LNG Ltd.,Energy,5,40.0,41.58,120.82,
+AME,"AMETEK, Inc.",Industrials,5,12.01,11.87,14.87,13.0
+FOX,Fox Corporation,Communication Services,5,3.93,4.09,-3.71,
+FDP,Fresh Del Monte Produce Inc.,Consumer Staples,5,33.34,26.0,48.18,7.18
+SBAC,SBA Communications Corporation,Real Estate,5,15.3,19.11,39.58,
+ERIC,Telefonaktiebolaget LM Ericsson (publ),Information Technology,5,1.46,3.19,19.02,-5.61
+GPRK,GeoPark Limited,Energy,5,9.7,67.41,69.59,
+FOXA,Fox Corporation,Communication Services,5,3.93,4.09,-3.71,
+CARR,Carrier Global Corporation,Industrials,5,6.72,15.95,,
+CAG,"Conagra Brands, Inc.",Consumer Staples,5,2.95,6.02,10.5,3.43
+KTB,"Kontoor Brands, Inc.",Consumer Discretionary,5,4.13,6.77,12.52,
+KRG,Kite Realty Group Trust,Real Estate,5,5.21,14.1,-8.65,-0.1
+CTVA,"Corteva, Inc.",Materials,5,6.46,6.92,20.48,
+CFBK,Central Federal Corporation,Financials,5,8.7,24.36,,
+CMC,Commercial Metals Company,Materials,5,9.38,11.87,7.84,3.85
+TOL,"Toll Brothers, Inc.",Consumer Discretionary,5,8.44,13.23,15.39,
+CTSH,Cognizant Technology Solutions Corporation,Information Technology,5,3.45,7.73,8.45,
+KBR,"KBR, Inc.",Information Technology,5,11.12,10.9,13.4,6.49
+CSR,Centerspace,Real Estate,5,2.75,1.85,1.39,19.16
+KKR,KKR & Co. Inc.,Financials,5,6.16,6.58,6.66,-10.23
+OXM,"Oxford Industries, Inc.",Consumer Discretionary,5,6.41,22.14,12.91,12.63
+PATK,"Patrick Industries, Inc.",Industrials,5,18.43,24.36,55.19,
+PBHC,"Pathfinder Bancorp, Inc.",Financials,5,8.34,13.05,10.2,18.27
+PFBC,Preferred Bank,Financials,5,27.28,24.82,18.47,39.55
+TAC,TransAlta Corporation,Utilities,5,8.34,5.99,7.9,-12.33
+TJX,"The TJX Companies, Inc.",Consumer Discretionary,5,12.77,11.91,10.5,15.84
+TLK,Perusahaan Perseroan (Persero) PT Telekomunikasi Indonesia Tbk,Communication Services,5,0.1,8.01,7.56,4.78
+KDP,Keurig Dr Pepper Inc.,Consumer Staples,5,7.37,9.04,7.84,
+MCBS,"MetroCity Bankshares, Inc.",Financials,5,15.28,21.75,14.6,
+BSVN,Bank7 Corp.,Financials,5,21.63,26.0,35.1,
+NRG,"NRG Energy, Inc.",Utilities,5,7.95,7.84,68.51,11.69
+NVS,Novartis AG,Health Care,5,6.89,5.35,5.71,3.09
+BOTJ,"Bank of the James Financial Group, Inc.",Financials,5,25.0,14.39,12.89,11.37
+LXP,Lexington Realty Trust,Real Estate,5,3.97,5.87,4.95,-2.49
+KNX,Knight-Swift Transportation Holdings Inc.,Industrials,5,14.29,18.98,21.68,10.31
+BRX,Brixmor Property Group Inc.,Real Estate,5,4.81,8.23,-0.55,4.14
+UMH,"UMH Properties, Inc.",Real Estate,5,3.66,3.81,3.38,1.67
+VCTR,"Victory Capital Holdings, Inc.",Financials,5,21.49,43.16,73.12,
+VIV,TelefÃ´nica Brasil S.A.,Communication Services,5,-29.12,-12.02,,
+VMI,"Valmont Industries, Inc.",Industrials,5,0.0,6.27,9.86,5.73
