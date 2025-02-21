@@ -24,7 +24,7 @@ class Stock:
     # Get cash flow statement
     def get_cashflow_data(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=WYGPKB8T21WMM6LO'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -35,7 +35,7 @@ class Stock:
                 if i < number_of_years:
                     date = report['fiscalDateEnding'].split('-')[0]
                     cashflow_data[date] = {
-                        'operatingCashFow': report['operatingCashflow'],
+                        'operatingCashFlow': report['operatingCashflow'],
                         'capitalExpenditures': report['capitalExpenditures'],
                         'cashFlowInvesting': report['cashflowFromInvestment'],
                         'cashFlowFinancing': report['cashflowFromFinancing'],
@@ -57,7 +57,7 @@ class Stock:
     # Get income statement
     def get_income_statement(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=WYGPKB8T21WMM6LO'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -106,7 +106,7 @@ class Stock:
     # Get balance sheet
     def get_balance_sheet(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=H03ZN6G32VUTNCGT'
+            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=WYGPKB8T21WMM6LO'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -592,20 +592,42 @@ class Stock:
             current_year = datetime.now().year
             cashflow_statement_id = db_crud.select_financial_statement(company_id, 'cash_flow_statement', current_year - 2)
 
-            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+            # Get operating cash flow
+            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFlow')
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+
+            # Get capital expenditures
             capital_expenditures = db_crud.select_financial_data(cashflow_statement_id, 'capitalExpenditures')
 
+            # Check for None values
             if operating_cash_flow is None or capital_expenditures is None:
                 return 0
-            
+                
+            # Convert to integers
+            try:
+                operating_cash_flow = int(operating_cash_flow)
+                capital_expenditures = int(capital_expenditures)
+            except (ValueError, TypeError):
+                return 0
+
             free_cash_flow = operating_cash_flow - capital_expenditures
 
+            # Get shares outstanding
             balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', current_year - 2)
             no_shares = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
 
-            if no_shares is None or no_shares == 0:
+            if no_shares is None or no_shares == 'None':
                 return 0
-            
+                
+            try:
+                no_shares = int(no_shares)
+            except (ValueError, TypeError):
+                return 0
+
+            if no_shares == 0:
+                return 0
+                
             return float(free_cash_flow / no_shares)
         except Exception as e:
             print(f"Error calculating FCF per share for {self.ticker}: {e}")
@@ -619,18 +641,43 @@ class Stock:
             company_id = db_crud.select_company(self.ticker)
             current_year = datetime.now().year
             cashflow_statement_id = db_crud.select_financial_statement(company_id, 'cash_flow_statement', current_year - 2)
-            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+
+            # Get operating cash flow
+            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFlow')
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+                
             capital_expenditures = db_crud.select_financial_data(cashflow_statement_id, 'capitalExpenditures')
+
             if operating_cash_flow is None or capital_expenditures is None:
                 return 0
-            free_cash_flow = operating_cash_flow - capital_expenditures
-            dividendPayout = abs(db_crud.select_financial_data(cashflow_statement_id, 'dividendPayout'))
-            if dividendPayout is None or free_cash_flow == 0:
+                
+            # Convert to integers
+            try:
+                operating_cash_flow = int(operating_cash_flow)
+                capital_expenditures = int(capital_expenditures)
+            except (ValueError, TypeError):
                 return 0
-            return dividendPayout / free_cash_flow
+
+            free_cash_flow = operating_cash_flow - capital_expenditures
+
+            # Get dividend payout
+            dividendPayout = db_crud.select_financial_data(cashflow_statement_id, 'dividendPayout')
+            if dividendPayout is None or dividendPayout == 'None':
+                return 0
+                
+            try:
+                dividendPayout = abs(int(dividendPayout))
+            except (ValueError, TypeError):
+                return 0
+
+            if free_cash_flow == 0:
+                return 0
+                
+            return float(dividendPayout / free_cash_flow)
         except Exception as e:
             print(f"Error calculating FCF Payout Ratio for {self.ticker}: {e}")
-            return 0  # Ensure a return value even in case of failure
+            return 0
         
     # Compute Operating Cash Flow per Share
     def get_operating_cash_flow_per_share(self):
@@ -640,13 +687,20 @@ class Stock:
             company_id = db_crud.select_company(self.ticker)
             current_year = datetime.now().year
             cashflow_statement_id = db_crud.select_financial_statement(company_id, 'cash_flow_statement', current_year - 2)
-            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+            
+            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFlow')
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+
             if operating_cash_flow is None:
                 return 0
+            
             balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', current_year - 2)
+
             no_shares = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
             if no_shares is None or no_shares == 0:
                 return 0
+            
             return float(operating_cash_flow / no_shares)
         except Exception as e:
             print(f"Error calculating operating cash flow per share for {self.ticker}: {e}")
@@ -660,12 +714,18 @@ class Stock:
             company_id = db_crud.select_company(self.ticker)
             current_year = datetime.now().year
             cashflow_statement_id = db_crud.select_financial_statement(company_id, 'cash_flow_statement', current_year - 2)
-            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+            
+            operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFlow')
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = db_crud.select_financial_data(cashflow_statement_id, 'operatingCashFow')
+            
             if operating_cash_flow is None or operating_cash_flow == 0:
                 return 0
+            
             dividendPayout = abs(db_crud.select_financial_data(cashflow_statement_id, 'dividendPayout'))
             if dividendPayout is None:
                 return 0
+            
             return dividendPayout / operating_cash_flow
         except Exception as e:
             print(f"Error calculating operating cash flow payout ratio for {self.ticker}: {e}")

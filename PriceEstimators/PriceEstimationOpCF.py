@@ -30,8 +30,14 @@ class PriceOpCFRatioEstimator:
         for year in range(start_year, end_year + 1):
             company_id = self.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
-            op_cf = self.db_crud.select_financial_data(financial_statement_id, 'operatingCashFlow')
-            op_cf_history[year] = op_cf
+
+            operating_cash_flow = self.db_crud.select_financial_data(financial_statement_id, 'operatingCashFlow')
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = self.db_crud.select_financial_data(financial_statement_id, 'operatingCashFow')
+
+            operating_cash_flow = int(operating_cash_flow) if operating_cash_flow and operating_cash_flow != 'None' else 0  
+
+            op_cf_history[year] = operating_cash_flow
         return op_cf_history
     
     # get shares outstanding from database for last 15 years

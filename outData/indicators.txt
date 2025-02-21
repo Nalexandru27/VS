@@ -1,8 +1,0 @@
-Professional analysts, therefore, use AFFO to estimate the REIT’s value. Although FFO is commonly used, professionals tend to focus on AFFO for two reasons:
-
-It measures more precisely the residual cash flow available to shareholders, and it’s thus a better “base number” for estimating value.
-It is true residual cash flow and a better predictor of the REIT’s future capacity to pay dividends.
-
-FFO = net income + amortization + depreciation - capital gains from property sales
-
-AFFO = FFO + rent increases - capital expenditures - routine maintenance amounts

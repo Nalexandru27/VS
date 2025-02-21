@@ -7,6 +7,8 @@ class dividendAnalysis:
     def __init__(self, stock: Stock, db_name):
         self.stock = stock
         self.db_crud = DatabaseCRUD(db_name)
+        self.plots_dir = "D:/FacultyYear3/Licenta/VS/outData/dividend_analysis"
+        os.makedirs(self.plots_dir, exist_ok=True)
     
     def dividends_stability(self, start_year, end_year):
         dict = {}
@@ -27,8 +29,11 @@ class dividendAnalysis:
             
             # operating cash flow
             operating_cash_flow = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFlow')
-            operating_cash_flow = int(operating_cash_flow) if operating_cash_flow and operating_cash_flow != 'None' else 0
+            if operating_cash_flow is None or operating_cash_flow == 'None':
+                operating_cash_flow = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFow')
             
+            operating_cash_flow = int(operating_cash_flow) if operating_cash_flow and operating_cash_flow != 'None' else 0
+
             # capital expenditures
             capex = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'capitalExpenditures')
             capex = int(capex) if capex and capex != 'None' else 0
@@ -69,6 +74,7 @@ class dividendAnalysis:
 
 
     def plot_dividend_sustainability(self, start_year, end_year):
+        print(f"Plotting dividend sustainability for {self.stock.ticker} from {start_year} to {end_year}")
         df = self.dividends_stability(start_year=start_year, end_year=end_year)
         plot_file = "D:/FacultyYear3/Licenta/VS/outData/dividend_plot.png"
 
@@ -85,15 +91,18 @@ class dividendAnalysis:
 
         # Add data labels with better visibility
         for i, txt in enumerate(eps_per_share):
-            plt.text(years[i], eps_per_share.iloc[i] + 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+            offset = eps_per_share.iloc[i] * 0.1
+            plt.text(years[i], eps_per_share.iloc[i] + offset, f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='blue', edgecolor='none', alpha=0.7), color='white')
 
         for i, txt in enumerate(free_cash_flow_per_share):
-            plt.text(years[i], free_cash_flow_per_share.iloc[i] - 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+            offset = free_cash_flow_per_share.iloc[i] * 0.1
+            plt.text(years[i], free_cash_flow_per_share.iloc[i] - offset, f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='green', edgecolor='none', alpha=0.7), color='white')
 
         for i, txt in enumerate(dividend_per_share):
-            plt.text(years[i], dividend_per_share.iloc[i] + 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+            offset = dividend_per_share.iloc[i] * 0.1
+            plt.text(years[i], dividend_per_share.iloc[i] + offset, f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='orange', edgecolor='none', alpha=0.7), color='white')
 
         # Add chart details
@@ -119,7 +128,7 @@ class dividendAnalysis:
         plt.savefig(plot_file, dpi=400)
         plt.close()
 
-        output_file = f"D:/FacultyYear3/Licenta/VS/outdata/{self.stock.ticker}.xlsx"
+        output_file = os.path.join(self.plots_dir, f"{self.stock.ticker}_analysis.xlsx")
         with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
             df.to_excel(writer, sheet_name='Dividend Data Analysis', index=True)
             worksheet = writer.sheets['Dividend Data Analysis']

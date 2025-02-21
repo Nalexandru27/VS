@@ -129,11 +129,36 @@ class DatabaseCRUD:
             return None
         return result[0]
     
-    def rename_column(self, table_name, old_column_name, new_column_name):
-        self.cursor.execute(f"""
-            ALTER TABLE {table_name} RENAME COLUMN {old_column_name} TO {new_column_name}                    
-        """, (table_name, old_column_name, new_column_name))
-        self.connection.commit()
+    def rename_column(self, old_column_name, new_column_name):
+        """Rename a column in financialData table by updating record_type values"""
+        try:
+            with self.connection:
+                # Check if old column exists
+                check_query = """
+                    SELECT COUNT(*) FROM financialData 
+                    WHERE record_type = ?
+                """
+                count = self.cursor.execute(check_query, (old_column_name,)).fetchone()[0]
+                
+                if count == 0:
+                    print(f"Warning: No records found with record_type '{old_column_name}'")
+                    return
+                    
+                # Update the record_type
+                update_query = """
+                    UPDATE financialData 
+                    SET record_type = ?
+                    WHERE record_type = ?
+                """
+                self.cursor.execute(update_query, (new_column_name, old_column_name))
+                self.connection.commit()
+                
+                print(f"Successfully renamed {count} records from '{old_column_name}' to '{new_column_name}'")
+                
+        except sqlite3.Error as e:
+            print(f"Error renaming column: {e}")
+            self.connection.rollback()
+            return
 
     def change_value(self, table_name, column_name, old_value, new_value):
         query = f"UPDATE {table_name} SET {column_name} = ? WHERE {column_name} = ?"
