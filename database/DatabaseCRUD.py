@@ -113,6 +113,12 @@ class DatabaseCRUD:
             return None
         return result[0]
     
+    def select_no_companies(self):
+        result = self.cursor.execute("""
+            SELECT COUNT(*) FROM company
+        """).fetchone()
+        return result[0]
+    
     def select_financial_statement(self, company_id, statement_type, year):
         result = self.cursor.execute("""
             SELECT id FROM financialStatement WHERE company_id = ? and statement_type = ? and year = ?
