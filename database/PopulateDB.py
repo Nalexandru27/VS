@@ -122,13 +122,13 @@ class PopulateDB:
 
     def populate_all(self, list_companies):
         # Populate company table
-        # try:
-        #     self.populate_company_table(list_companies)
-        #     print("Company table populated.")
-        # except Exception as e:
-        #     print(f"Error populating company table: {e}")
+        try:
+            self.populate_company_table(list_companies)
+            print("Company table populated.")
+        except Exception as e:
+            print(f"Error populating company table: {e}")
 
-        # Populate income statement
+        # # Populate income statement
         # try:
         #     print("Starting income statement population...")
         #     self.populate_income_statement(list_companies)
@@ -136,7 +136,7 @@ class PopulateDB:
         # except Exception as e:
         #     print(f"Error populating income statements: {e}")
 
-        # Populate cash flow statement
+        # # Populate cash flow statement
         # try:
         #     print("Starting cash flow statement population...")
         #     self.populate_cash_flow_statement(list_companies)
@@ -144,13 +144,13 @@ class PopulateDB:
         # except Exception as e:
         #     print(f"Error populating cash flow statements: {e}")
         
-        # Populate balance sheet
-        try:
-            print("Starting balance sheet population...")
-            self.populate_balance_sheet(list_companies)
-            print("Finished balance sheet population.")
-        except Exception as e:
-            print(f"Error populating balance sheets: {e}")
+        # # Populate balance sheet
+        # try:
+        #     print("Starting balance sheet population...")
+        #     self.populate_balance_sheet(list_companies)
+        #     print("Finished balance sheet population.")
+        # except Exception as e:
+        #     print(f"Error populating balance sheets: {e}")
 
 
         

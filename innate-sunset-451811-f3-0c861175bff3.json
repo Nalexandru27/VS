@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "innate-sunset-451811-f3",
+  "private_key_id": "0c861175bff3eb9f9dd771ebde17e06262ae32dc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDSVIx3WlZHfTTE\n6OUzlG5gyT36A0mpvRLMYv1HfLPKwsE1UtPvOxS/2vtFWmz0h2l/dzuNV8s3uY2j\nFOcK8mX3O08sSMASQeXaeJ8sMbeYr/uiAwUP1uKDh4Mjdhg5qv6XwtBQUDHEmeka\nZQX5MYOjjsEVr4gJtGO1A+4oDwzKA0+95XTl/EPr9Eh1lTi9a+mevmL/JeG2OtxM\nFX7wZ5/evWigxMbkZfLd/aSlrlbrKCz4OduE9edt2z/xgj54bi2DMSw0b7lKnmGg\nquqc8Pw9Mzx5kIwDG8NlaNe/WVOwr/SiZO28ft8e+gug7wPJjMhrSeRQacGMJogM\nz7MQ2dZhAgMBAAECggEADgS0l//dYEZoDfe3zwhFkw3Wo6M0dau0ZQrz9p/JG+p/\nFh6/IWK+r0rZFHZCbMnZrjU0Mud3E++6EPSDsacWRLQfQsRWiOD7gOQpN7jYk8Sm\n8NVisPuRfVK62tI0KyPKdDL3z2KI7qGTd77j9wflzjDljZx1ZLAxNQ9eAC2AnLYc\n0/DCC7wPdxa/PzouKEZaIGWy5D5NmQrSSpTr5FZKaJaTUP8CLn1NPbbnhzg5GzfT\nZNFvjaet/GXlAMOmqGtsf7heISpK2HR/GcYGvAchBR2hNgrWOADXwayc/m0xTTuj\nwZbnXauY36mVp+bX/GEjpSKgR37RTKIM5v+uZtZzAQKBgQDyu3wT7naFC7yVIgW3\nD5uei1sTh/OCqzkTy36mUUSpNa8NSpL4yoyKyAtPbivoaU6bRfAFEm8zfup8/whH\nKvH7OEhXoZyPgQmAnoKc4yrLKKIuOAXmesYyxDn7OvvJeP2yvCmKPqcGmrbhXkRf\ngWpukhuEcmTVE1PgZ0xfOBu1VQKBgQDd06qrQMa68LuMh4VYRmYwbHt/pRNRe/qO\nC+NcTH0PG2a+Ss44NgLquN5VU6fr9hLaGSfSv+8L10UTM5w6HJnqX0EaWDErgHou\nAOtSSz9U7yL4eRlmicu7nh0fYvKnnSZ6U1JOl+0HrlDrWHCCVapR+pJk5oMAbk/A\nb1Mv1LUc3QKBgCCyWJhmuthZKGH+Xz61f4TvyKjs20RyxBGCi+DjeZhBfv8PWJTi\n0+Ot5rggYxG/fbM0zIwiW5BYPEXyJK9RfZ8VickkH+7Etv74Wye/Afiz1ITdTw4o\n46HbBORuoZQWFDaLWh0hK2acWJ4rEJK84BVc4RAKSMLbA6VqxMLez/yxAoGAMPJs\nvV8MuuE1sRuSO9lE4Th+w7qsGZXOwpsy7wHdsoCsWh7thA++8wYZ4SAVdIaWwFM+\nq004tRcqIcOInHYFLGcaWXLOXrf5vb7sLft2nQorYEJwbWTIdLy91lgiDQQrImDS\nT49MeR5ospWQNeIrM+2jceo/S9ALfv3RkENSN20CgYAokQe45MHB0zVzbB+Wlr/6\n8Kvkn5p1aBII54aIzQdiD8DLPNQAOgZPt0MdAdXgtuNUmQd+9gkiiN9Fo8ZgzEqI\n0bgdwPIYvB8721kYwmBFweOnyXxBfNSNkfeUN024/7J1vA360wAMFmoJrdstsy68\ncrR//TvrR4ZJ+/1ATJlftw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "alex-nastase@innate-sunset-451811-f3.iam.gserviceaccount.com",
+  "client_id": "114323101453329648670",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/alex-nastase%40innate-sunset-451811-f3.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

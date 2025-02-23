@@ -91,18 +91,15 @@ class dividendAnalysis:
 
         # Add data labels with better visibility
         for i, txt in enumerate(eps_per_share):
-            offset = eps_per_share.iloc[i] * 0.1
-            plt.text(years[i], eps_per_share.iloc[i] + offset, f"{txt:.2f}", fontsize=10, ha='center', 
+            plt.text(years[i], eps_per_share.iloc[i], f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='blue', edgecolor='none', alpha=0.7), color='white')
 
         for i, txt in enumerate(free_cash_flow_per_share):
-            offset = free_cash_flow_per_share.iloc[i] * 0.1
-            plt.text(years[i], free_cash_flow_per_share.iloc[i] - offset, f"{txt:.2f}", fontsize=10, ha='center', 
+            plt.text(years[i], free_cash_flow_per_share.iloc[i], f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='green', edgecolor='none', alpha=0.7), color='white')
 
         for i, txt in enumerate(dividend_per_share):
-            offset = dividend_per_share.iloc[i] * 0.1
-            plt.text(years[i], dividend_per_share.iloc[i] + offset, f"{txt:.2f}", fontsize=10, ha='center', 
+            plt.text(years[i], dividend_per_share.iloc[i], f"{txt:.2f}", fontsize=10, ha='center', 
                     bbox=dict(facecolor='orange', edgecolor='none', alpha=0.7), color='white')
 
         # Add chart details

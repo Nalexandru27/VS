@@ -17,13 +17,22 @@ from stock.StockScreener import StockScreener
 import os
 import time
 
+import requests
+
+# replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=IBM&apikey=demo'
+r = requests.get(url)
+data = r.json()
+
+print(data)
+
 url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
-obj = SaveDocsData(url)
-obj.save_data(saved_csv_file_path)
-obj.process_data(saved_csv_file_path,new_csv_file_path)
+# obj = SaveDocsData(url)
+# obj.save_data(saved_csv_file_path)
+# obj.process_data(saved_csv_file_path,new_csv_file_path)
 
 # list_companies = pd.read_csv(new_csv_file_path)
 # list_companies = list_companies['Symbol'].tolist()
@@ -31,32 +40,32 @@ obj.process_data(saved_csv_file_path,new_csv_file_path)
 # populate = PopulateDB('companies.db')
 # populate.populate_all(list_companies)
 
-filtered_sorted_companies = pd.read_csv(new_csv_file_path)
-tickers = filtered_sorted_companies['Symbol'].tolist()
+# filtered_sorted_companies = pd.read_csv(new_csv_file_path)
+# tickers = filtered_sorted_companies['Symbol'].tolist()
 
-current_date = datetime.now().strftime("%Y-%m-%d")
-file_name = f"./outData/companies_screened_{current_date}.xlsx"
+# current_date = datetime.now().strftime("%Y-%m-%d")
+# file_name = f"./outData/companies_screened_{current_date}.xlsx"
 
-def create_excel_file():
-    screener = StockScreener()
-    screening_start_time = time.time()
-    all_results = {}
+# def create_excel_file():
+#     screener = StockScreener()
+#     screening_start_time = time.time()
+#     all_results = {}
 
-    results = screener.screen_stocks(tickers)
-    all_results.update(results)
+#     results = screener.screen_stocks(tickers)
+#     all_results.update(results)
 
-    screening_end_time = time.time()
+#     screening_end_time = time.time()
 
-    screener.result = all_results
-    screener.export_results_to_excel_file(file_name)
-    print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
+#     screener.result = all_results
+#     screener.export_results_to_excel_file(file_name)
+#     print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
 
-    for ticker in all_results:
-        if all_results[ticker]:
-            dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
-            dividend_plot.plot_dividend_sustainability(2013, 2023)
+#     for ticker in all_results:
+#         if all_results[ticker]:
+#             dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
+#             dividend_plot.plot_dividend_sustainability(2013, 2023)
     
-create_excel_file()
+# create_excel_file()
 
 # def get_price_estimation(ticker):
 #     pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')

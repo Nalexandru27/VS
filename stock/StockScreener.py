@@ -228,10 +228,10 @@ class StockScreener:
             data["Earnings Payout Ratio"] = f"{ticker.earnings_payout_ratio() * 100:.2f}%"
             data["FCF Payout Ratio"] = f"{ticker.FCF_Payout_Ratio() * 100:.2f}%"
             data["OpCF Payout Ratio"] = f"{ticker.get_operating_cash_flow_payout_ratio() * 100:.2f}%"
-            data["Debt/Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio():.2f}"
-            data["Op Income Margin"] = f"{ticker.operating_income_margin():.2f}%"
+            data["Debt/Capital"] = f"{ticker.Debt_to_Total_Capital_Ratio() * 100:.2f}"
+            data["Op Income Margin"] = f"{ticker.operating_income_margin() * 100:.2f}%"
             data["ROCE"] = f"{ticker.compute_ROCE() * 100:.2f}%"
-            data["ROE"] = f"{ticker.return_on_equity():.2f}%"
+            data["ROE"] = f"{ticker.return_on_equity() * 100:.2f}%"
             data["Ordinary Share Number Trend"] = ticker.ordinary_shares_number_trend_analysis()
             # data['P/E Ratio'] = f"{ticker.compute_PE_ratio():.2f}"
             # data['Price-to-book ratio'] = f"{ticker.compute_price_to_book_ratio():.2f}"
