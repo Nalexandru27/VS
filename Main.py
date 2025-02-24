@@ -17,18 +17,11 @@ from stock.StockScreener import StockScreener
 import os
 import time
 
-import requests
-
-# replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
-url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=IBM&apikey=demo'
-r = requests.get(url)
-data = r.json()
-
-print(data)
 
 url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
+
 
 # obj = SaveDocsData(url)
 # obj.save_data(saved_csv_file_path)
