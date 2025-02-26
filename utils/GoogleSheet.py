@@ -25,6 +25,22 @@ def num_to_col(n):
         string = chr(65 + remainder) + string
     return string
 
+
+def wait_for_data(sheet, col, max_wait=60):
+    """ Așteaptă până când numărul de rânduri dintr-o coloană nu mai crește """
+    prev_len = 0
+    for _ in range(max_wait // 5):  # Verifică timp de max_wait secunde, la fiecare 5 secunde
+        data_values = sheet.col_values(col)
+        current_len = len(data_values)
+        
+        if current_len > prev_len:
+            prev_len = current_len
+            time.sleep(5)  # Așteaptă încă 5 secunde și verifică din nou
+        else:
+            break  # Ieși dacă nu mai apar schimbări
+
+    return prev_len
+
 try:
     # Deschide foaia existentă sau creează una nouă
     try:
@@ -42,7 +58,7 @@ try:
     print(f"Number of companies in database: {no_companies}")
     
     stocks = []
-    for i in range(1, no_companies - 695):
+    for i in range(1, no_companies - 697):
         ticker = db_crud.select_company_ticker(i)
         stocks.append(ticker)
     
@@ -61,9 +77,9 @@ try:
         (datetime.datetime(2021, 1, 1), end_date)
     ]
 
-    date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1"; 0); "")'
+    date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1 offset 1"; 0); "")'
         
-    sheet.update_acell(f'A2', date_formula)
+    # sheet.update_acell(f'A2', date_formula)
     sheet.update(f'A2', [[date_formula]], value_input_option="USER_ENTERED")        
     time.sleep(5)
 
@@ -73,21 +89,20 @@ try:
         if segment_idx == 0:
             start_row = 2
         else:
-            days_in_previous_segments = sum((seg_end - seg_start).days for seg_start, seg_end in segments[:segment_idx])
-            # estimated_trading_days = int(days_in_previous_segments * 0.7)  # ~70% din zile sunt zile de tranzacționare
-            start_row = days_in_previous_segments + 1
+            start_row = wait_for_data(sheet, 2) + 1
+            print(f"Start row for segment {segment_idx+1}: {start_row}")
         
         for idx, stock in enumerate(stocks):
             col = num_to_col(idx + 2)
             
-            price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({seg_start.strftime("%Y;%m;%d")}); DATE({seg_end.strftime("%Y;%m;%d")}); "DAILY"); "select Col2"; 0); "")'
+            price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({seg_start.strftime("%Y;%m;%d")}); DATE({seg_end.strftime("%Y;%m;%d")}); "DAILY"); "select Col2 offset 1"; 0); "")'
             
             cell_range = f'{col}{start_row}'
             sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
             print(f"Added price formula for {stock} in segment {segment_idx+1}")
             time.sleep(5)
         
-            
+        print("Waiting 15 seconds for all data to be populated for the previous segment...")
         time.sleep(15)
     
     print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
