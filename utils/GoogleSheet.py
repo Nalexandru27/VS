@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import timedelta
+from datetime import timedelta, datetime
 import datetime
 import time
 import os
@@ -19,7 +19,6 @@ client = gspread.authorize(creds)
 SHEET_NAME = "Stock Price Historical Data"
 
 def num_to_col(n):
-    """Convert a 1-indexed column number to a spreadsheet column letter string."""
     string = ""
     while n:
         n, remainder = divmod(n - 1, 26)
@@ -27,74 +26,77 @@ def num_to_col(n):
     return string
 
 try:
-    sheet = client.open(SHEET_NAME).sheet1
-    print(f"Successfully opened the sheet: {SHEET_NAME}")
-except gspread.exceptions.SpreadsheetNotFound:
-    print(f"Spreadsheet with name '{SHEET_NAME}' not found. Please check the name and permissions.")
-    exit(1)
-
-db_name = os.path.join(parent_dir, "companies.db")
-db_crud = DatabaseCRUD(db_name)
-no_companies = db_crud.select_no_companies()
-print(f"Number of companies in database: {no_companies}")
-
-stocks = []
-for i in range(1, no_companies + 1):
-    ticker = db_crud.select_company_ticker(i)
-    stocks.append(ticker)
-
-try:
+    # Deschide foaia existentă sau creează una nouă
+    try:
+        spreadsheet = client.open(SHEET_NAME)
+        sheet = spreadsheet.sheet1
+        print(f"Successfully opened the sheet: {SHEET_NAME}")
+    except gspread.exceptions.SpreadsheetNotFound:
+        spreadsheet = client.create(SHEET_NAME)
+        sheet = spreadsheet.sheet1
+        print(f"Created new spreadsheet: {SHEET_NAME}")
+    
+    db_name = os.path.join(parent_dir, "companies.db")
+    db_crud = DatabaseCRUD(db_name)
+    no_companies = db_crud.select_no_companies()
+    print(f"Number of companies in database: {no_companies}")
+    
+    stocks = []
+    for i in range(1, no_companies - 695):
+        ticker = db_crud.select_company_ticker(i)
+        stocks.append(ticker)
+    
     sheet.clear()
-    print("Sheet cleared successfully")
-    time.sleep(1)
-
     header = ["Date"] + stocks
     sheet.update(values=[header], range_name='A1')
     print("Header updated successfully")
     time.sleep(1)
+    
+    end_date = datetime.datetime.now()
+    start_date = datetime.datetime(2013, 1, 1)
+    
+    segments = [
+        (start_date, datetime.datetime(2016, 12, 31)),
+        (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
+        (datetime.datetime(2021, 1, 1), end_date)
+    ]
 
-    end_date = datetime.datetime(2023,12,31)
-    start_date = datetime.datetime(2013,1,1)
+    date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1"; 0); "")'
+        
+    sheet.update_acell(f'A2', date_formula)
+    sheet.update(f'A2', [[date_formula]], value_input_option="USER_ENTERED")        
+    time.sleep(5)
 
-    num_days = (end_date - start_date).days + 1
-    date_rows = [[(start_date + timedelta(days=i)).strftime('%Y-%m-%d')] for i in range(num_days)]
-    sheet.update(range_name='A2', values=date_rows, value_input_option="USER_ENTERED")
-    print("Date column updated successfully")
-
-    batch_size = 60
-    max_retries = 3
-    for i in range(0, len(stocks), batch_size):
-        batch_stocks = stocks[i:i + batch_size]
-        updates = []
-
-        for idx, stock in enumerate(batch_stocks):
-            col = num_to_col(i + idx + 2)
-            formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col2 offset 1"; 0); "")'            
-            cell_range = f'{col}2'
-            updates.append({
-                'range': cell_range,
-                'values': [[formula]]
-
-            })
-
-        for retry in range(max_retries):
-            try:
-                sheet.batch_update(updates, value_input_option="USER_ENTERED")
-                print(f"Updated batch of {len(batch_stocks)} stocks)")
-                time.sleep(65)
-                break
-            except gspread.exceptions.APIError as batch_error:
-                print(f"Batch update error: {batch_error}")
-                if retry < max_retries - 1:
-                    wait_time = (2 ** retry) * 60
-                    print(f"Waiting {wait_time} seconds before retrying batch...")
-                    time.sleep(wait_time)
-                else:
-                    print("Max retries reached. Skipping batch.")
-                continue
-
-    print("Google Sheet updated with historical price formulas!")
+    for segment_idx, (seg_start, seg_end) in enumerate(segments):
+        print(f"Processing segment {segment_idx+1}: {seg_start.strftime('%Y-%m-%d')} to {seg_end.strftime('%Y-%m-%d')}")
+        
+        if segment_idx == 0:
+            start_row = 2
+        else:
+            days_in_previous_segments = sum((seg_end - seg_start).days for seg_start, seg_end in segments[:segment_idx])
+            # estimated_trading_days = int(days_in_previous_segments * 0.7)  # ~70% din zile sunt zile de tranzacționare
+            start_row = days_in_previous_segments + 1
+        
+        for idx, stock in enumerate(stocks):
+            col = num_to_col(idx + 2)
+            
+            price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({seg_start.strftime("%Y;%m;%d")}); DATE({seg_end.strftime("%Y;%m;%d")}); "DAILY"); "select Col2"; 0); "")'
+            
+            cell_range = f'{col}{start_row}'
+            sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
+            print(f"Added price formula for {stock} in segment {segment_idx+1}")
+            time.sleep(5)
+        
+            
+        time.sleep(15)
+    
+    print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
+    print("Acest proces poate dura câteva minute până la câteva zeci de minute, în funcție de numărul de companii.")
+    print(f"URL-ul foii de calcul: {spreadsheet.url}")
+    
 except gspread.exceptions.APIError as e:
     print(f"API Error occurred: {e}")
     print("Waiting 60 seconds before retrying...")
-    time.sleep(65)
+    time.sleep(60)
+except Exception as e:
+    print(f"Error: {e}")

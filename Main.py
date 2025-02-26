@@ -16,12 +16,26 @@ from utils.SaveDividendData import SaveDocsData
 from stock.StockScreener import StockScreener
 import os
 import time
-
+import datetime
 
 url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"
 saved_csv_file_path = "outData/dividend_spreadsheet.csv"
 new_csv_file_path = "outData/filtered_sorted_companies.csv"
 
+start_date = datetime.datetime(2013, 1, 1)
+end_date = datetime.datetime.now()
+
+segments = [
+        (start_date, datetime.datetime(2016, 12, 31)),
+        (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
+        (datetime.datetime(2021, 1, 1), end_date)
+    ]
+
+for idx, (start_date, end_date) in enumerate(segments):
+    print("Index:", idx)
+    print("Start date:", start_date)
+    print("End date:", end_date)
+    print("No of days:", (end_date - start_date).days)
 
 # obj = SaveDocsData(url)
 # obj.save_data(saved_csv_file_path)
