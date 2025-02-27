@@ -1,7 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import datetime
-import datetime
+from datetime import datetime, timedelta
 import time
 import os
 import sys
@@ -59,7 +58,7 @@ try:
     db_crud = DatabaseCRUD(db_name)
     no_companies = db_crud.select_no_companies()
     print(f"Number of companies in database: {no_companies}")
-    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies + 1)]
+    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies - 696)]
 
     today = datetime.today().strftime("%Y-%m-%d")
     weekday = datetime.today().weekday()
@@ -85,7 +84,7 @@ try:
                 cell_range = f'{col}{start_row}'
                 batch_updates.append({"range": cell_range, "values": [[price_formula]]})
                 print(f"Added price formula for {stock}, waiting 30 seconds...")
-                time.sleep(30)
+                time.sleep(5)
 
             if batch_updates:
                 sheet.batch_update(batch_updates, value_input_option="USER_ENTERED")
@@ -99,16 +98,16 @@ try:
         print("Header updated successfully")
         time.sleep(1)
         
-        end_date = datetime.datetime.now()
-        start_date = datetime.datetime(2013, 1, 1)
+        end_date = datetime.now()
+        start_date = datetime(2013, 1, 1)
         
         segments = [
-            (start_date, datetime.datetime(2016, 12, 31)),
-            (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
-            (datetime.datetime(2021, 1, 1), end_date)
+            (start_date, datetime(2016, 12, 31)),
+            (datetime(2017, 1, 1), datetime(2020, 12, 31)),
+            (datetime(2021, 1, 1), end_date)
         ]
 
-        date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1 offset 1"; 0); "")'
+        date_formula = f'=IFERROR(ARRAYFORMULA(TEXT(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1 offset 1"; 0); "YYYY-MM-DD")); "")'
             
         sheet.update(f'A2', [[date_formula]], value_input_option="USER_ENTERED")        
         time.sleep(5)
@@ -133,7 +132,7 @@ try:
                 time.sleep(5)
             
             print("Waiting 120 seconds for all data to be populated for the previous segment...")
-            time.sleep(120)
+            time.sleep(30)
         
         print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
         print("Acest proces poate dura câteva minute până la câteva zeci de minute, în funcție de numărul de companii.")
