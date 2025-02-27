@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import timedelta, datetime
+from datetime import datetime
 import datetime
 import time
 import os
@@ -9,6 +9,11 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from database.DatabaseCRUD import DatabaseCRUD
+
+MARKET_HOLIDAYS = {
+    "2024-01-01", "2024-01-15", "2024-02-19", "2024-03-29",
+    "2024-05-27", "2024-07-04", "2024-09-02", "2024-11-28", "2024-12-25"
+}
 
 SERVICE_ACCOUNT_FILE = "D:\\FacultyYear3\\Licenta\\VS\\innate-sunset-451811-f3-0c861175bff3.json"
 SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -27,22 +32,20 @@ def num_to_col(n):
 
 
 def wait_for_data(sheet, col, max_wait=60):
-    """ Așteaptă până când numărul de rânduri dintr-o coloană nu mai crește """
     prev_len = 0
-    for _ in range(max_wait // 5):  # Verifică timp de max_wait secunde, la fiecare 5 secunde
+    for _ in range(max_wait // 5):
         data_values = sheet.col_values(col)
         current_len = len(data_values)
         
         if current_len > prev_len:
             prev_len = current_len
-            time.sleep(5)  # Așteaptă încă 5 secunde și verifică din nou
+            time.sleep(5)
         else:
-            break  # Ieși dacă nu mai apar schimbări
+            break
 
     return prev_len
 
 try:
-    # Deschide foaia existentă sau creează una nouă
     try:
         spreadsheet = client.open(SHEET_NAME)
         sheet = spreadsheet.sheet1
@@ -56,59 +59,86 @@ try:
     db_crud = DatabaseCRUD(db_name)
     no_companies = db_crud.select_no_companies()
     print(f"Number of companies in database: {no_companies}")
-    
-    stocks = []
-    for i in range(1, no_companies - 697):
-        ticker = db_crud.select_company_ticker(i)
-        stocks.append(ticker)
-    
-    sheet.clear()
-    header = ["Date"] + stocks
-    sheet.update(values=[header], range_name='A1')
-    print("Header updated successfully")
-    time.sleep(1)
-    
-    end_date = datetime.datetime.now()
-    start_date = datetime.datetime(2013, 1, 1)
-    
-    segments = [
-        (start_date, datetime.datetime(2016, 12, 31)),
-        (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
-        (datetime.datetime(2021, 1, 1), end_date)
-    ]
+    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies + 1)]
 
-    date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1 offset 1"; 0); "")'
-        
-    # sheet.update_acell(f'A2', date_formula)
-    sheet.update(f'A2', [[date_formula]], value_input_option="USER_ENTERED")        
-    time.sleep(5)
+    today = datetime.today().strftime("%Y-%m-%d")
+    weekday = datetime.today().weekday()
 
-    for segment_idx, (seg_start, seg_end) in enumerate(segments):
-        print(f"Processing segment {segment_idx+1}: {seg_start.strftime('%Y-%m-%d')} to {seg_end.strftime('%Y-%m-%d')}")
-        
-        if segment_idx == 0:
-            start_row = 2
+    if weekday in [5, 6] or today in MARKET_HOLIDAYS:
+        print(f"{today} is a non-trading day. Exiting script.")
+        exit()
+
+    if sheet.col_values(1):
+        print(f"{today} the markets are open. We add prices into the sheet.")
+        dates = sheet.col_values(1)
+
+        if today not in dates:
+            start_row = len(dates) + 1
+            sheet.insert_row(index=start_row, values=[today])
+
+            print(f"Updating price for {today} at row {start_row}")
+
+            batch_updates = []
+            for idx, stock in enumerate(stocks):
+                col = num_to_col(idx + 2)
+                price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; "TODAY"); "select Col2 offset 1"; 0); "")'
+                cell_range = f'{col}{start_row}'
+                batch_updates.append({"range": cell_range, "values": [[price_formula]]})
+                print(f"Added price formula for {stock}, waiting 30 seconds...")
+                time.sleep(30)
+
+            if batch_updates:
+                sheet.batch_update(batch_updates, value_input_option="USER_ENTERED")
+                print("Prices updated successfully for all stocks")
         else:
-            start_row = wait_for_data(sheet, 2) + 1
-            print(f"Start row for segment {segment_idx+1}: {start_row}")
+            print(f"Price for {today} already exists in the sheet")
+    else:
+        sheet.clear()
+        header = ["Date"] + stocks
+        sheet.update(values=[header], range_name='A1')
+        print("Header updated successfully")
+        time.sleep(1)
         
-        for idx, stock in enumerate(stocks):
-            col = num_to_col(idx + 2)
-            
-            price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({seg_start.strftime("%Y;%m;%d")}); DATE({seg_end.strftime("%Y;%m;%d")}); "DAILY"); "select Col2 offset 1"; 0); "")'
-            
-            cell_range = f'{col}{start_row}'
-            sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
-            print(f"Added price formula for {stock} in segment {segment_idx+1}")
-            time.sleep(5)
+        end_date = datetime.datetime.now()
+        start_date = datetime.datetime(2013, 1, 1)
         
-        print("Waiting 15 seconds for all data to be populated for the previous segment...")
-        time.sleep(15)
-    
-    print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
-    print("Acest proces poate dura câteva minute până la câteva zeci de minute, în funcție de numărul de companii.")
-    print(f"URL-ul foii de calcul: {spreadsheet.url}")
-    
+        segments = [
+            (start_date, datetime.datetime(2016, 12, 31)),
+            (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
+            (datetime.datetime(2021, 1, 1), end_date)
+        ]
+
+        date_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stocks[0]}"; "price"; DATE({start_date.strftime("%Y;%m;%d")}); DATE({end_date.strftime("%Y;%m;%d")}); "DAILY"); "select Col1 offset 1"; 0); "")'
+            
+        sheet.update(f'A2', [[date_formula]], value_input_option="USER_ENTERED")        
+        time.sleep(5)
+
+        for segment_idx, (seg_start, seg_end) in enumerate(segments):
+            print(f"Processing segment {segment_idx+1}: {seg_start.strftime('%Y-%m-%d')} to {seg_end.strftime('%Y-%m-%d')}")
+            
+            if segment_idx == 0:
+                start_row = 2
+            else:
+                start_row = wait_for_data(sheet, 3) + 1
+                print(f"Start row for segment {segment_idx+1}: {start_row}")
+            
+            for idx, stock in enumerate(stocks):
+                col = num_to_col(idx + 2)
+                
+                price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({seg_start.strftime("%Y;%m;%d")}); DATE({seg_end.strftime("%Y;%m;%d")}); "DAILY"); "select Col2 offset 1"; 0); "")'
+                
+                cell_range = f'{col}{start_row}'
+                sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
+                print(f"Added price formula for {stock} in segment {segment_idx+1}")
+                time.sleep(5)
+            
+            print("Waiting 120 seconds for all data to be populated for the previous segment...")
+            time.sleep(120)
+        
+        print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
+        print("Acest proces poate dura câteva minute până la câteva zeci de minute, în funcție de numărul de companii.")
+        print(f"URL-ul foii de calcul: {spreadsheet.url}")
+        
 except gspread.exceptions.APIError as e:
     print(f"API Error occurred: {e}")
     print("Waiting 60 seconds before retrying...")
