@@ -1,6 +1,6 @@
 from stock.Stock import *
 import yfinance as yf
-from utils.Tresholds import *
+from utils.Constants import *
 from database.DatabaseCRUD import DatabaseCRUD
 
 class evaluateStock:

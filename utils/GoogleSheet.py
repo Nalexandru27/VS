@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 import os
 import sys
@@ -8,6 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from database.DatabaseCRUD import DatabaseCRUD
+from utils import SERVICE_ACCOUNT_FILE, SCOPES
 
 current_year = datetime.today().year
 
@@ -16,9 +17,6 @@ MARKET_HOLIDAYS = {
     f"{current_year}-07-04", f"{current_year}-09-01", f"{current_year}-10-09", f"{current_year}-11-11",
     f"{current_year}-11-27", f"{current_year}-12-25"
 }
-
-SERVICE_ACCOUNT_FILE = "D:\\FacultyYear3\\Licenta\\VS\\innate-sunset-451811-f3-0c861175bff3.json"
-SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 client = gspread.authorize(creds)

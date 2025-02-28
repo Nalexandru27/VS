@@ -1,8 +1,4 @@
-import numpy as np
-import yfinance as yf
 from stock.Stock import *
-import pandas as pd
-import matplotlib.pyplot as plt
 from stock.EvalutateStock import *
 from database.DatabaseCRUD import DatabaseCRUD
 from database.PopulateDB import PopulateDB
@@ -14,32 +10,17 @@ from PriceEstimators.PriceEstimationFCF import PriceFCFRatioEstimator
 from PriceEstimators.PriceEstimationDividend import PriceDividendRatioEstimator
 from utils.SaveDividendData import SaveDocsData
 from stock.StockScreener import StockScreener
-import os
 import time
 import datetime
+from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH, PRICE_SHEET_URL, PRICE_HISTORY_FILE_PATH
+from utils.ExportPriceHistory import ExportPriceHistory
 
-url = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"
-saved_csv_file_path = "outData/dividend_spreadsheet.csv"
-new_csv_file_path = "outData/filtered_sorted_companies.csv"
+# dividend_companies = SaveDocsData(DIVIDEND_SHEET_URL)
+# dividend_companies.save_data(DIVIDEND_COMPANY_FILE_PATH)
+# dividend_companies.process_data(DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
 
-start_date = datetime.datetime(2013, 1, 1)
-end_date = datetime.datetime.now()
-
-segments = [
-        (start_date, datetime.datetime(2016, 12, 31)),
-        (datetime.datetime(2017, 1, 1), datetime.datetime(2020, 12, 31)),
-        (datetime.datetime(2021, 1, 1), end_date)
-    ]
-
-for idx, (start_date, end_date) in enumerate(segments):
-    print("Index:", idx)
-    print("Start date:", start_date)
-    print("End date:", end_date)
-    print("No of days:", (end_date - start_date).days)
-
-# obj = SaveDocsData(url)
-# obj.save_data(saved_csv_file_path)
-# obj.process_data(saved_csv_file_path,new_csv_file_path)
+price_history = ExportPriceHistory(PRICE_SHEET_URL)
+price_history.save_data(PRICE_HISTORY_FILE_PATH)
 
 # list_companies = pd.read_csv(new_csv_file_path)
 # list_companies = list_companies['Symbol'].tolist()
@@ -77,7 +58,7 @@ for idx, (start_date, end_date) in enumerate(segments):
 # def get_price_estimation(ticker):
 #     pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')
 #     price_pe = pe_ratio.get_pe_ratio_estimation(2012, 2023)
-#     # print(f"{price_pe} is the price estimation using PE ratio")
+#     print(f"{price_pe} is the price estimation using PE ratio")
 
 #     ebit_price = PEBITRatioEstimator(Stock(ticker), 'companies.db')
 #     price_ebit = ebit_price.get_pebit_ratio_estimation(2012, 2023)
