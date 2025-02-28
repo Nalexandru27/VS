@@ -9,9 +9,12 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from database.DatabaseCRUD import DatabaseCRUD
 
+current_year = datetime.today().year
+
 MARKET_HOLIDAYS = {
-    "2024-01-01", "2024-01-15", "2024-02-19", "2024-03-29",
-    "2024-05-27", "2024-07-04", "2024-09-02", "2024-11-28", "2024-12-25"
+    f"{current_year}-01-01", f"{current_year}-01-20", f"{current_year}-02-17", f"{current_year}-05-26",
+    f"{current_year}-07-04", f"{current_year}-09-01", f"{current_year}-10-09", f"{current_year}-11-11",
+    f"{current_year}-11-27", f"{current_year}-12-25"
 }
 
 SERVICE_ACCOUNT_FILE = "D:\\FacultyYear3\\Licenta\\VS\\innate-sunset-451811-f3-0c861175bff3.json"
@@ -58,7 +61,7 @@ try:
     db_crud = DatabaseCRUD(db_name)
     no_companies = db_crud.select_no_companies()
     print(f"Number of companies in database: {no_companies}")
-    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies - 696)]
+    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies + 1)]
 
     today = datetime.today().strftime("%Y-%m-%d")
     weekday = datetime.today().weekday()
@@ -84,7 +87,7 @@ try:
                 cell_range = f'{col}{start_row}'
                 batch_updates.append({"range": cell_range, "values": [[price_formula]]})
                 print(f"Added price formula for {stock}, waiting 30 seconds...")
-                time.sleep(5)
+                time.sleep(2)
 
             if batch_updates:
                 sheet.batch_update(batch_updates, value_input_option="USER_ENTERED")
@@ -128,11 +131,11 @@ try:
                 
                 cell_range = f'{col}{start_row}'
                 sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
-                print(f"Added price formula for {stock} in segment {segment_idx+1}")
-                time.sleep(5)
+                print(f"Added price formula for stock number {idx} - {stock} in segment {segment_idx+1}")
+                time.sleep(3)
             
-            print("Waiting 120 seconds for all data to be populated for the previous segment...")
-            time.sleep(30)
+            print("Waiting 65 seconds for all data to be populated for the previous segment...")
+            time.sleep(65)
         
         print("\nToate formulele au fost adăugate. Așteaptă ca foaia de calcul să se populeze cu date.")
         print("Acest proces poate dura câteva minute până la câteva zeci de minute, în funcție de numărul de companii.")
