@@ -22,7 +22,7 @@ class DatabaseCRUD:
                     company_id INTEGER NOT NULL,
                     statement_type TEXT NOT NULL ,
                     year INTEGER NOT NULL,
-                    FOREIGN KEY(company_id) REFERENCES companyd(id),
+                    FOREIGN KEY(company_id) REFERENCES company(id),
                     UNIQUE(company_id, statement_type, year)
                 );
         """)

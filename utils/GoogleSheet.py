@@ -92,6 +92,7 @@ try:
                 print("Prices updated successfully for all stocks")
         else:
             print(f"Price for {today} already exists in the sheet")
+        
     else:
         sheet.clear()
         header = ["Date"] + stocks
