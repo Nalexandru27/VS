@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 import os
 import sys
@@ -8,7 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from database.DatabaseCRUD import DatabaseCRUD
-from utils import SERVICE_ACCOUNT_FILE, SCOPES
+from Constants import SERVICE_ACCOUNT_FILE, SCOPES
 
 current_year = datetime.today().year
 
@@ -78,18 +78,16 @@ try:
 
             print(f"Updating price for {today} at row {start_row}")
 
-            batch_updates = []
             for idx, stock in enumerate(stocks):
                 col = num_to_col(idx + 2)
-                price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; "TODAY"); "select Col2 offset 1"; 0); "")'
+                today = datetime.today().strftime("%Y;%m;%d")
+                price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({today})); "select Col2 offset 1"; 0); "")'
                 cell_range = f'{col}{start_row}'
-                batch_updates.append({"range": cell_range, "values": [[price_formula]]})
-                print(f"Added price formula for {stock}, waiting 30 seconds...")
-                time.sleep(2)
+                sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
+                print(f"Added price formula for {stock}, waiting 1 seconds...")
+                time.sleep(0.3)
 
-            if batch_updates:
-                sheet.batch_update(batch_updates, value_input_option="USER_ENTERED")
-                print("Prices updated successfully for all stocks")
+            print("Prices updated successfully for all stocks")
         else:
             print(f"Price for {today} already exists in the sheet")
         
