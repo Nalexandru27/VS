@@ -12,14 +12,18 @@ from utils.SaveDividendData import SaveDocsData
 from stock.StockScreener import StockScreener
 import time
 import datetime
-from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH, PRICE_SHEET_URL, PRICE_HISTORY_FILE_PATH
+from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH, HISTORICAL_PRICE_SHEET_URL, PRICE_HISTORY_FILE_PATH, DAILY_PRICE_SHEET_URL, PRICE_DAILY_FILE_PATH
 from utils.ExportPriceHistory import ExportPriceHistory
 from datetime import datetime
 
 
 def save_historical_prices_into_csv():
-    price_history = ExportPriceHistory(PRICE_SHEET_URL)
+    price_history = ExportPriceHistory(HISTORICAL_PRICE_SHEET_URL)
     price_history.save_data(PRICE_HISTORY_FILE_PATH)
+
+def save_daily_prices_into_csv():
+    daily_prices = ExportPriceHistory(DAILY_PRICE_SHEET_URL)
+    daily_prices.save_daily_prices(PRICE_DAILY_FILE_PATH)
 
 def save_dividend_paying_companies_into_csv():
     dividend_companies = SaveDocsData(DIVIDEND_SHEET_URL)
@@ -59,7 +63,6 @@ def create_excel_file():
             dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
             dividend_plot.plot_dividend_sustainability(2013, 2023)
     
-create_excel_file()
 
 def get_price_estimation(ticker):
     pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')
@@ -72,17 +75,20 @@ def get_price_estimation(ticker):
 
     op_cf_price = PriceOpCFRatioEstimator(Stock(ticker), 'companies.db')
     price_op_cf = op_cf_price.get_priceOpCF_ratio_estimation(2012, 2023)
-    # print(f"{price_op_cf} is the price estimation using Price to Operating Cash Flow ratio")
 
     fcf_price_estimator = PriceFCFRatioEstimator(Stock(ticker), 'companies.db')
     price_fcf = fcf_price_estimator.get_priceFCF_ratio_estimation(2012, 2023)
-    # print(f"{price_fcf} is the price estimation using Price to Free Cash Flow ratio")
 
     dividend_price_estimator = PriceDividendRatioEstimator(Stock(ticker), 'companies.db')
     price_dividend = dividend_price_estimator.get_priceDividend_ratio_estimation(2012, 2023)
-    # print(f"{price_dividend} is the price estimation using Price to Dividend ratio")
 
     avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
-    # print(f"{avg_price} is the average price estimation")
 
     return avg_price
+
+def get_alpha_data(ticker):
+    url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={ticker}&apikey=43KL4PW74AWGDJZI'
+    r = requests.get(url)
+    data = r.json()
+
+    print(data)
