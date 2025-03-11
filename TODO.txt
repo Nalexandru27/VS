@@ -1,0 +1,5 @@
+- Sa elimin spatiile din csv-ul cu preturi
+
+- Sa ma ocup de valorile lipsa folosind o metoda potrivita
+
+- Sa salvez preturile in baza de date

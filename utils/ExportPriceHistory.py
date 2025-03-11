@@ -15,5 +15,12 @@ class ExportPriceHistory:
         else:
             print("Failed to download file")
 
+    def process_data(self, csv_file_path, new_csv_file_path):
+        df = pd.read_csv(csv_file_path, skip_blank_lines=True, decimal=",", thousands=".")
+        df.columns = df.columns.str.strip()
+        df.to_csv(new_csv_file_path, index=False)
+        
+    
+
     
 

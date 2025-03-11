@@ -19,7 +19,7 @@ DIVIDEND_COMPANY_FILE_PATH = "outData/dividend_company_spreadsheet.csv"
 FILTERED_DIVIDEND_COMPANY_FILE_PATH = "outData/filtered_sorted_companies.csv"
 
 HISTORICAL_PRICE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1Ytd8I2ocRlYf5hyv4pH3zRhDlA7j001MIjnBpYpXkyM/export?format=csv&gid=0"
-PRICE_HISTORY_FILE_PATH = "outData/Prices/PriceHistory.csv"
+PRICE_HISTORY_FILE_PATH = "outData/PriceHistory.csv"
 
 DAILY_PRICE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1q5nSOIf4eyAZRR3lGbH6M6aW7TcxuOXUfQ93FiJDJwg/edit?gid=0#gid=0"
-PRICE_DAILY_FILE_PATH = "outData/Prices/PriceDaily.csv"
+PRICE_DAILY_FILE_PATH = "outData/PriceDaily.csv"

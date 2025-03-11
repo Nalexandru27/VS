@@ -16,6 +16,12 @@ from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILT
 from utils.ExportPriceHistory import ExportPriceHistory
 from datetime import datetime
 
+def test_price_history():
+    df = pd.read_csv("outData/PriceHistory.csv", skip_blank_lines=True, decimal=",", thousands=".")
+    df.to_csv("cleaned_PriceHistory.csv", index=False)
+    print(df)
+
+test_price_history()
 
 def save_historical_prices_into_csv():
     price_history = ExportPriceHistory(HISTORICAL_PRICE_SHEET_URL)

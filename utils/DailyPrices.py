@@ -44,8 +44,7 @@ try:
     db_crud = DatabaseCRUD(db_name)
     no_companies = int(db_crud.select_no_companies())
     print(f"Number of companies in database: {no_companies}")
-    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies - 695)]
-
+    stocks = [db_crud.select_company_ticker(i) for i in range(1, no_companies + 1)]
     sheet.clear()
     header = ["Date"] + stocks
     sheet.update(range_name='A1', values=[header])
