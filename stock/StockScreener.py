@@ -3,6 +3,7 @@ import stock.EvalutateStock as es
 from stock.Stock import *
 import utils.CreateExcelFile as CreateExcelFile
 import database.DatabaseCRUD as db
+from utils.Constants import FILTERED_DIVIDEND_COMPANY_FILE_PATH
 import time
 
 class StockScreener:
@@ -205,7 +206,7 @@ class StockScreener:
     
     def stock_data(self,ticker: Stock):
         data = {}
-        evaluator = es.evaluateStock(ticker, FILE_PATH_1)
+        evaluator = es.evaluateStock(ticker, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
         try:
             db_crud = db.DatabaseCRUD('companies.db')
             data['Ticker'] = ticker.ticker
@@ -216,11 +217,11 @@ class StockScreener:
             data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
             data['Earnings Stability'] = self.check_earnings_stability(ticker)
             data['Earnings Growth 10Y'] = f"{ticker.earnings_growth_last_10_years():.2f}"
-            data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILE_PATH_1)
+            data['Dividend Record'] = ticker.get_dividend_record_from_excel(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
             # data["Dividend Yield"] = f"{ticker.yf.info['dividendYield'] * 100:.2f}%"
-            data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILE_PATH_1)}%"
-            data["DGR 5Y"] = f"{ticker.get_DGR_5Y_from_excel(FILE_PATH_1)}%"
-            data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILE_PATH_1)}%"
+            data["DGR 3Y"] = f"{ticker.get_DGR_3Y_from_excel(FILTERED_DIVIDEND_COMPANY_FILE_PATH)}%"
+            data["DGR 5Y"] = f"{ticker.get_DGR_5Y_from_excel(FILTERED_DIVIDEND_COMPANY_FILE_PATH)}%"
+            data["DGR 10Y"] = f"{ticker.get_DGR_10Y_from_excel(FILTERED_DIVIDEND_COMPANY_FILE_PATH)}%"
             data["Div/share"] = f"{ticker.dividends_per_share():.2f}"
             data["EPS"] = f"{ticker.get_EPS():.2f}"
             data["FCF/share"] = f"{ticker.get_fcf_per_share():.2f}"

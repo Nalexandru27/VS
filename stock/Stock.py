@@ -1,6 +1,5 @@
 from datetime import datetime
 import requests
-import yfinance as yf
 from utils.Constants import *
 import pandas as pd
 import os
@@ -12,7 +11,6 @@ def convert_to_billion(value):
 class Stock:
     def __init__(self, ticker):
         self.ticker = ticker
-        self.yf = yf.Ticker(ticker)
 
     # Get stock sector
     def get_sector(self):
@@ -240,71 +238,29 @@ class Stock:
         except Exception as e:
             print(f"Error calculating LTDebt to WC for {self.ticker}: {e}")
             return 0
-
-    # TEST 4
-    #Get dividend history for a stock using yahoo finance
-    def get_dividend_history(self):
-        dividends = self.yf.dividends
-        timestamp = dividends.index
-        dividends = dividends.values
-
-        current_year = datetime.now().year
-
-        dividend_record = {}
-        for i in range(len(timestamp)):
-            year = timestamp[i].strftime('%Y')
-            if year == str(current_year):
-                break
-            dividend_record[year] = dividends[i]
-
-        return dividend_record
-
-    # Print dividend history from the current year
-    def print_dividend_history(self):
-        dividend_record = self.get_dividend_history()
-        sorted_history = dict(sorted(dividend_record.items(), reverse=True))
-        for year, dividend in sorted_history.items():
-            print(f"Dividends paid for {year}: ${dividend:.6f}")
-
-    # Get the dividend record for that stock
-    def count_consecutive_years_of_dividend_increase(self):
-        dividend_record = self.get_dividend_history()
-
-        consecutive_years = 0
-        previous_dividend = None
-
-        for year, dividend in dividend_record.items():
-            if previous_dividend is not None:
-                if dividend > previous_dividend:
-                    consecutive_years += 1
-                elif dividend < previous_dividend:
-                    consecutive_years = 0
-            previous_dividend = dividend
-
-        return consecutive_years + 1
     
     # Read dividend record from excel file
     def get_dividend_record_from_excel(self, file_path):
         if os.path.exists(file_path):
-            df = pd.read_excel(file_path)
+            df = pd.read_csv(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'No Years']
         
     # GET DGR 3Y from excel file
     def get_DGR_3Y_from_excel(self, file_path):
         if os.path.exists(file_path):
-            df = pd.read_excel(file_path)
+            df = pd.read_csv(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 3Y']
         
     # GET DGR 5Y from excel file
     def get_DGR_5Y_from_excel(self, file_path):
         if os.path.exists(file_path):
-            df = pd.read_excel(file_path)
+            df = pd.read_csv(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 5Y']
     
     # Get DGR 10Y from excel file
     def get_DGR_10Y_from_excel(self, file_path):
         if os.path.exists(file_path):
-            df = pd.read_excel(file_path)
+            df = pd.read_csv(file_path)
             return df.at[df.index[df['Symbol'] == self.ticker][0], 'DGR 10Y']
 
     # TEST 5

@@ -1,7 +1,9 @@
 from stock.Stock import *
+import sqlite3
 from stock.EvalutateStock import *
 from database.DatabaseCRUD import DatabaseCRUD
 from database.PopulateDB import PopulateDB
+from database.models.Price import Price
 from HistoryAnalysis.DividendAnalysis import dividendAnalysis
 from PriceEstimators.PriceEstimationEarnings import PERatioEstimator
 from PriceEstimators.PriceEstimationEBIT import PEBITRatioEstimator
@@ -16,12 +18,29 @@ from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILT
 from utils.ExportPriceHistory import ExportPriceHistory
 from datetime import datetime
 
+def create_price_table():
+    try:
+        connection = sqlite3.connect('companies.db', timeout=30, check_same_thread=False)
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("PRAGMA busy_timeout = 30000")
+        cursor = connection.cursor()
+        db_price = Price(connection, cursor)
+        db_price.create_table()
+        print("Price table created successfully")
+        return True
+    except Exception as e:
+        print(f"Error creating price table: {e}")
+        return False
+    finally:
+        if 'connection' in locals():
+            connection.close()
+
+create_price_table()
+
 def test_price_history():
     df = pd.read_csv("outData/PriceHistory.csv", skip_blank_lines=True, decimal=",", thousands=".")
     df.to_csv("cleaned_PriceHistory.csv", index=False)
     print(df)
-
-test_price_history()
 
 def save_historical_prices_into_csv():
     price_history = ExportPriceHistory(HISTORICAL_PRICE_SHEET_URL)
@@ -29,7 +48,7 @@ def save_historical_prices_into_csv():
 
 def save_daily_prices_into_csv():
     daily_prices = ExportPriceHistory(DAILY_PRICE_SHEET_URL)
-    daily_prices.save_daily_prices(PRICE_DAILY_FILE_PATH)
+    daily_prices.save_data(PRICE_DAILY_FILE_PATH)
 
 def save_dividend_paying_companies_into_csv():
     dividend_companies = SaveDocsData(DIVIDEND_SHEET_URL)
@@ -68,7 +87,6 @@ def create_excel_file():
         if all_results[ticker]:
             dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
             dividend_plot.plot_dividend_sustainability(2013, 2023)
-    
 
 def get_price_estimation(ticker):
     pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')
