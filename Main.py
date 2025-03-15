@@ -20,11 +20,11 @@ def save_daily_prices_into_csv():
 def clean_daily_prices():
     df = pd.read_csv(PRICE_DAILY_FILE_PATH, index_col=0)
 
-def populate_db():
-    list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
-    list_companies = list_companies['Symbol'].tolist()
-    populate = PopulateDB('companies.db')
-    populate.populate_all(list_companies)
+# def populate_db():
+#     list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
+#     list_companies = list_companies['Symbol'].tolist()
+#     populate = PopulateDB('companies.db')
+#     populate.populate_all(list_companies)
 
 def create_excel_file():
     current_date = datetime.now().strftime("%Y-%m-%d")
