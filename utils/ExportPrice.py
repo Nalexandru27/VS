@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-class ExportPriceHistory:
+class ExportPrice:
     def __init__(self, url_google_sheet):
         self.url_google_sheet = url_google_sheet
         

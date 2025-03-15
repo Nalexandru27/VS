@@ -1,10 +1,16 @@
 from database.DatabaseCRUD import DatabaseCRUD
 from stock.Stock import Stock
 import datetime as dt
+from database.models.Price import Price
 
 class PopulateDB:
     def __init__(self, db_name):
         self.db_crud = DatabaseCRUD(db_name)
+
+    def populate_history_prices(self, dataframe):
+        price_table = Price(self.db_crud.connection, self.db_crud.cursor)
+        rows_inserted = price_table.bulk_insert_historical_prices_from_dataframe(dataframe)
+        print(f"It was inserted {rows_inserted} rows in the price table")
 
     def populate_income_statement(self, list_companies):
         if list_companies is None:
