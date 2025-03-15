@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 class DatabaseCRUD:
     def __init__(self, db_name):
@@ -6,39 +7,6 @@ class DatabaseCRUD:
         self.connection.execute("PRAGMA journal_mode=WAL")
         self.connection.execute("PRAGMA busy_timeout = 30000")
         self.cursor = self.connection.cursor()
-
-    def create_tables(self):
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS company(
-                    id INTEGER PRIMARY KEY,
-                    ticker TEXT NOT NULL UNIQUE,
-                    sector TEXT
-                );           
-        """)
-
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS financialStatement(
-                    id INTEGER PRIMARY KEY,
-                    company_id INTEGER NOT NULL,
-                    statement_type TEXT NOT NULL ,
-                    year INTEGER NOT NULL,
-                    FOREIGN KEY(company_id) REFERENCES company(id),
-                    UNIQUE(company_id, statement_type, year)
-                );
-        """)
-
-        self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS financialData(
-                    id INTEGER PRIMARY KEY,
-                    financial_statement_id INTEGER NOT NULL,
-                    record_type TEXT NOT NULL,
-                    record_value NUMERIC NOT NULL,
-                    FOREIGN KEY(financial_statement_id) REFERENCES financialStatement(id),
-                    UNIQUE(financial_statement_id, record_type)
-                );
-        """)
-
-        self.connection.commit()
 
     def insert_company(self, ticker, sector):
         try:
@@ -165,6 +133,98 @@ class DatabaseCRUD:
             print(f"Error renaming column: {e}")
             self.connection.rollback()
             return
+        
+    def is_valide_date(self, date):
+        try:
+            datetime.strptime(date, '%Y-%m-%d')
+            return True
+        except ValueError:
+            return False
+        
+    def insert_price(self, ticker, date, close):
+        try:
+            if ticker is not None:
+                with self.connection:
+                    company_id = self.cursor.execute("""
+                        SELECT id FROM company WHERE ticker = ?                                 
+                    """, (ticker,)).fetchone()
+                    if company_id and self.is_valide_date(date) and close is not None:
+                        self.cursor.execute("""
+                            INSERT INTO price(company_id, date, close)
+                            VALUES(?, ?, ?)
+                        """, (company_id[0], date, close))
+        except sqlite3.IntegrityError:
+            pass
+
+    def get_price(self, ticker, date):
+        try:
+            if ticker is not None and self.is_valide_date(date):
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    return self.cursor.execute("""
+                        SELECT close FROM price WHERE company_id = ? AND date = ?
+                    """, (company_id[0], date)).fetchone()
+            return None
+        except sqlite3.IntegrityError:
+            pass
+
+    def get_last_price(self, ticker):
+        try:
+            if ticker is not None:
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    return self.cursor.execute("""
+                        SELECT close FROM price WHERE company_id = ? ORDER BY date DESC LIMIT 1
+                    """, (company_id[0],)).fetchone()
+            return None
+        except sqlite3.IntegrityError:
+            pass
+    
+    def get_prices(self, ticker, start_date, end_date):
+        try:
+            if ticker is not None and self.is_valide_date(start_date) and self.is_valide_date(end_date):
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    return self.cursor.execute("""
+                        SELECT date, close FROM price WHERE company_id = ? AND date BETWEEN ? AND ?
+                    """, (company_id[0], start_date, end_date)).fetchall()
+            return None
+        except sqlite3.IntegrityError:
+            pass
+
+    def delete_price(self, ticker, date):
+        try:
+            if ticker is not None and self.is_valide_date(date):
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    self.cursor.execute("""
+                        DELETE FROM price WHERE company_id = ? AND date = ?
+                    """, (company_id[0], date))
+                    self.connection.commit()
+        except sqlite3.IntegrityError:
+            pass
+        
+    def update_price(self, ticker, date, price):
+        try:
+            if ticker is not None and self.is_valide_date(date) and price is not None:
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    self.cursor.execute("""
+                        UPDATE price SET close = ? WHERE company_id = ? AND date = ?
+                    """, (price, company_id[0], date))
+                    self.connection.commit()
+        except sqlite3.IntegrityError:
+            pass
 
     def change_value(self, table_name, column_name, old_value, new_value):
         query = f"UPDATE {table_name} SET {column_name} = ? WHERE {column_name} = ?"

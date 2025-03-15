@@ -20,8 +20,7 @@ class evaluateStock:
         
     # Dividend Yield points
     def dividend_yield_points(self):
-        sp500 = yf.Ticker("SPY")
-        sp500_dividend_yield = sp500.info['yield'] * 100
+        sp500_dividend_yield = 1.27
         stock_dividend_yield = self.stock.get_dividend_yield() * 100
         if stock_dividend_yield > 2.5 * sp500_dividend_yield:
             return 3
@@ -172,7 +171,7 @@ class evaluateStock:
         points = 0
         points += self.dividend_record_points()
         # points += self.dividend_yield_points()
-        # points += self.DGR_points()
+        points += self.DGR_points()
         points += self.Earnings_Payout_Ratio_points()
         points += self.FCF_Payout_Ratio_points()
         points += self.Debt_to_Total_Capital_points()
@@ -180,29 +179,3 @@ class evaluateStock:
         points += self.operating_income_margin_points()
         points += self.ordinary_shares_number_points()
         return points
-        
-    def export_results_to_text_file(self, file_name):
-        print(f"Exporting results for {self.stock.ticker} to {file_name}")
-        with open(file_name, "a") as file:
-            file.write(f"Stock: {self.stock.ticker}\n")
-            file.write(f"Sector: {self.stock.yf.info['sector']}\n")
-            file.write(f"Market Cap: {self.stock.get_market_cap()/BILLION_DIVISION:.2f}B\n")
-            file.write(f"Current Ratio: {self.stock.get_current_ratio():.2f}\n")
-            file.write(f"LTDebtToWC: {self.stock.get_LTDebt_to_WC():.2f}\n")
-            file.write(f"P/E Ratio: {self.stock.compute_PE_ratio():.2f}\n")
-            file.write(f"Price-to-book ratio: {self.stock.compute_price_to_book_ratio():.2f}\n")
-            file.write(f"Graham's price-to-book ratio: {self.stock.compute_price_to_book_ratio_graham():.2f}\n")
-            file.write(f"ROCE: {self.stock.compute_ROCE()*100:.2f}\n")
-            file.write(f"Earnings Stability: {self.stock.earnings_stability()}\n")
-            file.write(f"Earnings Growth over past 10Y: {self.stock.earnings_growth_last_10_years()}\n")
-            file.write(f"Dividend Record: {self.stock.get_dividend_record_from_excel(FILE_PATH_1)}\n")
-            file.write(f"Dividend Yield: {self.stock.get_dividend_yield()*100:.2f}%\n")
-            file.write(f"DGR 1Y: {self.stock.get_DGR_3Y_from_excel(FILE_PATH_1)}\n")
-            file.write(f"Earnings Payout Ratio: {self.stock.yf.info['payoutRatio']*100:.2f}%\n")
-            file.write(f"FCF Payout Ratio: {self.stock.FCF_Payout_Ratio()*100:.2f}%\n")
-            file.write(f"Debt to Total Capital: {self.stock.Debt_to_Total_Capital_Ratio():.2f}\n")
-            file.write(f"ROE: {self.stock.return_on_equity():.2f}\n")
-            file.write(f"Operating Income Margin: {self.stock.operating_income_margin():.2f}%\n")
-            file.write(f"Ordinary Shares Number: {self.stock.ordinary_shares_number_trend_analysis()}\n")
-            file.write(f"Total Points: {self.give_points()}\n")
-            file.write("-----------------------------------------------------\n")

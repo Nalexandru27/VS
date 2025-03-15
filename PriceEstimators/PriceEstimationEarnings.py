@@ -72,14 +72,14 @@ class PERatioEstimator:
     # where Current P/E ratio = Current price / Last EPS reported
     # if the denominator is negative, it is set to 1.5
     def get_pe_ratio_estimation(self, start_year, end_year):
-        current_price = self.stock.yf.info['previousClose']
-        last_eps_reported = self.stock.yf.info['trailingEps']
-        current_pe_ratio = current_price / last_eps_reported
+        latest_price = self.db_crud.get_last_price(self.stock.ticker)
+        last_eps_reported = self.stock.get_EPS()
+        current_pe_ratio = latest_price / last_eps_reported
         historic_pe_ratio = self.get_average_price_to_earnings_ratio_history(start_year, end_year)
         denominator = current_pe_ratio / historic_pe_ratio
         if denominator < 0:
             denominator = 1.5
-        estimated_final_price = current_price / denominator
+        estimated_final_price = latest_price / denominator
         return estimated_final_price
     
 

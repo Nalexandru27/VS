@@ -116,6 +116,20 @@ class Price:
             return None
         except sqlite3.IntegrityError:
             pass
+
+    def get_last_price(self, ticker):
+        try:
+            if ticker is not None:
+                company_id = self.cursor.execute("""
+                    SELECT id FROM company WHERE ticker = ?                                 
+                """, (ticker,)).fetchone()
+                if company_id:
+                    return self.cursor.execute("""
+                        SELECT close FROM price WHERE company_id = ? ORDER BY date DESC LIMIT 1
+                    """, (company_id[0],)).fetchone()
+            return None
+        except sqlite3.IntegrityError:
+            pass
     
     def get_prices(self, ticker, start_date, end_date):
         try:

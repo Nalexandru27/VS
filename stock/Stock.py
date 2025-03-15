@@ -158,7 +158,15 @@ class Stock:
     # Get market cap from yahoo finance
     def get_market_cap(self):
         try:
-            return self.yf.info['marketCap']
+            db_name = 'companies.db'
+            db_crud = db.DatabaseCRUD(db_name)
+            latest_price = db_crud.get_last_price(self.ticker)
+            company_id = db_crud.select_company(self.ticker)
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', datetime.now().year - 2)
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+            if shares_outstanding is None or shares_outstanding == 'None':
+                return 0
+            return float(latest_price * shares_outstanding)
         except Exception as e:
             print(f"Error getting market cap for {self.ticker}: {e}")
             return 0
@@ -174,16 +182,13 @@ class Stock:
             last_year = datetime.now().year - 2
             financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
 
-            # Get raw values first
             current_assets = db_crud.select_financial_data(financial_statement_id, 'totalCurrentAssets')
             current_liabilities = db_crud.select_financial_data(financial_statement_id, 'totalCurrentLiabilities')
 
-            # Check for None or 'None' string values
             if (current_assets is None or current_assets == 'None' or 
                 current_liabilities is None or current_liabilities == 'None'):
                 return 0
-
-            # Convert to integers after checking
+           
             try:
                 current_assets = int(current_assets)
                 current_liabilities = int(current_liabilities)
@@ -209,18 +214,15 @@ class Stock:
             last_year = datetime.now().year - 2
             financial_statement_id = db_crud.select_financial_statement(company_id, 'balance_sheet', last_year)
 
-            # Get the values and handle None cases
             current_assets = db_crud.select_financial_data(financial_statement_id, 'totalCurrentAssets')
             current_liabilities = db_crud.select_financial_data(financial_statement_id, 'totalCurrentLiabilities')
             long_term_debt = db_crud.select_financial_data(financial_statement_id, 'longTermDebt')
 
-            # Check for None or 'None' string values
             if (current_assets is None or current_assets == 'None' or 
                 current_liabilities is None or current_liabilities == 'None' or
                 long_term_debt is None or long_term_debt == 'None'):
                 return 0
-
-            # Convert to integers
+            
             try:
                 current_assets = int(current_assets)
                 current_liabilities = int(current_liabilities)
@@ -230,7 +232,6 @@ class Stock:
 
             working_capital = current_assets - current_liabilities
             
-            # Avoid division by zero
             if working_capital == 0:
                 return 0
 
@@ -317,10 +318,11 @@ class Stock:
             sum = 0
             for earnings in past_3_years_earnings:
                 sum += earnings
-            no_shares = self.yf.info['sharesOutstanding']
-            avg_earnings_per_share = sum / no_shares
-            current_price_per_share = self.yf.info['currentPrice']
-            return float(current_price_per_share / avg_earnings_per_share)
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', datetime.now().year - 2)
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+            avg_earnings_per_share = sum / shares_outstanding
+            latest_price = db_crud.get_last_price(self.ticker)
+            return float(latest_price / avg_earnings_per_share)
         except Exception as e:
             print(f"Error calculating PE ratio for {self.ticker}: {e}")
             return 0
@@ -330,12 +332,17 @@ class Stock:
     def compute_price_to_book_ratio(self):
         # Tangible book value describes the standard definition of book value because it exclude the intangible assets like franchises, brand name, patents and trademarks
         try:
-            balance_sheet = self.yf.balance_sheet
-            tangible_book_value = balance_sheet.loc['Tangible Book Value'].iloc[0]
-            no_shares = self.yf.info['sharesOutstanding']
-            tangible_book_value_per_share = tangible_book_value / no_shares
-            current_price_per_share = self.yf.info['currentPrice']
-            return float(current_price_per_share / tangible_book_value_per_share)
+            db_crud = db.DatabaseCRUD('companies.db')
+            company_id = db_crud.select_company(self.ticker)
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', datetime.now().year - 2)
+            total_equity = db_crud.select_financial_data(balance_sheet_id, 'totalEquity')
+            intagible_assets = db_crud.select_financial_data(balance_sheet_id, 'intagibleAssets')
+            goodwill = db_crud.select_financial_data(balance_sheet_id, 'goodwill')
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+            tangible_book_value = total_equity - intagible_assets - goodwill
+            tangible_book_value_per_share = tangible_book_value / shares_outstanding
+            latest_price = db_crud.get_last_price(self.ticker)
+            return float(latest_price / tangible_book_value_per_share)
         except Exception as e:
             print(f"Error calculating price to book ratio for {self.ticker}: {e}")
             return 0
@@ -344,7 +351,20 @@ class Stock:
     # 7.2 < 22.5
     def compute_price_to_book_ratio_graham(self):
         try:
-            price_to_book_ratio = self.yf.info['priceToBook']
+            db_crud = db.DatabaseCRUD('companies.db')
+            company_id = db_crud.select_company(self.ticker)
+
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', datetime.now().year - 2)
+            total_assets = db_crud.select_financial_data(balance_sheet_id, 'totalAssets')
+            total_liabilities = db_crud.select_financial_data(balance_sheet_id, 'totalLiabilities')
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+
+            book_value = total_assets - total_liabilities
+
+            latest_price = db_crud.get_last_price(self.ticker)
+            market_cap = latest_price * shares_outstanding
+            price_to_book_ratio = market_cap / book_value
+
             pe_ratio = self.compute_PE_ratio()
             return float(pe_ratio * price_to_book_ratio)
         except Exception as e:
@@ -353,8 +373,22 @@ class Stock:
 
     # Get Dividend Yield
     def get_dividend_yield(self):
-        return self.yf.info['dividendYield']
+        db_crud = db.DatabaseCRUD('companies.db')
+        company_id = db_crud.select_company(self.ticker)
+
+        cashflow_statement_id = db_crud.select_financial_statement(company_id, 'cash_flow_statement', datetime.now().year - 2)
+        dividend_payout = db_crud.select_financial_data(cashflow_statement_id, 'dividendPayout')
+
+        balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', datetime.now().year - 2)
+        shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
     
+        if shares_outstanding is not None and shares_outstanding != 0:
+            dividend_per_share = dividend_payout / shares_outstanding
+            latest_price = db_crud.get_last_price(self.ticker)
+            if latest_price is not None and latest_price != 0:
+                return float(dividend_per_share / latest_price)
+        return 0
+
     # Compute Debt to Total Capital Ratio
     def Debt_to_Total_Capital_Ratio(self):
         try:
@@ -705,28 +739,3 @@ class Stock:
         except Exception as e:
             print(f"Error calculating dividends per share for {self.ticker}: {e}")
             return 0
-
-    # print stock indicators value
-    # def print_results(self):
-    #     print(f"Stock: {self.ticker}")
-    #     print(f"Sector: {self.yf.info['sector']}")
-    #     print(f"Price: {self.yf.info['currentPrice']}")
-    #     print(f"52-week low: {self.yf.info['fiftyTwoWeekLow']}")
-    #     print(f"52-week high: {self.yf.info['fiftyTwoWeekHigh']}")
-    #     marketcap = convert_to_billion(self.yf.info['marketCap'])
-    #     print(f"Market Cap: {marketcap:.2f} billions")
-    #     print(f"Current Ratio: {self.yf.info["currentRatio"]:.2f}")
-    #     print(f"LTDebtToWC: {self.calculate_LTDebt_to_WC():.2f}")
-    #     print(f"Dividend Record is: {self.get_dividend_record_from_excel(FILE_PATH_1)} consecutive years")
-    #     print(f"Dividend Yield: {self.get_dividend_yield():.2f}")
-    #     print(f"Earnings Payout Ratio: {self.yf.info['payoutRatio']:.2f}%")
-    #     print(f"FCF Payout Ratio: {self.FCF_Payout_Ratio() * 100:.2f}%")
-    #     print(f"Debt to Total Capital Ratio: {self.Debt_to_Total_Capital_Ratio() * 100:.2f}")
-    #     print(f"Return on Equity: {self.return_on_equity():.2f}%")
-    #     print(f"ROCE: {self.compute_ROCE():.2f}")
-    #     print(f"P/E Ratio: {self.compute_PE_ratio():.2f}")
-    #     print(f"Price-to-book ratio: {self.compute_price_to_book_ratio():.2f}")
-    #     print(f"Graham's price-to-book ratio: {self.compute_price_to_book_ratio_graham():.2f}")
-    #     print(f"Earnings Stability over the past 10 years: {self.earnings_stability()}")
-    #     print(f"Earnings Growth over the past 10 years: {self.earnings_growth_last_10_years():.2f}%")
-    #     print('---------------------------------------------------------')
