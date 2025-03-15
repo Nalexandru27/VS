@@ -8,7 +8,7 @@ PRICE_TO_BOOK_RATIO=1.5 # correct value=1.5
 INCREASED_DIVIDEND_RECORD=10 # correct value=20 (or 10)
 PRICE_TO_BOOK_RATIO_GRAHAM=22.5 # correct value=22.5
 
-SERVICE_ACCOUNT_FILE = "D:\\FacultyYear3\\Licenta\\VS\\innate-sunset-451811-f3-0c861175bff3.json"
+SERVICE_ACCOUNT_FILE = "D:\\Facultate\\An 3\\Licenta\\Lucrare Licenta\\VS\\innate-sunset-451811-f3-0c861175bff3.json"
 SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 DIVIDEND_SHEET_URL = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"

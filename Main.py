@@ -35,12 +35,45 @@ def create_price_table():
         if 'connection' in locals():
             connection.close()
 
-create_price_table()
+def clean_price_history():
+    # Citește fișierul CSV și ignoră prima coloană dacă e un index
+    df = pd.read_csv("outData/PriceHistory.csv", skip_blank_lines=True, decimal=",", thousands=".", index_col=0)
+    df.to_csv("outData/cleaned_PriceHistory.csv")
 
-def test_price_history():
-    df = pd.read_csv("outData/PriceHistory.csv", skip_blank_lines=True, decimal=",", thousands=".")
-    df.to_csv("cleaned_PriceHistory.csv", index=False)
-    print(df)
+def print_price_history():
+    df = pd.read_csv("outData/cleaned_PriceHistory.csv", index_col=0)
+    print(df.iloc[:, :4])
+
+def handling_missing_prices_history():
+    df = pd.read_csv("outData/cleaned_PriceHistory.csv", index_col=0)
+    available_date_percentage = (1 - df.isnull().mean()) * 100
+
+    valid_companies = available_date_percentage[available_date_percentage >= 75].index
+    df_filtered = df[valid_companies]
+
+    df_filled = df_filtered.interpolate(method='linear', limi=5)
+
+    still_missing = df_filled.isnull()
+
+    df_ffill = df_filled.ffill()
+    df_bfill = df_filled.bfill()
+
+    df_filled[still_missing] = (df_ffill[still_missing] + df_bfill[still_missing]) / 2
+
+    if df_filled.isnull().sum().sum() > 0 :
+        df_filled = df_filled.fillna(df_filled.ewm(span=30).mean())
+
+    df_filled = df_filled.fillna(df_filled.mean())
+
+    df_filled.to_csv("outData/filled_PriceHistory.csv")
+
+def export_price_history_to_excel():
+    df = pd.read_csv("outData/filled_PriceHistory.csv", index_col=0)
+    df.to_excel("outData/FilledPriceHistory.xlsx")
+
+export_price_history_to_excel()
+
+
 
 def save_historical_prices_into_csv():
     price_history = ExportPriceHistory(HISTORICAL_PRICE_SHEET_URL)
