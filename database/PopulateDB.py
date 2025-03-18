@@ -40,7 +40,8 @@ class PopulateDB:
                 for fiscalDate, row in df_company_income_statement.iterrows():
                     financial_statement_id = self.db_crud.select_financial_statement(company_id, statement_type, fiscalDate)
                     if financial_statement_id is not None:
-                        print(f"The {statement_type} for {ticker} from year {fiscalDate} already exists. Checking is there is any missing data...")
+                        print(f"The {statement_type} for {ticker} from year {fiscalDate} already exists")
+                        continue
                     else:
                         print(f"Inserting {statement_type} for {ticker} from year {fiscalDate}...")
                         self.db_crud.insert_financial_statement(ticker, statement_type, fiscalDate)

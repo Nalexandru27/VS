@@ -1,11 +1,13 @@
+import pandas as pd
+
 def handling_missing_prices_history():
-    df = pd.read_csv("outData/cleaned_PriceHistory.csv", index_col=0)
+    df = pd.read_csv("outData/cleand_PriceHistory.csv", index_col=0)
     available_date_percentage = (1 - df.isnull().mean()) * 100
 
     valid_companies = available_date_percentage[available_date_percentage >= 75].index
     df_filtered = df[valid_companies]
 
-    df_filled = df_filtered.interpolate(method='linear', limi=5)
+    df_filled = df_filtered.interpolate(method='linear', limit=5)
 
     still_missing = df_filled.isnull()
 
