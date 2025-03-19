@@ -7,8 +7,8 @@ from Constants import CLIENT_SECRET_FILE
 from google.auth.transport.requests import Request
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
-
 CREDS_FILE = CLIENT_SECRET_FILE
+FOLDER_ID = "1gb30u_IhDzWrz0dQewB4rTBhvDdZlZgV"
 
 def authenticate_google_drive():
     """Autentificare cu Google API"""
@@ -30,18 +30,43 @@ def authenticate_google_drive():
 
     return build('drive', 'v3', credentials=creds)
 
+def get_existing_file(drive_service, file_name):
+    """Caută un fișier după nume în folderul specificat"""
+    query = f"name='{file_name}' and \"{FOLDER_ID}\" in parents and trashed=false"
+    results = drive_service.files().list(q=query, fields="files(id, name)").execute()
+    files = results.get('files', [])
+    return files[0] if files else None
+
+def rename_existing_file(drive_service, file_id, new_name):
+    """Redenumește un fișier existent pe Google Drive"""
+    updated_metadata = {'name': new_name}
+    drive_service.files().update(fileId=file_id, body=updated_metadata).execute()
+    print(f"Fișierul existent a fost redenumit ca {new_name}")
+
 def upload_file_to_drive(file_path, file_name):
     drive_service = authenticate_google_drive()
 
+    # Verifică dacă există deja fișierul în Drive
+    existing_file = get_existing_file(drive_service, file_name)
+    
+    if existing_file:
+        backup_name = "backup_" + file_name
+        rename_existing_file(drive_service, existing_file['id'], backup_name)
+        print(f"Fișierul existent a fost redenumit în {backup_name}")
+
     media = MediaFileUpload(file_path, mimetype='application/octet-stream')
 
-    file_metadata = {'name': file_name}
+    file_metadata = {
+        'name': file_name,
+        'parents': [FOLDER_ID]  # Încarcă fișierul în folderul dorit
+    }
+
     file = drive_service.files().create(media_body=media, body=file_metadata).execute()
-    print(f"Fișierul {file_name} a fost încărcat pe Google Drive!")
+    print(f"Fișierul {file_name} a fost încărcat pe Google Drive în folderul specificat!")
     return file
 
 if __name__ == '__main__':
-    db_file_path = 'D:\\Facultate\\An 3\\Licenta\\Lucrare Licenta\\companies.db'
+    db_file_path = 'D:\\Facultate\\An 3\\Licenta\\Lucrare Licenta\\VS\\companies.db'
     db_file_name = 'companies.db'
 
     upload_file_to_drive(db_file_path, db_file_name)

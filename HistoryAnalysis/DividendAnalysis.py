@@ -2,12 +2,13 @@ from stock.Stock import *
 import matplotlib.pyplot as plt
 import pandas as pd
 from database.DatabaseCRUD import DatabaseCRUD
+from xlsxwriter import Workbook
 
 class dividendAnalysis:
     def __init__(self, stock: Stock, db_name):
         self.stock = stock
         self.db_crud = DatabaseCRUD(db_name)
-        self.plots_dir = "D:/FacultyYear3/Licenta/VS/outData/dividend_analysis"
+        self.plots_dir = "D:/FacultyYear3/An 3/Licenta/Lucrare Licenta/VS/outData/dividend_analysis"
         os.makedirs(self.plots_dir, exist_ok=True)
     
     def dividends_stability(self, start_year, end_year):
@@ -76,7 +77,7 @@ class dividendAnalysis:
     def plot_dividend_sustainability(self, start_year, end_year):
         print(f"Plotting dividend sustainability for {self.stock.ticker} from {start_year} to {end_year}")
         df = self.dividends_stability(start_year=start_year, end_year=end_year)
-        plot_file = "D:/FacultyYear3/Licenta/VS/outData/dividend_plot.png"
+        plot_file = "D:/FacultyYear3/An 3/Licenta/Lucrare Licenta/VS/outData//dividend_plot.png"
 
         eps_per_share = df['eps_per_share']
         free_cash_flow_per_share = df['free_cash_flow_per_share']

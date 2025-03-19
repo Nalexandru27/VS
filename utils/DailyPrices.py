@@ -69,7 +69,7 @@ try:
             price_formula = f'=IFERROR(QUERY(GOOGLEFINANCE("{stock}"; "price"; DATE({today})); "select Col2 offset 1"; 0); "")'
             cell_range = f'{col}{2}'
             sheet.update(range_name=cell_range, values=[[price_formula]], value_input_option="USER_ENTERED")
-            print(f"Added price formula for {stock}, waiting 2 seconds...")
+            print(f"Added price formula for {stock} - no {idx}, waiting 2 seconds...")
             time.sleep(2)
         print("Prices updated successfully for all stocks")
         
