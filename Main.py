@@ -24,8 +24,6 @@ def print_daily_prices():
     null_columns = null_columns[null_columns]
     print(null_columns.index.tolist())
 
-print_daily_prices()
-
 def populate_db():
     list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
     list_companies = list_companies['Symbol'].tolist()
@@ -58,6 +56,8 @@ def create_excel_file():
         if all_results[ticker]:
             dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
             dividend_plot.plot_dividend_sustainability(2013, 2023)
+
+create_excel_file()
 
 def get_price_estimation(ticker):
     pe_ratio = PERatioEstimator(Stock(ticker), 'companies.db')

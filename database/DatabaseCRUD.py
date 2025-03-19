@@ -165,7 +165,7 @@ class DatabaseCRUD:
                 if company_id:
                     return self.cursor.execute("""
                         SELECT close FROM price WHERE company_id = ? AND date = ?
-                    """, (company_id[0], date)).fetchone()
+                    """, (company_id[0], date)).fetchone()[0]
             return None
         except sqlite3.IntegrityError:
             pass
@@ -179,7 +179,7 @@ class DatabaseCRUD:
                 if company_id:
                     return self.cursor.execute("""
                         SELECT close FROM price WHERE company_id = ? ORDER BY date DESC LIMIT 1
-                    """, (company_id[0],)).fetchone()
+                    """, (company_id[0],)).fetchone()[0]
             return None
         except sqlite3.IntegrityError:
             pass
