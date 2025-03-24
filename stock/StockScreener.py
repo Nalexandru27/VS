@@ -4,7 +4,7 @@ from stock.Stock import *
 import utils.CreateExcelFile as CreateExcelFile
 import database.DatabaseCRUD as db
 from utils.Constants import FILTERED_DIVIDEND_COMPANY_FILE_PATH
-import time
+from database.DatabaseConnection import db_connection
 
 class StockScreener:
     def __init__(self):
@@ -36,7 +36,7 @@ class StockScreener:
     # TEST 4
     # Check if the stock has increased its dividend for more than 10 years in a row
     def check_dividend_record(self, stock: Stock):
-        return stock.count_consecutive_years_of_dividend_increase() >= INCREASED_DIVIDEND_RECORD
+        return stock.get_dividend_record_from_excel(FILTERED_DIVIDEND_COMPANY_FILE_PATH) >= INCREASED_DIVIDEND_RECORD
 
     # TEST 5
     # Check if the last 3 years earnings did grow more than 33% vs the earnings from the 8,9,10 year from the past
@@ -70,7 +70,7 @@ class StockScreener:
         long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
         if long_term_debt_to_workin_capital == 0:
             print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
-        elif not self.check_LTDebt_To_WC(stock):
+        elif self.check_LTDebt_To_WC(stock) == False:
             print(f"-->{stock.ticker} failed the test 'Long-Term Debt to Working Capital'")
             return False
 
@@ -79,7 +79,7 @@ class StockScreener:
             current_ratio = stock.get_current_ratio()
             if current_ratio == 0:
                 print(f"{stock.ticker} has no data available for the current ratio. Test skipped")
-            elif not self.check_current_ratio(stock):
+            elif self.check_current_ratio(stock) == False:
                 print(f"-->{stock.ticker} failed the test 'Current Ratio'")
                 return False
         else:
@@ -89,7 +89,7 @@ class StockScreener:
         market_cap = stock.get_market_cap()
         if market_cap == 0:
             print(f"{stock.ticker} has no data available for the market capitalization. Test skipped")
-        elif not self.check_market_cap(stock):
+        elif self.check_market_cap(stock) == False:
             print(f"-->{stock.ticker} failed the test 'Market Cap'")
             return False
 
@@ -97,7 +97,7 @@ class StockScreener:
         pe_ratio = stock.compute_PE_ratio()
         if pe_ratio == 0:
             print(f"{stock.ticker} has no data available for the P/E ratio. Test skipped")
-        elif not self.check_PE_ratio(stock):
+        elif self.check_PE_ratio(stock) == False:
             print(f"-->{stock.ticker} failed the test 'P/E Ratio'")
             return False
 
@@ -106,22 +106,25 @@ class StockScreener:
         price_to_book_ratio_graham = stock.compute_price_to_book_ratio_graham()
         if price_to_book_ratio == 0 and price_to_book_ratio_graham == 0:
             print(f"{stock.ticker} has no data available for the price-to-book ratio (normal and graham). Test skipped")
-        elif not self.check_price_to_book_ratio(stock) and not self.check_price_to_book_ratio_graham(stock):
+        elif self.check_price_to_book_ratio(stock) == False and self.check_price_to_book_ratio_graham(stock) == False:
             print(f"-->{stock.ticker} failed the test 'Price-to-book ratio' and 'Graham's price-to-book ratio'")
             return False
         
         # # Check Dividend Record
-        # if not stock.get_dividend_record_from_excel():
-        #     print(f"-->{stock.ticker} failed the test 'Dividend Record'")
-        #     return False
+        if self.check_dividend_record(stock) == False:
+            print(f"-->{stock.ticker} failed the test 'Dividend Record'")
+            return False
 
         # Check Earnings Stability
-        if not stock.earnings_stability():
+        earnings_stability = self.check_earnings_stability(stock)
+        if earnings_stability == 0:
+            print(f"{stock.ticker} has no data available to check the earnings stability. Test skipped")
+        elif self.check_earnings_stability(stock) == False:
             print(f"-->{stock.ticker} failed the test 'Earnings Stability'")
             return False
 
         # Check Earnings Growth
-        if not stock.earnings_growth_last_10_years():
+        if self.check_earnings_growth(stock) == False:
             print(f"-->{stock.ticker} failed the test 'Earnings Growth'")
             return False
 
@@ -129,29 +132,64 @@ class StockScreener:
         print(f"{stock.ticker} passed all tests")
         return True
 
-    # Screen a list of stocks in parallel
+    # Screen a list of stocks in parallel with multi threading
+    # def screen_stocks(self, tickers):
+    #     results = {}
+        
+    #     def process_ticker(ticker):
+    #         try:
+    #             print(f"Screening {ticker}...")
+    #             stock = Stock(ticker)
+
+    #             if stock.db_crud.select_company(ticker) is None:
+    #                 print(f"No data found for ticker '{ticker}'. Skipping.")
+    #                 return (ticker, False)
+
+    #             result = self.validate_criterias(stock)
+    #             return (ticker, result)
+    #         except Exception as e:
+    #             print(f"Error screening {ticker}: {e}")
+    #             return (ticker, False)
+            
+    #     max_workers = min(10, len(tickers))
+        
+    #     with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    #         futures = [executor.submit(process_ticker, ticker) for ticker in tickers]
+    #         for future in as_completed(futures):
+    #             try:
+    #                 ticker, result = future.result()
+    #                 results[ticker] = result
+    #             except Exception as e:
+    #                 print(f"Error processing ticker result: {e}")
+        
+    #     self.result = results
+    #     print("\nScreening done.\n")
+    #     return results
+
+    # Screen a list of stocks in sequence without multi threading
     def screen_stocks(self, tickers):
-        def process_ticker(ticker):
-            print(f"Screening {ticker}...")
-            stock = Stock(ticker)
-            self.result[ticker] = self.validate_criterias(stock)
-
-        with ThreadPoolExecutor() as executor:
-            executor.map(process_ticker, tickers)
-
-        print("\nScreening done.\n")
-        return self.result
-
-    # Inspect the results of the screening process and print the stocks that passed all tests in the terminal
-    def inspect_results_of_screening(self):
-        for ticker, value in self.result.items():
-            if value:
-                print(f'{ticker} passed all tests')
+        results = {}
+        for ticker in tickers:
+            try:
+                print(f"Screening {ticker}...")
                 stock = Stock(ticker)
-                stock.print_results()
-            else:
-                print(f"{ticker} did not pass all the test")
-                print("\n")
+                company_id = stock.db_crud.select_company(ticker)
+                print(f"Company ID for {ticker}: {company_id}")
+                
+                if company_id is None:
+                    print(f"No data found for ticker '{ticker}'. Skipping.")
+                    results[ticker] = False
+                    continue
+
+                result = self.validate_criterias(stock)
+                results[ticker] = result
+            except Exception as e:
+                print(f"Error screening {ticker}: {e}")
+                results[ticker] = False
+        
+        self.result = results
+        print("\nScreening done.\n")
+        return results
 
     # Export results to an Excel file
     def export_results_to_excel_file(self, file_name):
@@ -170,8 +208,34 @@ class StockScreener:
 
             stock_data_list = []
 
-            # Process each ticker in parallel
-            def process_ticker(ticker):
+            # Process each ticker in parallel with multi threading
+            # def process_ticker(ticker):
+            #     if self.result[ticker]:
+            #         try:
+            #             print(f"Processing {ticker}...")
+            #             stock = Stock(ticker)
+            #             data = self.stock_data(stock)
+            #             if data is not None:
+            #                 print(f"Data for {ticker} processed successfully.")
+            #                 return data
+            #             else:
+            #                 print(f"No data for {ticker}.")
+            #                 return None
+            #         except Exception as e:
+            #             print(f"Error processing {ticker}: {e}")
+            #             return None
+            
+            # with ThreadPoolExecutor(max_workers=5) as executor:
+            #     future_to_ticker = {executor.submit(process_ticker, ticker): ticker
+            #                         for ticker in self.result if self.result[ticker]} 
+                
+            #     for future in as_completed(future_to_ticker):
+            #         data = future.result()
+            #         if data is not None:
+            #             stock_data_list.append(data)
+
+            # Process each ticker in sequence without multi threading
+            for ticker in self.result:
                 if self.result[ticker]:
                     try:
                         print(f"Processing {ticker}...")
@@ -179,22 +243,11 @@ class StockScreener:
                         data = self.stock_data(stock)
                         if data is not None:
                             print(f"Data for {ticker} processed successfully.")
-                            return data
+                            stock_data_list.append(data)
                         else:
                             print(f"No data for {ticker}.")
-                            return None
                     except Exception as e:
                         print(f"Error processing {ticker}: {e}")
-                        return None
-            
-            with ThreadPoolExecutor() as executor:
-                future_to_ticker = {executor.submit(process_ticker, ticker): ticker
-                                    for ticker in self.result if self.result[ticker]} 
-                
-                for future in as_completed(future_to_ticker):
-                    data = future.result()
-                    if data is not None:
-                        stock_data_list.append(data)
 
             for stock_data in stock_data_list:
                 excel.add_stocks(stock_data)
@@ -208,9 +261,8 @@ class StockScreener:
         data = {}
         evaluator = es.evaluateStock(ticker, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
         try:
-            db_crud = db.DatabaseCRUD('companies.db')
             data['Ticker'] = ticker.ticker
-            sector = db_crud.select_company_sector(ticker.ticker)
+            sector = ticker.db_crud.select_company_sector(ticker.ticker)
             data["Sector"] = sector
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"

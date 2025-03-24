@@ -4,8 +4,8 @@ import datetime as dt
 from database.models.Price import Price
 
 class PopulateDB:
-    def __init__(self, db_name):
-        self.db_crud = DatabaseCRUD(db_name)
+    def __init__(self):
+        self.db_crud = DatabaseCRUD()
 
     def populate_history_prices(self, dataframe):
         price_table = Price(self.db_crud.connection, self.db_crud.cursor)
