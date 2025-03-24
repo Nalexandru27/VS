@@ -73,9 +73,7 @@ class evaluateStock:
     # EPS and Earnings Payout Ratio points
     def Earnings_Payout_Ratio_points(self):
         earnings_payout_ratio = self.stock.earnings_payout_ratio()
-        db_name = 'companies.db'
-        db_crud = DatabaseCRUD(db_name)
-        sector = db_crud.select_company_sector(self.stock.ticker)
+        sector = self.stock.db_crud.select_company_sector(self.stock.ticker)
         if sector == "Real Estate":
             if earnings_payout_ratio < 0.8:
                 return 3
@@ -95,9 +93,7 @@ class evaluateStock:
     # FCF Payout Ratio points
     def FCF_Payout_Ratio_points(self):
         FCF_payout_ratio = self.stock.FCF_Payout_Ratio()
-        db_name = 'companies.db'
-        db_crud = DatabaseCRUD(db_name)
-        sector = db_crud.select_company_sector(self.stock.ticker)
+        sector = self.stock.db_crud.select_company_sector(self.stock.ticker)
         if sector == "Real Estate":
             if FCF_payout_ratio < 0.8:
                 return 3
@@ -170,7 +166,7 @@ class evaluateStock:
     def give_points(self):
         points = 0
         points += self.dividend_record_points()
-        # points += self.dividend_yield_points()
+        points += self.dividend_yield_points()
         points += self.DGR_points()
         points += self.Earnings_Payout_Ratio_points()
         points += self.FCF_Payout_Ratio_points()

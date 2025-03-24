@@ -11,6 +11,8 @@ class PriceDividendRatioEstimator:
     def get_price_history(self, start_year, end_year):
         start_date = f'{start_year}-01-01'
         end_date = f'{end_year}-12-31'
+        
+
         history = self.stock.yf.history(start=start_date, end=end_date, interval='1d')
         history = history['Close']
         history.index = pd.to_datetime(history.index)

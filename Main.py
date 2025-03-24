@@ -10,24 +10,20 @@ from PriceEstimators.PriceEstimationDividend import PriceDividendRatioEstimator
 from stock.StockScreener import StockScreener
 import time, datetime
 from utils.Constants import DIVIDEND_SHEET_URL, DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH, HISTORICAL_PRICE_SHEET_URL, PRICE_HISTORY_FILE_PATH, DAILY_PRICE_SHEET_URL, PRICE_DAILY_FILE_PATH, CLEANED_PRICE_DAILY_FILE_PATH
-from utils.ExportPrice import ExportPrice
+from utils.SaveDividendData import SaveDocsData
 from datetime import datetime
+import atexit
+from database.DatabaseConnection import db_connection
 
-def save_daily_prices_into_csv():
-    daily_prices = ExportPrice(DAILY_PRICE_SHEET_URL)
-    daily_prices.save_data(PRICE_DAILY_FILE_PATH)
-    daily_prices.process_data(PRICE_DAILY_FILE_PATH, CLEANED_PRICE_DAILY_FILE_PATH)
-
-def print_daily_prices():
-    df = pd.read_csv(CLEANED_PRICE_DAILY_FILE_PATH, index_col=0)
-    null_columns = df.isnull().iloc[0]
-    null_columns = null_columns[null_columns]
-    print(null_columns.index.tolist())
+def save_dividend_paying_companies():
+    save_dividend_data = SaveDocsData(DIVIDEND_SHEET_URL)
+    save_dividend_data.save_data(DIVIDEND_COMPANY_FILE_PATH)
+    save_dividend_data.process_data(DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
 
 def populate_db():
     list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
     list_companies = list_companies['Symbol'].tolist()
-    populate = PopulateDB('companies.db')
+    populate = PopulateDB()
     populate.populate_all(list_companies)
 
 def create_excel_file():
@@ -45,8 +41,6 @@ def create_excel_file():
 
     screening_end_time = time.time()
 
-    screener.result = all_results
-
     current_date = datetime.now().strftime("%Y-%m-%d")
     file_name = f"./outData/companies_screened_{current_date}.xlsx"
     screener.export_results_to_excel_file(file_name)
@@ -54,8 +48,11 @@ def create_excel_file():
 
     for ticker in all_results:
         if all_results[ticker]:
-            dividend_plot = dividendAnalysis(Stock(ticker), 'companies.db')
-            dividend_plot.plot_dividend_sustainability(2013, 2023)
+            dividend_plot = dividendAnalysis(Stock(ticker))
+            try:
+                dividend_plot.plot_dividend_sustainability(2013, 2023)
+            except Exception as e:
+                print(f"Error plotting dividend sustainability for {ticker}: {e}")
 
 create_excel_file()
 
@@ -80,3 +77,5 @@ def get_price_estimation(ticker):
     avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
 
     return avg_price
+
+atexit.register(db_connection.close_connection)
