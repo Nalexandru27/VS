@@ -15,6 +15,26 @@ from datetime import datetime
 import atexit
 from database.DatabaseConnection import db_connection
 
+def inspect_dividend_data():
+    url = 'https://www.alphavantage.co/query?function=DIVIDENDS&symbol=CCi&apikey=WYGPKB8T21WMM6LO'
+    r = requests.get(url)
+    data = r.json()
+
+    print(data)
+
+def inspect_income_statement_data():
+    url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=WMT&apikey=WYGPKB8T21WMM6LO'
+    r = requests.get(url)
+    data = r.json()
+    annual_reports = data['annualReports']
+    for report in annual_reports:
+        fiscalDateEnding = report['fiscalDateEnding']
+        year = fiscalDateEnding.split('-')[0]
+        if year == '2024' or year == '2025':
+            print(report)
+
+# inspect_income_statement_data()
+
 def save_dividend_paying_companies():
     save_dividend_data = SaveDocsData(DIVIDEND_SHEET_URL)
     save_dividend_data.save_data(DIVIDEND_COMPANY_FILE_PATH)
