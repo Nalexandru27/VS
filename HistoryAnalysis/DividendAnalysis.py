@@ -16,13 +16,21 @@ class dividendAnalysis:
         for year in range(start_year, end_year + 1):
             # company id
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
+            if company_id is None:
+                print(f"Company {self.stock.ticker} not found in the database")
+                return None
             
             # cash flow financial statement id
             cash_flow_financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
+            if cash_flow_financial_statement_id is None:
+                print(f"Financial statement for {self.stock.ticker} not found in the database")
+                return None
             
             # dividends paid
             dividens_paid = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayout')
-            dividens_paid = int(dividens_paid) if dividens_paid and dividens_paid != 'None' else 0
+            if dividens_paid is None or dividens_paid == 'None':
+                return None
+            dividens_paid = int(dividens_paid)
             
             # dividends paid to preferred stock
             dividends_paid_preferred_stock = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayoutPreferredStock')
@@ -44,7 +52,9 @@ class dividendAnalysis:
             
             # shares outstanding
             shares_outstanding = self.stock.db_crud.select_financial_data(balance_sheet_financial_statement_id, 'sharesOutstanding')
-            shares_outstanding = int(shares_outstanding) if shares_outstanding and shares_outstanding != 'None' else 1
+            if shares_outstanding is None or shares_outstanding == 'None':
+                return None
+            shares_outstanding = int(shares_outstanding)
             
             # income statement financial statement id
             income_statement_financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'income_statement', year)
@@ -77,6 +87,9 @@ class dividendAnalysis:
     def plot_dividend_sustainability(self, start_year, end_year):
         print(f"Plotting dividend sustainability for {self.stock.ticker} from {start_year} to {end_year}")
         df = self.dividends_stability(start_year=start_year, end_year=end_year)
+        if df is None:
+            print(f"Error getting the necessary dividend data for {self.stock.ticker} => skipping plot")
+            return 0
 
         eps_per_share = df['eps_per_share']
         free_cash_flow_per_share = df['free_cash_flow_per_share']
