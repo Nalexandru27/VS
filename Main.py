@@ -28,105 +28,116 @@ def inspect_income_statement_data():
     data = r.json()
     annual_reports = data['annualReports']
     for report in annual_reports:
-        fiscalDateEnding = report['fiscalDateEnding']
-        year = fiscalDateEnding.split('-')[0]
-        if year == '2024' or year == '2025':
-            print(report)
+        if i < 15:
+            date = report['fiscalDateEnding']
+            income_statement[date] = {
+                'revenue': report['totalRevenue'],
+                'grossProfit': report['grossProfit'],
+                'ebit': report['ebit'],
+                'operatingIncome': report['operatingIncome'],
+                'cogs': report['costofGoodsAndServicesSold'],
+                'netIncomeFromContinuingOps': report['netIncomeFromContinuingOperations'],
+                'depreciationAndAmortization': report['depreciationAndAmortization'],
+                'researchAndDevelopment': report['researchAndDevelopment']
+            }
+            i += 1
+        else:
+            break
+    df = pd.DataFrame.from_dict(income_statement, orient='index')
+    df.index.name = 'fiscal_date_ending'
+    df = df.apply(pd.to_numeric, errors='coerce')
+    return df
 
-# inspect_income_statement_data()
+# Get balance sheet
+def get_balance_sheet():
+    url = 'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=IBM&apikey=demo'
+    r = requests.get(url)
+    data = r.json()
+    annual_reports = data['annualReports']
+    i = 0
+    balance_sheet = {}
+    for report in annual_reports:
+        if i < 15:
+            date = report['fiscalDateEnding']
+            balance_sheet[date] = {
+                'totalAssets': report['totalAssets'],
+                'totalCurrentAssets': report['totalCurrentAssets'],
+                'intagibleAssets': report['intangibleAssets'],
+                'totalLiabilities': report['totalLiabilities'],
+                'totalCurrentLiabilities': report['totalCurrentLiabilities'],
+                'currentDebt': report['currentDebt'],
+                'capitalLeaseObligations': report['capitalLeaseObligations'],
+                'longTermDebt': report['longTermDebt'],
+                'sharesOutstanding': report['commonStockSharesOutstanding'],
+                'totalEquity': report['totalShareholderEquity']
+            }
+            i += 1
+        else:
+                break
+    df = pd.DataFrame.from_dict(balance_sheet, orient='index')
+    df.index.name = 'fiscal_date_ending'
+    df = df.apply(pd.to_numeric, errors='coerce')
+    return df
 
-def save_dividend_paying_companies():
-    save_dividend_data = SaveDocsData(DIVIDEND_SHEET_URL)
-    save_dividend_data.save_data(DIVIDEND_COMPANY_FILE_PATH)
-    save_dividend_data.process_data(DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
+income_stmt = get_income_statement()
+balance_sheet = get_balance_sheet()
+cash_flows = get_cashflow_data()
 
-def populate_db():
-    list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
-    list_companies = list_companies['Symbol'].tolist()
-    populate = PopulateDB()
-    populate.populate_all(list_companies)
+# print(cash_flows)
 
-def create_excel_file():
-    current_date = datetime.now().strftime("%Y-%m-%d")
+dividendsPaid = cash_flows['dividendPayout']
+shares_outstanding = balance_sheet['sharesOutstanding']
+net_income = cash_flows['netIncome']
+operating_cash_flow = cash_flows['operatingCF']
+capex = cash_flows['capitalExpenditures']
 
-    screener = StockScreener()
-    screening_start_time = time.time()
-    all_results = {}
+Dividends_per_share = (dividendsPaid / shares_outstanding).round(2)
+EPS_basic = (net_income / shares_outstanding).round(2)
+FCF__per_share = ((operating_cash_flow - capex) / shares_outstanding).round(2)
 
-    filtered_sorted_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
-    tickers = filtered_sorted_companies['Symbol'].tolist()
+cash_flows.index = pd.to_datetime(cash_flows.index)
+years = cash_flows.index.year
 
-    results = screener.screen_stocks(tickers)
-    all_results.update(results)
+# Plotting
+plt.figure(figsize=(16,10))
 
-    screening_end_time = time.time()
+# Plot each variable with distinct styles
+plt.plot(years, EPS_basic, marker='o', linestyle='-', color='blue', label='EPS Basic')
+plt.plot(years, FCF__per_share, marker='s', linestyle='--', color='green', label='FCF/share')
+plt.plot(years, Dividends_per_share, marker='^', linestyle=':', color='orange', label='Dividends/share')
 
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    file_name = f"./outData/companies_screened_{current_date}.xlsx"
-    screener.export_results_to_excel_file(file_name)
-    print(f"Screening stocks took {screening_end_time - screening_start_time} seconds")
+# Add data labels with better visibility
+for i, txt in enumerate(EPS_basic):
+    plt.text(years[i], EPS_basic.iloc[i] + 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+             bbox=dict(facecolor='blue', edgecolor='none', alpha=0.7), color='white')
 
-    for ticker in all_results:
-        if all_results[ticker]:
-            dividend_plot = dividendAnalysis(Stock(ticker))
-            try:
-                dividend_plot.plot_dividend_sustainability(2013, 2023)
-            except Exception as e:
-                print(f"Error plotting dividend sustainability for {ticker}: {e}")
+for i, txt in enumerate(FCF__per_share):
+    plt.text(years[i], FCF__per_share.iloc[i] - 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+             bbox=dict(facecolor='green', edgecolor='none', alpha=0.7), color='white')
 
-# create_excel_file()
+for i, txt in enumerate(Dividends_per_share):
+    plt.text(years[i], Dividends_per_share.iloc[i] + 0.5, f"{txt:.2f}", fontsize=10, ha='center', 
+             bbox=dict(facecolor='orange', edgecolor='none', alpha=0.7), color='white')
 
-def get_price_estimation(ticker):
-    pe_ratio = PERatioEstimator(Stock(ticker))
-    price_pe = pe_ratio.get_pe_ratio_estimation(2013, 2023)
-    print(f"The price estimation using P/E ratio: {price_pe:.2f}$")
+# Add chart details
+plt.xlabel('Year', fontsize=12)
+plt.ylabel('Value per Share (USD)', fontsize=12)
+plt.title('Dividend Sustainability Analysis (EPS, FCF, Dividends)', fontsize=16, fontweight='bold')
+plt.legend(fontsize=10)
 
-    ebit_price = PEBITRatioEstimator(Stock(ticker))
-    price_ebit = ebit_price.get_pebit_ratio_estimation(2013, 2023)
-    print(f"The price estimation using P/EBIT ratio: {price_ebit:.2f}$")
+# Adjust axis ticks and range
+plt.xticks(years, rotation=45, fontsize=10)
+plt.yticks(fontsize=10)
 
-    op_cf_price = PriceOpCFRatioEstimator(Stock(ticker))
-    price_op_cf = op_cf_price.get_priceOpCF_ratio_estimation(2013, 2023)
-    print(f"The price estimation using P/OpCF ratio: {price_op_cf:.2f}$")
+# Add a grid
+plt.grid(visible=True, linestyle='--', linewidth=0.5, alpha=0.7)
 
-    fcf_price_estimator = PriceFCFRatioEstimator(Stock(ticker))
-    price_fcf = fcf_price_estimator.get_priceFCF_ratio_estimation(2013, 2023)
-    print(f"The price estimation using PEBIT ratio: {price_fcf:.2f}$")
+# Set background colors
+plt.gca().set_facecolor('#f9f9f9')  # Light gray for plot background
+plt.gcf().set_facecolor('white')    # White for figure background
+
+# Show plot
+plt.tight_layout()
+plt.show()
 
 
-    dividend_price_estimator = PriceDividendRatioEstimator(Stock(ticker))
-    price_dividend = dividend_price_estimator.get_priceDividend_ratio_estimation(2013, 2023)
-    print(f"The price estimation using P/Dividend ratio: {price_dividend:.2f}$")
-
-    avg_price = (price_pe + price_ebit + price_op_cf + price_fcf + price_dividend) / 5
-
-    return avg_price
-
-print(get_price_estimation("GPC"))
-
-# def get_price_history(stock:Stock, start_year, end_year):
-#         start_date = f'{start_year}-01-01'
-#         end_date = f'{end_year}-12-31'
-    
-#         history = stock.db_crud.get_prices(stock.ticker, start_date, end_date)
-#         if history is None:
-#             raise ValueError("No price history found for the given date range.")
-       
-#         df_history = pd.DataFrame(history, columns=['Date', 'Close'])
-       
-#         df_history.set_index('Date', inplace=True)
-#         return df_history
-
-# def get_average_year_price(stock: Stock, start_year, end_year):
-#     df_history = get_price_history(stock, start_year, end_year)
-#     df_history.index = pd.to_datetime(df_history.index)
-#     annual_average = df_history.groupby(df_history.index.year).mean()
-#     return annual_average
-
-# avg_prices = get_average_year_price(Stock("GPC"), 2013, 2023)
-# # for year in avg_prices:
-# #     print(avg_prices[year])
-
-# print(avg_prices.loc[2013])
-
-atexit.register(db_connection.close_connection)
