@@ -1,1 +1,3 @@
 companies.db
+*.pyc
+*.xlsx
