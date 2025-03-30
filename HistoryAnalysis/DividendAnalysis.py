@@ -2,54 +2,65 @@ from stock.Stock import *
 import matplotlib.pyplot as plt
 import pandas as pd
 from database.DatabaseCRUD import DatabaseCRUD
+from xlsxwriter import Workbook
+import os
 
 class dividendAnalysis:
-    def __init__(self, stock: Stock, db_name):
+    def __init__(self, stock: Stock):
         self.stock = stock
-        self.db_crud = DatabaseCRUD(db_name)
-        self.plots_dir = "D:/FacultyYear3/Licenta/VS/outData/dividend_analysis"
+        self.plots_dir = "D:/Facultate/An 3/Licenta/Lucrare Licenta/VS/outData/dividend_analysis"
         os.makedirs(self.plots_dir, exist_ok=True)
     
     def dividends_stability(self, start_year, end_year):
         dict = {}
         for year in range(start_year, end_year + 1):
             # company id
-            company_id = self.db_crud.select_company(self.stock.ticker)
+            company_id = self.stock.db_crud.select_company(self.stock.ticker)
+            if company_id is None:
+                print(f"Company {self.stock.ticker} not found in the database")
+                return None
             
             # cash flow financial statement id
-            cash_flow_financial_statement_id = self.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
+            cash_flow_financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
+            if cash_flow_financial_statement_id is None:
+                print(f"Financial statement for {self.stock.ticker} not found in the database")
+                return None
             
             # dividends paid
-            dividens_paid = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayout')
-            dividens_paid = int(dividens_paid) if dividens_paid and dividens_paid != 'None' else 0
+            dividens_paid = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayout')
+            if dividens_paid is None or dividens_paid == 'None':
+                return None
+            dividens_paid = int(dividens_paid)
             
             # dividends paid to preferred stock
-            dividends_paid_preferred_stock = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayoutPreferredStock')
+            dividends_paid_preferred_stock = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'dividendPayoutPreferredStock')
             dividends_paid_preferred_stock = int(dividends_paid_preferred_stock) if dividends_paid_preferred_stock and dividends_paid_preferred_stock != 'None' else 0
             
             # operating cash flow
-            operating_cash_flow = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFlow')
+            operating_cash_flow = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFlow')
             if operating_cash_flow is None or operating_cash_flow == 'None':
-                operating_cash_flow = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFow')
+                operating_cash_flow = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'operatingCashFow')
             
             operating_cash_flow = int(operating_cash_flow) if operating_cash_flow and operating_cash_flow != 'None' else 0
 
             # capital expenditures
-            capex = self.db_crud.select_financial_data(cash_flow_financial_statement_id, 'capitalExpenditures')
+            capex = self.stock.db_crud.select_financial_data(cash_flow_financial_statement_id, 'capitalExpenditures')
             capex = int(capex) if capex and capex != 'None' else 0
             
             # balance sheet financial statement id
-            balance_sheet_financial_statement_id = self.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+            balance_sheet_financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
             
             # shares outstanding
-            shares_outstanding = self.db_crud.select_financial_data(balance_sheet_financial_statement_id, 'sharesOutstanding')
-            shares_outstanding = int(shares_outstanding) if shares_outstanding and shares_outstanding != 'None' else 1
+            shares_outstanding = self.stock.db_crud.select_financial_data(balance_sheet_financial_statement_id, 'sharesOutstanding')
+            if shares_outstanding is None or shares_outstanding == 'None':
+                return None
+            shares_outstanding = int(shares_outstanding)
             
             # income statement financial statement id
-            income_statement_financial_statement_id = self.db_crud.select_financial_statement(company_id, 'income_statement', year)
+            income_statement_financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'income_statement', year)
             
             # net income
-            net_income = self.db_crud.select_financial_data(income_statement_financial_statement_id, 'netIncome')
+            net_income = self.stock.db_crud.select_financial_data(income_statement_financial_statement_id, 'netIncome')
             net_income = int(net_income) if net_income and net_income != 'None' else 0
             
             # eps per share
@@ -76,7 +87,9 @@ class dividendAnalysis:
     def plot_dividend_sustainability(self, start_year, end_year):
         print(f"Plotting dividend sustainability for {self.stock.ticker} from {start_year} to {end_year}")
         df = self.dividends_stability(start_year=start_year, end_year=end_year)
-        plot_file = "D:/FacultyYear3/Licenta/VS/outData/dividend_plot.png"
+        if df is None:
+            print(f"Error getting the necessary dividend data for {self.stock.ticker} => skipping plot")
+            return 0
 
         eps_per_share = df['eps_per_share']
         free_cash_flow_per_share = df['free_cash_flow_per_share']
@@ -122,13 +135,32 @@ class dividendAnalysis:
         # Show plot
         plt.tight_layout()
 
-        plt.savefig(plot_file, dpi=400)
+        import io
+        img_data = io.BytesIO()
+        
+        try:
+            plt.savefig(img_data, format='png', dpi=400)
+            img_data.seek(0)  # Move to the start of the BytesIO buffer
+        except Exception as e:
+            print(f"Error creating plot for {self.stock.ticker}: {e}")
+            return
+        
         plt.close()
 
+        # Create Excel file with embedded image
         output_file = os.path.join(self.plots_dir, f"{self.stock.ticker}_analysis.xlsx")
-        with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
-            df.to_excel(writer, sheet_name='Dividend Data Analysis', index=True)
-            worksheet = writer.sheets['Dividend Data Analysis']
-            worksheet.insert_image('F2', plot_file, {'x_scale': 0.6, 'y_scale': 0.6})
+        
+        try:
+            with pd.ExcelWriter(output_file, engine='xlsxwriter') as writer:
+                df.to_excel(writer, sheet_name='Dividend Data Analysis', index=True)
+                workbook = writer.book
+                worksheet = writer.sheets['Dividend Data Analysis']
+                
+                # Insert image from the memory buffer
+                worksheet.insert_image('F2', f"{self.stock.ticker}_plot.png", {'image_data': img_data, 'x_scale': 0.6, 'y_scale': 0.6})
+            
+            print(f"Successfully created Excel file with embedded plot: {os.path.abspath(output_file)}")
+        except Exception as e:
+            print(f"Error creating Excel file for {self.stock.ticker}: {e}")
 
 
