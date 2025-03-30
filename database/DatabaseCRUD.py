@@ -122,6 +122,7 @@ class DatabaseCRUD:
             query = "SELECT record_value FROM financialData WHERE financial_statement_id = ? and record_type = ?"
             cursor.execute(query, (financial_statement_id, record_type))
             result = cursor.fetchone()
+
             if result is None:
                 return None
             return result[0]

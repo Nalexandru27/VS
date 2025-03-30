@@ -63,6 +63,7 @@ class PriceDividendRatioEstimator:
         dividend_yield_history = {}
         for year in range(start_year, end_year + 1):
             dividend_yield_history[year] = dividends_per_share_history[year] / avg_year_prices.loc[year]
+
         return dividend_yield_history
     
     # compute average dividends paid for the last 15 years
@@ -99,6 +100,6 @@ class PriceDividendRatioEstimator:
         
         if denominator < 0:
             denominator = 1.5
-        
+
         estimated_final_price = latest_price / denominator
         return estimated_final_price

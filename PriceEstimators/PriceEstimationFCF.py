@@ -34,6 +34,7 @@ class PriceFCFRatioEstimator:
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
             op_cf = self.stock.db_crud.select_financial_data(financial_statement_id, 'operatingCashFlow')
             capex = self.stock.db_crud.select_financial_data(financial_statement_id, 'capitalExpenditures')
+
             fcf_history[year] = op_cf - capex
         return fcf_history
     
@@ -44,6 +45,7 @@ class PriceFCFRatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
             shares_outstanding = self.stock.db_crud.select_financial_data(financial_statement_id, 'sharesOutstanding')
+
             shares_outstanding_history[year] = shares_outstanding
         return shares_outstanding_history
     
@@ -62,6 +64,7 @@ class PriceFCFRatioEstimator:
         price_to_fcf_ratio_history = {}
         for year in range(start_year, end_year + 1):
             price_to_fcf_ratio_history[year] = avg_year_prices.loc[year] / fcf_per_share_history[year]
+
         return price_to_fcf_ratio_history
     
     # compute average free cash flow for the last 15 years
@@ -92,4 +95,5 @@ class PriceFCFRatioEstimator:
             denominator = 1.5
         
         estimated_final_price = latest_price / denominator
+
         return estimated_final_price

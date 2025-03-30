@@ -34,6 +34,7 @@ class PERatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'income_statement', year)
             net_income = self.stock.db_crud.select_financial_data(financial_statement_id, 'netIncome')
+
             net_income_history[year] = net_income
         return net_income_history
     
@@ -44,6 +45,7 @@ class PERatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
             shares_outstanding = self.stock.db_crud.select_financial_data(financial_statement_id, 'sharesOutstanding')
+
             shares_outstanding_history[year] = shares_outstanding
         return shares_outstanding_history
     
@@ -63,6 +65,7 @@ class PERatioEstimator:
         pe_ratio = {}
         for year in range(start_year, end_year + 1):
             pe_ratio[year] = annual_price_average.loc[year] / eps_history[year]
+
         return pe_ratio
     
     # compute average P/E ratio for the last 15 years
@@ -75,6 +78,7 @@ class PERatioEstimator:
         else:
             # Presupun că este un dicționar
             return sum(pe_ratio.values()) / len(pe_ratio)
+
     
     # compute estimated price using P/E ratio
     # formula: Current price / (Current P/E ratio / Average P/E ratio)

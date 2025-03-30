@@ -11,6 +11,7 @@ sys.path.append(parent_dir)
 from database.DatabaseCRUD import DatabaseCRUD
 from database.DatabaseConnection import db_connection
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from Constants import SERVICE_ACCOUNT_FILE, SCOPES
 
 current_year = datetime.today().year

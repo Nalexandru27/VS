@@ -34,6 +34,7 @@ class PEBITRatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'income_statement', year)
             ebit = self.stock.db_crud.select_financial_data(financial_statement_id, 'ebit')
+
             ebit_history[year] = ebit
         return ebit_history
     
@@ -44,6 +45,7 @@ class PEBITRatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
             shares_outstanding = self.stock.db_crud.select_financial_data(financial_statement_id, 'sharesOutstanding')
+
             shares_outstanding_history[year] = shares_outstanding
         return shares_outstanding_history
     
@@ -62,6 +64,7 @@ class PEBITRatioEstimator:
         price_to_ebit_ratio = {}
         for year in range(start_year, end_year + 1):
             price_to_ebit_ratio[year] = price.loc[year] / ebit[year]
+
         return price_to_ebit_ratio
     
     # compute average ebit for the last 15 years
@@ -71,6 +74,7 @@ class PEBITRatioEstimator:
             return price_to_ebit_ratio.mean()
         else:
             return sum(price_to_ebit_ratio.values()) / len(price_to_ebit_ratio)
+
     
     # compute estimated price using P/EBIT ratio
     # formula: Current price / (Current P/EBIT ratio / Average P/EBIT ratio)
