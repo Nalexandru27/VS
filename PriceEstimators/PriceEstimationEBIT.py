@@ -1,6 +1,9 @@
 from stock.Stock import Stock
 from database.DatabaseCRUD import DatabaseCRUD
 import pandas as pd
+import sys, os
+from utils.SafeDivide import safe_divide
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 class PEBITRatioEstimator:
     def __init__(self, stock: Stock):
@@ -55,7 +58,7 @@ class PEBITRatioEstimator:
         shares_outstanding_history = self.get_shares_outstanding_history(start_year, end_year)
         ebit_per_share_history = {}
         for year in range(start_year, end_year + 1):
-            ebit_per_share_history[year] = ebit_history[year] / shares_outstanding_history[year]
+            ebit_per_share_history[year] = safe_divide(ebit_history[year], shares_outstanding_history[year])
         return ebit_per_share_history
     
     def get_price_to_ebit_ratio_history(self, start_year, end_year):
@@ -63,7 +66,7 @@ class PEBITRatioEstimator:
         price = self.get_average_year_price(start_year, end_year)
         price_to_ebit_ratio = {}
         for year in range(start_year, end_year + 1):
-            price_to_ebit_ratio[year] = price.loc[year] / ebit[year]
+            price_to_ebit_ratio[year] = safe_divide(price.loc[year], ebit[year])
 
         return price_to_ebit_ratio
     
@@ -73,7 +76,7 @@ class PEBITRatioEstimator:
         if isinstance(price_to_ebit_ratio, (pd.Series, pd.DataFrame)):
             return price_to_ebit_ratio.mean()
         else:
-            return sum(price_to_ebit_ratio.values()) / len(price_to_ebit_ratio)
+            return safe_divide(sum(price_to_ebit_ratio.values()), len(price_to_ebit_ratio))
 
     
     # compute estimated price using P/EBIT ratio
@@ -91,8 +94,8 @@ class PEBITRatioEstimator:
         balance_sheet_id = self.stock.db_crud.select_financial_statement(company_id, "balance_sheet", end_year)
         shares_outstanding = self.stock.db_crud.select_financial_data(balance_sheet_id, "sharesOutstanding")
         
-        last_ebit_per_share = last_ebit_reported / shares_outstanding
-        current_pebit_ratio = latest_price / last_ebit_per_share
+        last_ebit_per_share = safe_divide(last_ebit_reported, shares_outstanding)
+        current_pebit_ratio = safe_divide(latest_price,last_ebit_per_share)
         
         historic_pebit_ratio = self.get_average_price_to_ebit_ratio(start_year, end_year)
         
@@ -102,6 +105,6 @@ class PEBITRatioEstimator:
         denominator = current_pebit_ratio / historic_pebit_ratio
         if denominator < 0:
             denominator = 1.5
-        estimated_final_price = latest_price / denominator
+        estimated_final_price = safe_divide(latest_price, denominator)
         
         return estimated_final_price

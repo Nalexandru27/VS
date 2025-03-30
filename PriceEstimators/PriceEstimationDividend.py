@@ -1,6 +1,9 @@
 from stock.Stock import Stock
 from database.DatabaseCRUD import DatabaseCRUD
 import pandas as pd
+import sys, os
+from utils.SafeDivide import safe_divide
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 class PriceDividendRatioEstimator:
     def __init__(self, stock: Stock):
@@ -53,7 +56,7 @@ class PriceDividendRatioEstimator:
         shares_outstanding_history = self.get_shares_outstanding_history(start_year, end_year)
         dividends_per_share_history = {}
         for year in range(start_year, end_year + 1):
-            dividends_per_share_history[year] = dividends_history[year] / shares_outstanding_history[year]
+            dividends_per_share_history[year] = safe_divide(dividends_history[year], shares_outstanding_history[year])
         return dividends_per_share_history
     
     # get dividend yield for last 15 years
@@ -62,7 +65,7 @@ class PriceDividendRatioEstimator:
         avg_year_prices = self.get_average_year_price(start_year, end_year)
         dividend_yield_history = {}
         for year in range(start_year, end_year + 1):
-            dividend_yield_history[year] = dividends_per_share_history[year] / avg_year_prices.loc[year]
+            dividend_yield_history[year] = safe_divide(dividends_per_share_history[year], avg_year_prices.loc[year])
 
         return dividend_yield_history
     
@@ -72,7 +75,7 @@ class PriceDividendRatioEstimator:
         if isinstance(dividends_yield, (pd.Series, pd.DataFrame)):
             return dividends_yield.mean()
         else:
-            return sum(dividends_yield.values()) / len(dividends_yield)
+            return safe_divide(sum(dividends_yield.values()), len(dividends_yield))
     
     # compute estimated price using P/Dividend ratio
     # formula: Current price / (Historic yield / Current yield)
@@ -90,16 +93,23 @@ class PriceDividendRatioEstimator:
         balance_sheet_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', end_year)
         shares_outstanding = self.stock.db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
 
-        last_dividendPayout_per_share = last_dividend_payout / shares_outstanding
-        current_dividend_yield = last_dividendPayout_per_share / latest_price 
+        last_dividendPayout_per_share = safe_divide(last_dividend_payout,shares_outstanding)
+        current_dividend_yield = safe_divide(last_dividendPayout_per_share, latest_price) 
 
         if isinstance(historic_price_dividend_yield, (pd.Series, pd.DataFrame)):
-            historic_price_dividend_yield = historic_price_dividend_yield.iloc[0]
+            # Dacă este un Series, luați prima valoare sau media
+            if 'Close' in historic_price_dividend_yield:
+                historic_price_dividend_yield = historic_price_dividend_yield['Close']
+            historic_price_dividend_yield = float(historic_price_dividend_yield)
 
-        denominator = historic_price_dividend_yield / current_dividend_yield
+        denominator = safe_divide(historic_price_dividend_yield, current_dividend_yield)
         
+        # Verificați dacă denominator este scalar înainte de a compara
+        if not isinstance(denominator, (int, float)):
+            denominator = float(denominator)
+            
         if denominator < 0:
             denominator = 1.5
 
-        estimated_final_price = latest_price / denominator
+        estimated_final_price = safe_divide(latest_price, denominator)
         return estimated_final_price

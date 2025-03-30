@@ -5,6 +5,9 @@ import utils.CreateExcelFile as CreateExcelFile
 import database.DatabaseCRUD as db
 from utils.Constants import FILTERED_DIVIDEND_COMPANY_FILE_PATH
 from database.DatabaseConnection import db_connection
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from PriceEstimators.PriceEstimationCombined import get_price_estimation
 
 class StockScreener:
     def __init__(self):
@@ -198,7 +201,7 @@ class StockScreener:
             print("No results to export. Ensure the screening process was completed successfully.")
             return
         try:
-            columns = ['Ticker', 'Sector',  'Market Cap',
+            columns = ['Ticker', 'Sector',  'Price', 'Estimated Price', 'Market Cap',
                         'Current Ratio', 'LTDebtToWC', 'Earnings Stability', 'Earnings Growth 10Y',
                         'Dividend Record', 'Dividend Yield', 'DGR 3Y', 'DGR 5Y', 'DGR 10Y', 
                         'Div/share', 'EPS', 'FCF/share', 'OpCF/share', 'Earnings Payout Ratio', 'FCF Payout Ratio', 'OpCF Payout Ratio',
@@ -264,6 +267,8 @@ class StockScreener:
             data['Ticker'] = ticker.ticker
             sector = ticker.db_crud.select_company_sector(ticker.ticker)
             data["Sector"] = sector
+            data["Price"] = f"{ticker.db_crud.get_last_price(ticker.ticker):.2f}$"
+            data["Estimated Price"] = f"{get_price_estimation(ticker.ticker):.2f}$"
             data['Market Cap'] = f"{ticker.get_market_cap()/BILLION_DIVISION:.2f}B"
             data['Current Ratio'] = f"{ticker.get_current_ratio():.2f}"
             data['LTDebtToWC'] = f"{ticker.get_LTDebt_to_WC():.2f}"
