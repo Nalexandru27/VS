@@ -1,5 +1,8 @@
 from stock.Stock import Stock
 import pandas as pd
+import sys, os
+from utils.SafeDivide import safe_divide
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 class PriceFCFRatioEstimator:
     def __init__(self, stock: Stock):
@@ -33,6 +36,8 @@ class PriceFCFRatioEstimator:
             company_id = self.stock.db_crud.select_company(self.stock.ticker)
             financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
             op_cf = self.stock.db_crud.select_financial_data(financial_statement_id, 'operatingCashFlow')
+            if op_cf is None:
+                op_cf = self.stock.db_crud.select_financial_data(financial_statement_id, 'operatingCashFow')
             capex = self.stock.db_crud.select_financial_data(financial_statement_id, 'capitalExpenditures')
 
             fcf_history[year] = op_cf - capex
@@ -55,7 +60,7 @@ class PriceFCFRatioEstimator:
         shares_outstanding_history = self.get_shares_outstanding_history(start_year, end_year)
         fcf_per_share_history = {}
         for year in range(start_year, end_year + 1):
-            fcf_per_share_history[year] = fcf_history[year] / shares_outstanding_history[year]
+            fcf_per_share_history[year] = safe_divide(fcf_history[year], shares_outstanding_history[year])
         return fcf_per_share_history
     
     def get_price_to_fcf_ratio_history(self, start_year, end_year):
@@ -63,7 +68,7 @@ class PriceFCFRatioEstimator:
         avg_year_prices = self.get_average_year_price(start_year, end_year)
         price_to_fcf_ratio_history = {}
         for year in range(start_year, end_year + 1):
-            price_to_fcf_ratio_history[year] = avg_year_prices.loc[year] / fcf_per_share_history[year]
+            price_to_fcf_ratio_history[year] = safe_divide(avg_year_prices.loc[year], fcf_per_share_history[year])
 
         return price_to_fcf_ratio_history
     
@@ -73,7 +78,7 @@ class PriceFCFRatioEstimator:
         if isinstance(price_to_fcf_ratio, (pd.Series, pd.DataFrame)):
             return price_to_fcf_ratio.mean()
         else:
-            return sum(price_to_fcf_ratio.values()) / len(price_to_fcf_ratio)
+            return safe_divide(sum(price_to_fcf_ratio.values()), len(price_to_fcf_ratio))
     
     # compute estimated price using P/FCF ratio
     # formula: Current price / (Current P/FCF ratio / Average P/FCF ratio)
@@ -83,7 +88,7 @@ class PriceFCFRatioEstimator:
         latest_price = self.stock.db_crud.get_last_price(self.stock.ticker)
         
         last_fcf_per_share = self.stock.get_fcf_per_share()
-        current_price_fcf_ratio = latest_price / last_fcf_per_share
+        current_price_fcf_ratio = safe_divide(latest_price, last_fcf_per_share)
         
         historic_price_fcf_ratio = self.get_average_price_to_FCF_ratio(start_year, end_year)
         if isinstance(historic_price_fcf_ratio, (pd.Series, pd.DataFrame)):
@@ -94,6 +99,6 @@ class PriceFCFRatioEstimator:
         if denominator < 0:
             denominator = 1.5
         
-        estimated_final_price = latest_price / denominator
+        estimated_final_price = safe_divide(latest_price, denominator)
 
         return estimated_final_price

@@ -1,6 +1,9 @@
 from stock.Stock import Stock
-from database.DatabaseCRUD import DatabaseCRUD
 import pandas as pd
+import sys, os
+from utils.SafeDivide import safe_divide
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 class PERatioEstimator:
     def __init__(self, stock: Stock):
@@ -55,7 +58,7 @@ class PERatioEstimator:
         shares_outstanding_history = self.get_shares_outstanding_history(start_year, end_year)
         eps_history = {}
         for year in range(start_year, end_year + 1):
-            eps_history[year] = net_income_history[year] / shares_outstanding_history[year]
+            eps_history[year] = safe_divide(net_income_history[year], shares_outstanding_history[year])
         return eps_history
     
     # compute P/E ratio for every year (price retrieved from yahoo finance, EPS computed with data from database)
@@ -64,7 +67,7 @@ class PERatioEstimator:
         eps_history = self.get_earnings_per_share_history(start_year, end_year)
         pe_ratio = {}
         for year in range(start_year, end_year + 1):
-            pe_ratio[year] = annual_price_average.loc[year] / eps_history[year]
+            pe_ratio[year] = safe_divide(annual_price_average.loc[year], eps_history[year])
 
         return pe_ratio
     
@@ -77,7 +80,7 @@ class PERatioEstimator:
             return pe_ratio.mean()
         else:
             # Presupun că este un dicționar
-            return sum(pe_ratio.values()) / len(pe_ratio)
+            return safe_divide(sum(pe_ratio.values()), len(pe_ratio))
 
     
     # compute estimated price using P/E ratio
@@ -93,8 +96,8 @@ class PERatioEstimator:
             latest_price = latest_price.iloc[0]
         if isinstance(last_eps_reported, (pd.Series, pd.DataFrame)):
             last_eps_reported = last_eps_reported.iloc[0]
-            
-        current_pe_ratio = latest_price / last_eps_reported
+
+        current_pe_ratio = safe_divide(latest_price, last_eps_reported)
         historic_pe_ratio = self.get_average_price_to_earnings_ratio_history(start_year, end_year)
        
         # Asigură-te că historic_pe_ratio este un număr
@@ -106,7 +109,8 @@ class PERatioEstimator:
         if denominator < 0:
             denominator = 1.5
         
-        estimated_final_price = latest_price / denominator
+        estimated_final_price = safe_divide(latest_price,denominator)
+
         return estimated_final_price
     
 

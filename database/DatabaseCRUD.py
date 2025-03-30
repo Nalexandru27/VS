@@ -61,7 +61,6 @@ class DatabaseCRUD:
 
     def select_company(self, ticker):
             self.connection.commit()
-            ticker = ticker.strip()  # Elimină spațiile
             with self.connection.get_cursor() as cursor:
                 query = "SELECT id FROM company WHERE UPPER(ticker) = UPPER(?)"
                 # print(f"Executing: {query} with ticker={ticker}")
