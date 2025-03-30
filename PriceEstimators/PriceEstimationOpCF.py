@@ -1,0 +1,100 @@
+from stock.Stock import Stock
+import pandas as pd
+
+class PriceOpCFRatioEstimator:
+    def __init__(self, stock: Stock):
+        self.stock = stock
+
+    # get daily prices
+    def get_price_history(self, start_year, end_year):
+        start_date = f'{start_year}-01-01'
+        end_date = f'{end_year}-12-31'
+    
+        history = self.stock.db_crud.get_prices(self.stock.ticker, start_date, end_date)
+        if history is None:
+            raise ValueError("No price history found for the given date range.")
+       
+        df_history = pd.DataFrame(history, columns=['Date', 'Close'])
+       
+        df_history.set_index('Date', inplace=True)
+        return df_history
+
+    # get price average for every year
+    def get_average_year_price(self, start_year, end_year):
+        df_history = self.get_price_history(start_year, end_year)
+        df_history.index = pd.to_datetime(df_history.index)
+        annual_average = df_history.groupby(df_history.index.year).mean()
+        return annual_average
+
+    # get free cash flow (computed as operating cash flow - capital expenditures) history from database for last 15 years
+    def get_op_cf_history(self, start_year, end_year):
+        op_cf_history = {}
+        for year in range(start_year, end_year + 1):
+            company_id = self.stock.db_crud.select_company(self.stock.ticker)
+            financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'cash_flow_statement', year)
+            op_cf = self.stock.db_crud.select_financial_data(financial_statement_id, 'operatingCashFlow')
+            if op_cf is None:
+                op_cf = self.stock.db_crud.select_financial_data(financial_statement_id, 'operatingCashFow')
+            op_cf_history[year] = op_cf
+
+        return op_cf_history
+    
+    # get shares outstanding from database for last 15 years
+    def get_shares_outstanding_history(self, start_year, end_year):
+        shares_outstanding_history = {}
+        for year in range(start_year, end_year + 1):
+            company_id = self.stock.db_crud.select_company(self.stock.ticker)
+            financial_statement_id = self.stock.db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+            shares_outstanding = self.stock.db_crud.select_financial_data(financial_statement_id, 'sharesOutstanding')
+
+            shares_outstanding_history[year] = shares_outstanding
+        return shares_outstanding_history
+    
+    # compute operating free cash flow per share for last 15 years using free cash flow and shares outstanding (retrieved from database)
+    def get_op_cf_per_share_history(self, start_year, end_year):
+        fcf_history = self.get_op_cf_history(start_year, end_year)
+        shares_outstanding_history = self.get_shares_outstanding_history(start_year, end_year)
+        fcf_per_share_history = {}
+        for year in range(start_year, end_year + 1):
+            fcf_per_share_history[year] = fcf_history[year] / shares_outstanding_history[year]
+        return fcf_per_share_history
+    
+    def get_price_to_op_cf_ratio_history(self, start_year, end_year):
+        fcf_per_share_history = self.get_op_cf_per_share_history(start_year, end_year)
+        avg_year_prices = self.get_average_year_price(start_year, end_year)
+        price_to_fcf_ratio_history = {}
+        for year in range(start_year, end_year + 1):
+            price_to_fcf_ratio_history[year] = avg_year_prices.loc[year] / fcf_per_share_history[year]
+
+        return price_to_fcf_ratio_history
+    
+    # compute average free cash flow for the last 15 years
+    def get_average_price_to_op_cf_ratio(self, start_year, end_year):
+        price_to_op_cf_ratio = self.get_price_to_op_cf_ratio_history(start_year, end_year)
+        if isinstance(price_to_op_cf_ratio, (pd.Series, pd.DataFrame)):
+            return price_to_op_cf_ratio.mean()
+        else:
+            return sum(price_to_op_cf_ratio.values()) / len(price_to_op_cf_ratio)
+    
+    # compute estimated price using P/OpCF ratio
+    # formula: Current price / (Current P/OpCF ratio / Average P/OpCF ratio)
+    # where Current P/OpCF ratio = Current price / Last OpCF reported
+    # if the denominator is negative, it is set to 1.5
+    def get_priceOpCF_ratio_estimation(self, start_year, end_year):
+        latest_price = self.stock.db_crud.get_last_price(self.stock.ticker)
+        
+        last_op_cf_per_share = self.stock.get_operating_cash_flow_per_share()
+        current_price_fcf_ratio = latest_price / last_op_cf_per_share
+        
+        historic_price_op_cf_per_share_ratio = self.get_average_price_to_op_cf_ratio(start_year, end_year)
+        if isinstance(historic_price_op_cf_per_share_ratio, (pd.Series, pd.DataFrame)):
+            historic_price_op_cf_per_share_ratio = historic_price_op_cf_per_share_ratio.iloc[0]
+
+        denominator = current_price_fcf_ratio / historic_price_op_cf_per_share_ratio
+        
+        if denominator < 0:
+            denominator = 1.5
+        
+        estimated_final_price = latest_price / denominator
+
+        return estimated_final_price

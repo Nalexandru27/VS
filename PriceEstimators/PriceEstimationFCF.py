@@ -75,9 +75,9 @@ class PriceFCFRatioEstimator:
         else:
             return sum(price_to_fcf_ratio.values()) / len(price_to_fcf_ratio)
     
-    # compute estimated price using P/OpCF ratio
-    # formula: Current price / (Current P/OpCF ratio / Average P/OpCF ratio)
-    # where Current P/OpCF ratio = Current price / Last OpCF reported
+    # compute estimated price using P/FCF ratio
+    # formula: Current price / (Current P/FCF ratio / Average P/FCF ratio)
+    # where Current P/FCF ratio = Current price / Last FCF reported
     # if the denominator is negative, it is set to 1.5
     def get_priceFCF_ratio_estimation(self, start_year, end_year):
         latest_price = self.stock.db_crud.get_last_price(self.stock.ticker)
