@@ -47,22 +47,28 @@ def rename_existing_file(drive_service, file_id, new_name):
 def upload_file_to_drive(file_path, file_name):
     drive_service = authenticate_google_drive()
 
-    # Verifică dacă există deja fișierul în Drive
+    backup_file_name = "backup_" + file_name
+
     existing_file = get_existing_file(drive_service, file_name)
+    existing_backup = get_existing_file(drive_service, backup_file_name)
     
+    if existing_backup:
+        drive_service.files().delete(fileId=existing_backup['id']).execute()
+        print(f"Previous backup {backup_file_name} was deleted.")
+
     if existing_file:
-        backup_name = "backup_" + file_name
-        rename_existing_file(drive_service, existing_file['id'], backup_name)
+        rename_existing_file(drive_service, existing_file['id'], backup_file_name)
+        print(f"Existing file {file_name} has been renamed to {backup_file_name}.")
 
     media = MediaFileUpload(file_path, mimetype='application/octet-stream')
 
     file_metadata = {
         'name': file_name,
-        'parents': [FOLDER_ID]  # Încarcă fișierul în folderul dorit
+        'parents': [FOLDER_ID]
     }
 
     file = drive_service.files().create(media_body=media, body=file_metadata).execute()
-    print(f"Fișierul {file_name} a fost încărcat pe Google Drive în folderul specificat!")
+    print(f"File {file_name} has been uploaded on Google Drive into the specified folder!")
     return file
 
 def get_file_id(drive_service, file_name):
@@ -102,9 +108,3 @@ def download_file_from_drive(file_name, destination_path):
     
     print(f"Fișierul {file_name} a fost descărcat cu succes la: {destination_path}")
     return True
-
-if __name__ == '__main__':
-    db_file_path = 'D:\\Facultate\\An 3\\Licenta\\Lucrare Licenta\\VS\\companies.db'
-    db_file_name = 'companies.db'
-
-    upload_file_to_drive(db_file_path, db_file_name)
