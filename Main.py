@@ -16,11 +16,22 @@ import atexit
 from database.DatabaseConnection import db_connection
 
 def inspect_dividend_data():
-    url = 'https://www.alphavantage.co/query?function=DIVIDENDS&symbol=CCi&apikey=WYGPKB8T21WMM6LO'
+    url = 'https://www.alphavantage.co/query?function=DIVIDENDS&symbol=GPC&apikey=WYGPKB8T21WMM6LO'
     r = requests.get(url)
     data = r.json()
 
     print(data)
+
+inspect_dividend_data()
+
+def inspect_income_statement():
+    url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=NUE&apikey=WYGPKB8T21WMM6LO'
+    r = requests.get(url)
+    data = r.json()
+
+    print(data)
+
+# inspect_income_statement()
 
 def save_dividend_paying_companies():
     save_dividend_data = SaveDocsData(DIVIDEND_SHEET_URL)
@@ -61,11 +72,27 @@ def create_excel_file():
             except Exception as e:
                 print(f"Error plotting dividend sustainability for {ticker}: {e}")
 
-create_excel_file()
-                
-# stock = Stock("NUE")
-# prices = stock.db_crud.get_prices(stock.ticker, '2013-01-01', '2023-12-31')
-# print(prices)
+# create_excel_file()
+
+
+
+def analyze_specific_companies():
+    tickers = ["TROW", "PEP", "REXR", "DEO", "HRL", "BF.B", "ARE", "RHI", "NKE", "SWKS", "TGT", "UPS", "NUE", "TTC", "O", "CBU", "OZK"]
+    results = {}
+    for ticker in tickers:
+        results[ticker] = True
+
+    screener = StockScreener()
+    screener.result = results
+
+    screener.export_results_to_excel_file("outData/specific_companies_analyzed.xlsx")
+
+    for ticker in tickers:
+        dividend_plot = dividendAnalysis(Stock(ticker))
+        try:
+            dividend_plot.plot_dividend_sustainability(2013, 2023)
+        except Exception as e:
+            print(f"Error plotting dividend sustainability for {ticker}: {e}")
 
 def get_price_history(stock: Stock, start_year, end_year):
         start_date = f'{start_year}-01-01'
@@ -95,7 +122,7 @@ def get_dividends_history(stock: Stock, start_year, end_year):
             dividends_history[year] = dividendPayout
         return dividends_history
 
-print("Dividends history: ", get_dividends_history(Stock("NUE"),2013,2023))
+# print("Dividends history: ", get_dividends_history(Stock("NUE"),2013,2023))
       
 def get_shares_outstanding_history(stock: Stock, start_year, end_year):
         shares_outstanding_history = {}
@@ -106,7 +133,7 @@ def get_shares_outstanding_history(stock: Stock, start_year, end_year):
             shares_outstanding_history[year] = shares_outstanding
         return shares_outstanding_history
 
-print("Shares outstanding history:", get_shares_outstanding_history(Stock("NUE"),2013,2023))
+# print("Shares outstanding history:", get_shares_outstanding_history(Stock("NUE"),2013,2023))
 
 def get_dividends_per_share_history(stock: Stock, start_year, end_year):
         dividends_history = get_dividends_history(stock, start_year, end_year)
@@ -116,7 +143,7 @@ def get_dividends_per_share_history(stock: Stock, start_year, end_year):
             dividends_per_share_history[year] = safe_divide(dividends_history[year], shares_outstanding_history[year])
         return dividends_per_share_history
 
-print("Dividends per share history: ", get_dividends_per_share_history(Stock("NUE"),2013,2023))
+# print("Dividends per share history: ", get_dividends_per_share_history(Stock("NUE"),2013,2023))
 
 def get_dividend_yield_history(stock: Stock, start_year, end_year):
         dividends_per_share_history = get_dividends_per_share_history(stock, start_year, end_year)
@@ -127,7 +154,7 @@ def get_dividend_yield_history(stock: Stock, start_year, end_year):
 
         return dividend_yield_history
 
-print("Dividend yield history: ", get_dividend_yield_history(Stock("NUE"), 2013, 2023))
+# print("Dividend yield history: ", get_dividend_yield_history(Stock("NUE"), 2013, 2023))
 
 
 
