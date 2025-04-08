@@ -14,7 +14,7 @@ def insert_daily_prices():
     df = pd.read_csv(cnst.FILLED_DAILY_PRICE_FILE_PATH, index_col=0)
     if download_file_from_drive("backup_" + cnst.DB_NAME, database_path):
         print(f"Latest database version of {cnst.DB_NAME} was downloaded successfully at {database_path}")
-        time.sleep(10)
+        time.sleep(15)
         db_crud = DatabaseCRUD()
         yestarday = pd.Timestamp.today() - pd.Timedelta(days=1)
         formatted_yestarday = yestarday.strftime("%Y-%m-%d")

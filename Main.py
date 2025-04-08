@@ -22,7 +22,7 @@ def inspect_dividend_data():
 
     print(data)
 
-inspect_dividend_data()
+# inspect_dividend_data()
 
 def inspect_income_statement():
     url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=NUE&apikey=WYGPKB8T21WMM6LO'
@@ -73,8 +73,6 @@ def create_excel_file():
                 print(f"Error plotting dividend sustainability for {ticker}: {e}")
 
 # create_excel_file()
-
-
 
 def analyze_specific_companies():
     tickers = ["TROW", "PEP", "REXR", "DEO", "HRL", "BF.B", "ARE", "RHI", "NKE", "SWKS", "TGT", "UPS", "NUE", "TTC", "O", "CBU", "OZK"]

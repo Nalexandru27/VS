@@ -70,12 +70,12 @@ class StockScreener:
     # Implement testing criterias
     def validate_criterias(self, stock: Stock):
         # Check Long-Term Debt to Working Capital
-        long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
-        if long_term_debt_to_workin_capital == 0:
-            print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
-        elif self.check_LTDebt_To_WC(stock) == False:
-            print(f"-->{stock.ticker} failed the test 'Long-Term Debt to Working Capital'")
-            return False
+        # long_term_debt_to_workin_capital = stock.get_LTDebt_to_WC()
+        # if long_term_debt_to_workin_capital == 0:
+        #     print(f"{stock.ticker} has no data available for the long-term debt to working capital ratio. Test skipped")
+        # elif self.check_LTDebt_To_WC(stock) == False:
+        #     print(f"-->{stock.ticker} failed the test 'Long-Term Debt to Working Capital'")
+        #     return False
 
         # Check Current Ratio
         if stock.get_sector() != "Utilities":
