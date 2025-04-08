@@ -7,6 +7,8 @@ class ExportPrice:
         
     def save_data(self, csv_file_path):
         response = requests.get(self.url_google_sheet)
+        print(f"Response status code: {response.status_code}")
+        print(f"Response content: {response.content}")
         csv_text = response.content.decode("utf-8")
         if response.status_code == 200:
             with open(csv_file_path, "w", encoding="utf-8") as f:
