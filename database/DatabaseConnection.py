@@ -1,18 +1,27 @@
-# DatabaseConnection.py
 import sqlite3
 from threading import Lock
-from utils.Constants import DB_NAME
+from utils.Constants import DB_NAME, BASE_DIR
+import os
 from contextlib import contextmanager
 
 class DatabaseConnection:
     _instance = None
     _lock = Lock()
 
-    def __new__(cls, db_name=DB_NAME):
+    def __new__(cls, db_name=None):
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(DatabaseConnection, cls).__new__(cls)
-                cls._instance.connection = sqlite3.connect(db_name, timeout=30, check_same_thread=False)
+                
+                # Use the absolute path to the database
+                if db_name is None:
+                    db_path = os.path.join(BASE_DIR, DB_NAME)
+                else:
+                    db_path = db_name
+                
+                print(f"Connecting to database at: {db_path}")
+                
+                cls._instance.connection = sqlite3.connect(db_path, timeout=30, check_same_thread=False)
                 cls._instance.connection.execute("PRAGMA journal_mode=WAL")
                 cls._instance.connection.execute("PRAGMA busy_timeout = 30000")
         return cls._instance
@@ -39,5 +48,5 @@ class DatabaseConnection:
                 self.connection = None
             DatabaseConnection._instance = None
 
-# Instanță globală pentru import
+# Reinitialize the global instance with the correct path
 db_connection = DatabaseConnection()
