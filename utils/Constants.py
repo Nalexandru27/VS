@@ -23,6 +23,7 @@ raw_path = os.getenv("GOOGLE_CREDS")
 # Convert to absolute path, relative to project root
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 SERVICE_ACCOUNT_FILE = os.path.join(base_dir, raw_path)
+GOOGLE_DRIVE_FOLDER_ID = os.getenv("GOOGLE_DRIVE_FOLDER_ID")
 
 # Validate that the file exists
 if not os.path.exists(SERVICE_ACCOUNT_FILE):
