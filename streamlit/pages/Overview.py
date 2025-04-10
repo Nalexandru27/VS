@@ -44,6 +44,14 @@ if st.button("Search") and ticker:
     try:
         company_id = db_crud.select_company(ticker)
         if company_id is not None:
+            # Verifică dacă s-a schimbat ticker-ul
+            if "company_ticker" in st.session_state and st.session_state.company_ticker != ticker:
+                # Resetează datele financiare dacă s-a schimbat ticker-ul
+                if "income_statement_df" in st.session_state:
+                    del st.session_state.income_statement_df
+                if "show_financial_data" in st.session_state:
+                    st.session_state.show_financial_data = False
+
             st.session_state.company_found = True
             st.session_state.company_id = company_id
             st.session_state.company_ticker = ticker
@@ -79,6 +87,7 @@ if st.session_state.company_found:
         st.session_state.show_financial_data = True
 
         if statement == 'Income Statement':
+            # Verifică dacă există date pentru ticker-ul curent sau dacă trebuie reîncărcate
             if "income_statement_df" not in st.session_state:
                 df = get_income_statement_df(st.session_state.company_ticker, 2009, 2025)
                 if df is not None:
