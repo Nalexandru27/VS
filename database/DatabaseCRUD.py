@@ -6,6 +6,7 @@ from threading import Lock
 class DatabaseCRUD:
     def __init__(self):
         self.connection = db_connection
+        print(f"[DEBUG] Using connection: {self.connection}")
         self._lock = Lock()
 
     def insert_company(self, ticker, sector):
@@ -125,6 +126,32 @@ class DatabaseCRUD:
             if result is None:
                 return None
             return result[0]
+        
+    def select_financial_data_by_year_range(self, company_id, statement_type, start_year, end_year, record_types):
+        with self.connection.get_cursor() as cursor:
+            placeholders = ','.join('?' for _ in record_types)
+            query = f"""
+                SELECT fs.year, fd.record_type, fd.record_value
+                FROM financialStatement fs
+                JOIN financialData fd ON fs.id = fd.financial_statement_id
+                WHERE fs.company_id = ?
+                    AND fs.statement_type = ?
+                    AND fs.year BETWEEN ? AND ?
+                    AND fd.record_type IN ({placeholders})
+                ORDER BY fs.year
+            """
+
+            params = [company_id, statement_type, start_year, end_year] + record_types
+            cursor.execute(query, params)
+            rows = cursor.fetchall()
+
+            data = {}
+            for year, record_type, value in rows:
+                if year not in data:
+                    data[year] = {}
+                data[year][record_type] = value
+
+        return data
     
     def rename_column(self, old_column_name, new_column_name):
         """Rename a column in financialData table by updating record_type values"""
