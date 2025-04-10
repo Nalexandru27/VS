@@ -1,3 +1,5 @@
 companies.db
 *.pyc
 *.xlsx
+google-creds.json
+.env

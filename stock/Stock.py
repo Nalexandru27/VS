@@ -25,7 +25,7 @@ class Stock:
     # Get cash flow statement
     def get_cashflow_data(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey=WYGPKB8T21WMM6LO'
+            url = f'https://www.alphavantage.co/query?function=CASH_FLOW&symbol={self.ticker}&apikey={ALPHA_VANTAGE_API_KEY1}'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -58,7 +58,7 @@ class Stock:
     # Get income statement
     def get_income_statement(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey=WYGPKB8T21WMM6LO'
+            url = f'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={self.ticker}&apikey={ALPHA_VANTAGE_API_KEY1}'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
@@ -107,7 +107,7 @@ class Stock:
     # Get balance sheet
     def get_balance_sheet(self):
         try:
-            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey=43KL4PW74AWGDJZI'
+            url = f'https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol={self.ticker}&apikey={ALPHA_VANTAGE_API_KEY1}'
             r = requests.get(url)
             data = r.json()
             annual_reports = data['annualReports']
