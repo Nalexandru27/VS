@@ -35,6 +35,7 @@ SCOPES = ["https://spreadsheets.google.com/feeds",
 creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 client = gspread.authorize(creds)
 
+ALPHA_VANTAGE_API_KEY1 = os.getenv("ALPHA_VANTAGE_API_KEY1")
 
 DB_NAME = "companies.db"
 
