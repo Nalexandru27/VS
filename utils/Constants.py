@@ -20,7 +20,6 @@ CREDENTIALS_DIR = os.path.join(BASE_DIR, "Credentials")
 OUTDATA_DIR = os.path.join(BASE_DIR, "outData")
 
 # Credentials
-SERVICE_ACCOUNT_FILE = os.path.join(CREDENTIALS_DIR, "innate-sunset-451811-f3-0c861175bff3.json")
 SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive", 'https://www.googleapis.com/auth/spreadsheets']
 
 DIVIDEND_SHEET_URL = "https://docs.google.com/spreadsheets/d/1D4H2OoHOFVPmCoyKBVCjxIl0Bt3RLYSz/export?format=csv&gid=2128848540#gid=2128848540"
@@ -36,4 +35,3 @@ PRICE_DAILY_FILE_PATH = os.path.join(OUTDATA_DIR, "PriceDaily.csv")
 CLEANED_PRICE_DAILY_FILE_PATH = os.path.join(OUTDATA_DIR, "CleanedPriceDaily.csv")
 FILLED_DAILY_PRICE_FILE_PATH = os.path.join(OUTDATA_DIR, "FilledPriceDaily.csv")
 
-CLIENT_SECRET_FILE = os.path.join(CREDENTIALS_DIR, "client_secret_1053106492290-cjcop57vafs5s7uemp7rod15v1mahj1r.apps.googleusercontent.com.json")
