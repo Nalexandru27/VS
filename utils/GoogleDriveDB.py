@@ -4,11 +4,11 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
-from Constants import CLIENT_SECRET_FILE
+from Constants import SERVICE_ACCOUNT_FILE
 from google.auth.transport.requests import Request
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
-CREDS_FILE = CLIENT_SECRET_FILE
+CREDS_FILE = SERVICE_ACCOUNT_FILE
 FOLDER_ID = "1gb30u_IhDzWrz0dQewB4rTBhvDdZlZgV"
 
 def authenticate_google_drive():
