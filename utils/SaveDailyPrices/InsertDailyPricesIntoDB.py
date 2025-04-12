@@ -28,7 +28,7 @@ def insert_daily_prices():
         print(f"Latest database version of {cnst.DB_NAME} was downloaded successfully at {database_path}")
         time.sleep(20)
         db_crud = DatabaseCRUD()
-        yestarday = pd.Timestamp.today() - pd.Timedelta(days=1)
+        yestarday = pd.Timestamp.today() - pd.Timedelta(days=2)
         formatted_yestarday = yestarday.strftime("%Y-%m-%d")
         for index, row in df.iterrows():
             date = formatted_yestarday

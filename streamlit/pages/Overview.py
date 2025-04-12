@@ -7,12 +7,15 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from stock.Stock import Stock
 from utils.Constants import BASE_DIR, DB_NAME, FILTERED_DIVIDEND_COMPANY_FILE_PATH
 from services.db_instance import get_db
-from services.financial_data_processor import get_income_statement_df
+from services.financial_data_processor import get_income_statement_df, get_balance_sheet_df, get_cashflow_statement_df
 from datetime import datetime
 
 st.set_page_config(page_title="Stock Overview", layout="centered")
 
 db_crud = get_db()
+
+def get_valid_defaults(defaults, available_columns):
+    return [col for col in defaults if col in available_columns]
 
 # Find the correct database path
 db_path = os.path.join(BASE_DIR, DB_NAME)
@@ -86,10 +89,12 @@ if st.session_state.company_found:
     if st.button("Show Financial Overview") or st.session_state.show_financial_data:
         st.session_state.show_financial_data = True
 
+        current_year = datetime.now().year
+
         if statement == 'Income Statement':
             # Verifică dacă există date pentru ticker-ul curent sau dacă trebuie reîncărcate
             if "income_statement_df" not in st.session_state:
-                df = get_income_statement_df(st.session_state.company_ticker, 2009, 2025)
+                df = get_income_statement_df(st.session_state.company_ticker, 2009, current_year)
                 if df is not None:
                     st.session_state.income_statement_df = df
                 else:
@@ -108,16 +113,22 @@ if st.session_state.company_found:
 
                 # 🎚️ Selector de coloane
                 available_columns = df.columns.tolist()
+                # Inițializare dacă nu există
                 if "selected_columns" not in st.session_state:
-                    st.session_state.selected_columns = ["Revenue", "Net Income"]
-                        
+                    st.session_state.selected_columns = {}
+
+                if "income" not in st.session_state.selected_columns:
+                    st.session_state.selected_columns["income"] = ["Revenue", "Net Income"]
+
+                valid_defaults = get_valid_defaults(st.session_state.selected_columns["income"], available_columns)
+
                 selected_columns = st.multiselect(
                     "Select the columns for the chart: ", 
                     available_columns, 
-                    default=st.session_state.selected_columns)
+                    default=valid_defaults)
                 
                 # Actualizăm session_state cu noile coloane selectate
-                st.session_state.selected_columns = selected_columns
+                st.session_state.selected_columns["income"] = selected_columns
 
                 # 📈 Tip de grafic
                 chart_type = st.radio("Choose the chart type: ", ["Bar Chart", "Line Chart"])
@@ -142,3 +153,130 @@ if st.session_state.company_found:
                     st.info("Select at least one column to generate a chart.")
             else:
                 st.warning("No financial data available")
+
+        elif statement == "Balance Sheet":
+             # Verifică dacă există date pentru ticker-ul curent sau dacă trebuie reîncărcate
+            if "balance_sheet_df" not in st.session_state:
+                df = get_balance_sheet_df(st.session_state.company_ticker, 2009, current_year)
+                if df is not None:
+                    st.session_state.balance_sheet_df = df
+                else:
+                    st.warning("No financial data available")
+                    st.session_state.balance_sheet_df = None
+        
+            # Dacă datele sunt disponibile, continuăm
+            if st.session_state.balance_sheet_df is not None:
+                df = st.session_state.balance_sheet_df
+
+                st.subheader("Balance Sheet Overview")
+                st.caption("📊 Values are expressed in **billion USD ($)**, rounded to 2 decimal places.")
+                st.dataframe(df)
+
+                st.markdown("---")
+
+                # 🎚️ Selector de coloane
+                available_columns = df.columns.tolist()
+                if "selected_columns" not in st.session_state:
+                    st.session_state.selected_columns = {}
+
+                if "balance" not in st.session_state.selected_columns:
+                    st.session_state.selected_columns["balance"] = ["Total Assets", "Total Liabilities"]
+
+                # Filtrăm default-urile
+                valid_defaults = get_valid_defaults(st.session_state.selected_columns["balance"], available_columns)
+                        
+                selected_columns = st.multiselect(
+                    "Select the columns for the chart: ", 
+                    available_columns, 
+                    default=valid_defaults)
+                
+                # Actualizăm session_state cu noile coloane selectate
+                st.session_state.selected_columns["balance"] = selected_columns
+
+                # 📈 Tip de grafic
+                chart_type = st.radio("Choose the chart type: ", ["Bar Chart", "Line Chart"])
+                
+                if selected_columns:
+                    fig_data = df[selected_columns].reset_index() # resetăm indexul ca să avem 'Year' ca coloană
+                    
+                    for col in selected_columns:
+                        if chart_type == "Bar Chart":
+                                fig = px.bar(fig_data, x="Year", y=col, title=f"{col} - Bar Chart")
+                        else:
+                            fig = px.line(fig_data, x="Year", y=col, markers=True, title=f"{col} - Line Chart")
+
+                        fig.update_layout(
+                            xaxis_title = "Year",
+                            yaxis_title = "Value (billions USD)",
+                            title_x = 0.5,
+                            height = 400
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Select at least one column to generate a chart.")
+            else:
+                st.warning("No financial data available")
+
+        elif statement == "Cashflow Statement":
+            # Verifică dacă există date pentru ticker-ul curent sau dacă trebuie reîncărcate
+            if "cash_flow_statement_df" not in st.session_state:
+                df = get_cashflow_statement_df(st.session_state.company_ticker, 2009, current_year)
+                if df is not None:
+                    st.session_state.cash_flow_statement_df = df
+                else:
+                    st.warning("No financial data available")
+                    st.session_state.cash_flow_statement_df = None
+        
+            # Dacă datele sunt disponibile, continuăm
+            if st.session_state.cash_flow_statement_df is not None:
+                df = st.session_state.cash_flow_statement_df
+
+                st.subheader("Cash Flow Statement Overview")
+                st.caption("📊 Values are expressed in **billion USD ($)**, rounded to 2 decimal places.")
+                st.dataframe(df)
+
+                st.markdown("---")
+
+                # 🎚️ Selector de coloane
+                available_columns = df.columns.tolist()
+                # Inițializare dacă nu există
+                if "selected_columns" not in st.session_state:
+                    st.session_state.selected_columns = {}
+
+                if "cashflow" not in st.session_state.selected_columns:
+                    st.session_state.selected_columns["cashflow"] = ["Operating Cash Flow", "CAPEX"]
+
+                valid_defaults = get_valid_defaults(st.session_state.selected_columns["cashflow"], available_columns)
+                        
+                selected_columns = st.multiselect(
+                    "Select the columns for the chart: ", 
+                    available_columns, 
+                    default=valid_defaults)
+                
+                # Actualizăm session_state cu noile coloane selectate
+                st.session_state.selected_columns["cashflow"] = selected_columns
+
+                # 📈 Tip de grafic
+                chart_type = st.radio("Choose the chart type: ", ["Bar Chart", "Line Chart"])
+                
+                if selected_columns:
+                    fig_data = df[selected_columns].reset_index() # resetăm indexul ca să avem 'Year' ca coloană
+                    
+                    for col in selected_columns:
+                        if chart_type == "Bar Chart":
+                                fig = px.bar(fig_data, x="Year", y=col, title=f"{col} - Bar Chart")
+                        else:
+                            fig = px.line(fig_data, x="Year", y=col, markers=True, title=f"{col} - Line Chart")
+
+                        fig.update_layout(
+                            xaxis_title = "Year",
+                            yaxis_title = "Value (billions USD)",
+                            title_x = 0.5,
+                            height = 400
+                        )
+                        st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info("Select at least one column to generate a chart.")
+            else:
+                st.warning("No financial data available")
+            
