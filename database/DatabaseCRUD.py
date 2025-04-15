@@ -6,7 +6,7 @@ from threading import Lock
 class DatabaseCRUD:
     def __init__(self):
         self.connection = db_connection
-        print(f"[DEBUG] Using connection: {self.connection}")
+        print(f"[DEBUG] Using connection in DatabaseCRUD: {id(self.connection)}")
         self._lock = Lock()
 
     def insert_company(self, ticker, sector):
@@ -60,21 +60,50 @@ class DatabaseCRUD:
         except sqlite3.IntegrityError:
             pass  # Ignore duplicate entries
 
-    def select_company(self, ticker):
-            self.connection.commit()
-            with self.connection.get_cursor() as cursor:
-                query = "SELECT id FROM company WHERE UPPER(ticker) = UPPER(?)"
-                # print(f"Executing: {query} with ticker={ticker}")
-                cursor.execute(query, (ticker,))
-                result = cursor.fetchone()
-                # print(f"Result: {result}")
+    def debug_database_content(self):
+        with self.connection.get_cursor() as cursor:
+            # Get total count
+            cursor.execute("SELECT COUNT(*) FROM company")
+            count = cursor.fetchone()[0]
+            print(f"Total companies in database: {count}")
+            
+            # Get first 5 rows
+            cursor.execute("SELECT id, ticker FROM company ORDER BY id ASC LIMIT 5")
+            first_rows = cursor.fetchall()
+            print(f"First 5 companies: {first_rows}")
+            
+            # Get last 5 rows
+            cursor.execute("SELECT id, ticker FROM company ORDER BY id DESC LIMIT 5")
+            last_rows = cursor.fetchall()
+            print(f"Last 5 companies: {last_rows}")
+            
+            # Specifically search for GPC
+            cursor.execute("SELECT id, ticker FROM company WHERE ticker='GPC'")
+            gpc = cursor.fetchone()
+            print(f"Direct search for GPC: {gpc}")
+            
+            # Search for GPC case-insensitive
+            cursor.execute("SELECT id, ticker FROM company WHERE UPPER(ticker)='GPC'")
+            gpc_upper = cursor.fetchone()
+            print(f"Case-insensitive search for GPC: {gpc_upper}")
+            
+            # Search with LIKE
+            cursor.execute("SELECT id, ticker FROM company WHERE ticker LIKE '%GPC%'")
+            gpc_like = cursor.fetchall()
+            print(f"LIKE search for GPC: {gpc_like}")
 
-                if result is None:
-                    print(f"No company found with ticker '{ticker}'")
-                    print(f"Căutare pentru: UPPER('{ticker}') = {ticker.upper()}")
-                    return None
-                return result[0]
-    
+    def select_company(self, ticker):
+        with self.connection.get_cursor() as cursor:
+            query = "SELECT id FROM company WHERE UPPER(ticker) = UPPER(?)"
+            cursor.execute(query, (ticker,))
+            result = cursor.fetchone()
+
+            if result is None:
+                print(f"No company found with ticker '{ticker}'")
+                print(f"Căutare pentru: UPPER('{ticker}') = {ticker.upper()}")
+                return None
+            return result[0]
+
     def select_company_ticker(self, company_id):
         with self.connection.get_cursor() as cursor:
             cursor.execute("""
