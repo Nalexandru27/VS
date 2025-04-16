@@ -135,40 +135,6 @@ class StockScreener:
         print(f"{stock.ticker} passed all tests")
         return True
 
-    # Screen a list of stocks in parallel with multi threading
-    # def screen_stocks(self, tickers):
-    #     results = {}
-        
-    #     def process_ticker(ticker):
-    #         try:
-    #             print(f"Screening {ticker}...")
-    #             stock = Stock(ticker)
-
-    #             if stock.db_crud.select_company(ticker) is None:
-    #                 print(f"No data found for ticker '{ticker}'. Skipping.")
-    #                 return (ticker, False)
-
-    #             result = self.validate_criterias(stock)
-    #             return (ticker, result)
-    #         except Exception as e:
-    #             print(f"Error screening {ticker}: {e}")
-    #             return (ticker, False)
-            
-    #     max_workers = min(10, len(tickers))
-        
-    #     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-    #         futures = [executor.submit(process_ticker, ticker) for ticker in tickers]
-    #         for future in as_completed(futures):
-    #             try:
-    #                 ticker, result = future.result()
-    #                 results[ticker] = result
-    #             except Exception as e:
-    #                 print(f"Error processing ticker result: {e}")
-        
-    #     self.result = results
-    #     print("\nScreening done.\n")
-    #     return results
-
     # Screen a list of stocks in sequence without multi threading
     def screen_stocks(self, tickers):
         results = {}
@@ -211,33 +177,6 @@ class StockScreener:
 
             stock_data_list = []
 
-            # Process each ticker in parallel with multi threading
-            # def process_ticker(ticker):
-            #     if self.result[ticker]:
-            #         try:
-            #             print(f"Processing {ticker}...")
-            #             stock = Stock(ticker)
-            #             data = self.stock_data(stock)
-            #             if data is not None:
-            #                 print(f"Data for {ticker} processed successfully.")
-            #                 return data
-            #             else:
-            #                 print(f"No data for {ticker}.")
-            #                 return None
-            #         except Exception as e:
-            #             print(f"Error processing {ticker}: {e}")
-            #             return None
-            
-            # with ThreadPoolExecutor(max_workers=5) as executor:
-            #     future_to_ticker = {executor.submit(process_ticker, ticker): ticker
-            #                         for ticker in self.result if self.result[ticker]} 
-                
-            #     for future in as_completed(future_to_ticker):
-            #         data = future.result()
-            #         if data is not None:
-            #             stock_data_list.append(data)
-
-            # Process each ticker in sequence without multi threading
             for ticker in self.result:
                 if self.result[ticker]:
                     try:
