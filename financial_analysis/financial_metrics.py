@@ -438,3 +438,5 @@ def calculate_dividend_annual_growth_rate(ticker, start_year, end_year):
     except Exception as e:
         print(f"Cannot compute dividend annual growth rate because: {e}")
         return None
+
+
