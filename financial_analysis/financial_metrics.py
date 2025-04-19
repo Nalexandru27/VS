@@ -438,5 +438,101 @@ def calculate_dividend_annual_growth_rate(ticker, start_year, end_year):
     except Exception as e:
         print(f"Cannot compute dividend annual growth rate because: {e}")
         return None
+    
+def get_revenue(ticker, year):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+            
+        income_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+        if income_statement_id is None:
+            return None
+            
+        revenue = db_crud.select_financial_data(income_statement_id, 'revenue')
+        if revenue is None:
+            return None
+        
+        return float(revenue)
+    except Exception as e:
+        print(f"Error getting revenue for {ticker}: {e}")
+        return None
+    
+def get_net_income(ticker, year):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+            
+        income_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+        if income_statement_id is None:
+            return None
+            
+        net_income = db_crud.select_financial_data(income_statement_id, 'netIncome')
+        if net_income is None:
+            return None
+        
+        return float(net_income)
+    except Exception as e:
+        print(f"Error getting net income for {ticker}: {e}")
+        return None
+
+def get_total_assets(ticker, year):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+            
+        balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+        if balance_sheet_id is None:
+            return None
+            
+        total_assets = db_crud.select_financial_data(balance_sheet_id, 'totalAssets')
+        if total_assets is None:
+            return None
+        
+        return float(total_assets)
+    except Exception as e:
+        print(f"Error getting total assets for {ticker}: {e}")
+        return None
+    
+def get_total_liabilities(ticker, year):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+            
+        balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+        if balance_sheet_id is None:
+            return None
+            
+        total_liabilities = db_crud.select_financial_data(balance_sheet_id, 'totalLiabilities')
+        if total_liabilities is None:
+            return None
+        
+        return float(total_liabilities)
+    except Exception as e:
+        print(f"Error getting total liabilities for {ticker}: {e}")
+        return None
+    
+def get_total_equity(ticker, year):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+            
+        balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+        if balance_sheet_id is None:
+            return None
+            
+        total_equity = db_crud.select_financial_data(balance_sheet_id, 'totalEquity')
+        if total_equity is None:
+            return None
+        
+        return float(total_equity)
+    except Exception as e:
+        print(f"Error getting total equity for {ticker}: {e}")
+        return None
+    
 
 

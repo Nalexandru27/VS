@@ -63,6 +63,21 @@ def create_metrics_companies_dataframe(start_year, end_year, metrics_to_calculat
             if 'Debt_to_Total_Capital_Ratio' in metrics_to_calculate:
                 company_data['Debt_to_Total_Capital_Ratio'] = financial_metrics.calculate_Debt_to_Total_Capital_Ratio(ticker, year)
 
+            if 'NetIncome' in metrics_to_calculate:
+                company_data['NetIncome'] = financial_metrics.get_net_income(ticker, year)
+
+            if 'Revenue' in metrics_to_calculate:
+                company_data['Revenue'] = financial_metrics.get_revenue(ticker, year)
+
+            if 'TotalAssets' in metrics_to_calculate:
+                company_data['TotalAssets'] = financial_metrics.get_total_assets(ticker, year)
+
+            if 'TotalLiabilities' in metrics_to_calculate:
+                company_data['TotalLiabilities'] = financial_metrics.get_total_liabilities(ticker, year)
+
+            if 'TotalEquity' in metrics_to_calculate:
+                company_data['TotalEquity'] = financial_metrics.get_total_equity(ticker, year)
+
             # Get dividend growth rate (always included)
             dividend_growth_data = financial_metrics.calculate_dividend_annual_growth_rate(ticker, start_year, end_year)
             
