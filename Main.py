@@ -38,6 +38,8 @@ def save_dividend_paying_companies():
     save_dividend_data.save_data(DIVIDEND_COMPANY_FILE_PATH)
     save_dividend_data.process_data(DIVIDEND_COMPANY_FILE_PATH, FILTERED_DIVIDEND_COMPANY_FILE_PATH)
 
+# save_dividend_paying_companies()
+
 def populate_db():
     list_companies = pd.read_csv(FILTERED_DIVIDEND_COMPANY_FILE_PATH)
     list_companies = list_companies['Symbol'].tolist()
