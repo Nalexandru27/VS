@@ -466,7 +466,9 @@ def predict_next_year(df, target_metrics=['FCF_per_share', 'EPS', 'OperatingCF_p
         
         # Pregătim datele de intrare pentru anul viitor
         X_next = next_year_data.drop(columns=[metric, 'year', 'ticker'], errors='ignore')
-        X_next_scaled = scaler.transform(X_next)  # Folosim același scaler pentru consistență
+        X_next_scaled = pd.DataFrame(scaler.transform(X_next), columns=X_next.columns)
+
+  # Folosim același scaler pentru consistență
         
         # Facem predicția
         y_pred = model.predict(X_next_scaled)
@@ -611,8 +613,8 @@ def validate_prediction_model(df, target_metrics=['FCF_per_share', 'EPS', 'Opera
         
         # Pregătim datele de intrare pentru validare
         X_val = validation_input.drop(columns=[metric, 'year', 'ticker'], errors='ignore')
-        X_val_scaled = scaler.transform(X_val)
-        
+        X_val_scaled = pd.DataFrame(scaler.transform(X_val), columns=X_val.columns)
+
         # Facem predicția
         y_pred = model.predict(X_val_scaled)
         
