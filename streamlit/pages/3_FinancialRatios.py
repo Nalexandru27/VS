@@ -1,3 +1,6 @@
+# Financial Ratios
+# 3_FinancialRatios.py
+
 import streamlit as st
 
 st.set_page_config(page_title="Financial Ratios", layout="wide")

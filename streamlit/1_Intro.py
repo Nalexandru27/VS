@@ -1,3 +1,6 @@
+# Intro
+# 1_Intro.py
+
 import streamlit as st
 st.set_page_config(page_title="Financial Analysis Dashboard", layout="wide")
 
@@ -54,19 +57,23 @@ else:
 
 # Display filtered tickers in a selectbox
 if filtered_tickers:
-    selected_ticker = st.sidebar.selectbox(
+    options_with_placeholder = ["Select a company..."] + filtered_tickers
+
+    selected_option = st.sidebar.selectbox(
         "Select ticker:",
-        options=filtered_tickers,
-        index=0 if st.session_state.selected_ticker not in filtered_tickers else filtered_tickers.index(st.session_state.selected_ticker)
+        options=options_with_placeholder,
+        index=0
     )
-    # Save to session state when changed
-    if selected_ticker != st.session_state.selected_ticker:
-        st.session_state.selected_ticker = selected_ticker
+
+# Salvează doar dacă nu e placeholder-ul
+if selected_option != "Select a company...":
+    st.session_state.selected_ticker = selected_option
 else:
-    st.sidebar.warning("No matching tickers found")
+    st.session_state.selected_ticker = None
+
 
 # Main content
-if st.session_state.selected_ticker:
+if st.session_state.get("selected_ticker"):
     st.header(f"Company: {st.session_state.selected_ticker}")
     
     # Navigation instructions
