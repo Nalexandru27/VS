@@ -125,6 +125,17 @@ class DatabaseCRUD:
             if result is None:
                 return None
             return result[0]
+        
+    def select_all_company_tickers(self):
+        with self.connection.get_cursor() as cursor:
+            cursor.execute("""
+                SELECT ticker from company
+            """)
+            result = cursor.fetchall()
+
+            if not result:
+                return []
+            return [row[0] for row in result]
     
     def select_no_companies(self):
         with self.connection.get_cursor() as cursor:

@@ -1,8 +1,13 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from services.db_instance import get_db
 import pandas as pd
+from financial_analysis import financial_metrics
+
+db_crud = get_db()
 
 def get_income_statement_df(ticker, start_year, end_year):
-    db_crud = get_db()
     company_id = db_crud.select_company(ticker)
     if company_id is None:
         return None
@@ -47,7 +52,6 @@ def get_income_statement_df(ticker, start_year, end_year):
 
 
 def get_balance_sheet_df(ticker, start_year, end_year):
-    db_crud = get_db()
     company_id = db_crud.select_company(ticker)
     if company_id is None:
         return None
@@ -101,7 +105,6 @@ def get_balance_sheet_df(ticker, start_year, end_year):
     return df
 
 def get_cashflow_statement_df(ticker, start_year, end_year):
-    db_crud = get_db()
     company_id = db_crud.select_company(ticker)
     if company_id is None:
         return None
@@ -142,4 +145,36 @@ def get_cashflow_statement_df(ticker, start_year, end_year):
     df.sort_index(ascending=False, inplace=True)
 
     return df
+
+def get_financial_ratios_df(ticker, start_year=2013, end_year=2023):
+    try:
+        company_id = db_crud.select_company(ticker)
+        if company_id is None:
+            return None
+
+        data = []
+        for year in range(start_year, end_year + 1):
+            current_ratio = financial_metrics.calculate_current_ratio(ticker, year)
+            pe_ratio = financial_metrics.calculate_price_to_earnings_ratio(ticker, year)
+            pb_ratio = financial_metrics.calculate_price_to_book_ratio(ticker, year)
+            debt_to_total_capital_ratio = financial_metrics.calculate_Debt_to_Total_Capital_Ratio(ticker, year)
+            roce = financial_metrics.calculate_ROCE(ticker, year)
+            roe = financial_metrics.calculate_return_on_equity(ticker, year)
+            operating_income_margin = financial_metrics.calculate_operating_income_margin(ticker, year)
+
+            data.append({
+                "Year": year,
+                "P/E Ratio": pe_ratio,
+                "P/B Ratio": pb_ratio,
+                "Current Ratio": current_ratio,
+                "Debt/Total Capital Ratio": debt_to_total_capital_ratio,
+                "Operating Income Margin": operating_income_margin,
+                "ROE": roe,
+                "ROCE": roce
+            })
+
+        df = pd.DataFrame(data)
+        return df
+    except Exception as e:
+        print(f"Error getting financial ratios for {ticker}")
     

@@ -66,8 +66,7 @@ def main():
 
      # 4. Use validation results to inform next_year predictions
     # (You could adjust model parameters based on validation performance)
-    next_year_predictions = predict_next_year(df.copy(), next_year=2024, 
-                                             validation_performance=validation_results)
+    next_year_predictions = predict_next_year(df.copy(), next_year=2024, validation_performance=validation_results)
     
     # Afișarea și salvarea rezultatelor
     print("\nPredicții pentru anul 2024:")
@@ -92,16 +91,16 @@ def main():
             f'{metric}_2024': list(data['predictions'].values())
         })
         predictions_df.to_csv(f'{metric}_2024_predictions.csv', index=False)
-        print(f"  Predicțiile pentru {metric} au fost salvate în {metric}_2025_predictions.csv")
+        print(f"  Predicțiile pentru {metric} au fost salvate în {metric}_2024_predictions.csv")
     
     # Analizăm și rezultatele modelului original (păstrat din codul original)
     # Preprocesarea datelor
     df_original = preprocess_data(df.copy())
 
     # Modelarea pentru fiecare metrică țintă (păstrat din codul original)
-    fcf_results = predict_fcf(df_original.copy())
-    eps_results = predict_eps(df_original.copy())
-    opcf_results = predict_opCF(df_original.copy())
+    fcf_results = predict_fcf(df_original.copy(), visualize=False)
+    eps_results = predict_eps(df_original.copy(), visualize=False)
+    opcf_results = predict_opCF(df_original.copy(), visualize=False)
 
     # Vizualizarea și salvarea rezultatelor (păstrat din codul original)
     visualize_and_save_results(fcf_results, eps_results, opcf_results)
@@ -396,8 +395,7 @@ def save_predictions_to_csv(results, filename):
     except Exception as e:
         print(f"Eroare la salvarea în fișierul {filename}: {e}")
 
-def predict_next_year(df, target_metrics=['FCF_per_share', 'EPS', 'OperatingCF_per_share'], 
-                      next_year=2024, validation_performance=None):
+def predict_next_year(df, target_metrics=['FCF_per_share', 'EPS', 'OperatingCF_per_share'], next_year=2024, validation_performance=None):
     """
     Predict financial values for next year, potentially adjusting based on validation performance.
     """

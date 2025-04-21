@@ -534,5 +534,79 @@ def get_total_equity(ticker, year):
         print(f"Error getting total equity for {ticker}: {e}")
         return None
     
+def calculate_price_to_book_ratio(ticker, year):
+        # Tangible book value describes the standard definition of book value because it exclude the intangible assets like franchises, brand name, patents and trademarks
+        try:
+            company_id = db_crud.select_company(ticker)
+            if company_id is None:
+                return None
+            
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+            if balance_sheet_id is None:
+                return None
+            
+            total_equity = db_crud.select_financial_data(balance_sheet_id, 'totalEquity')
+            if total_equity is None:
+                return None
+            
+            intagible_assets = db_crud.select_financial_data(balance_sheet_id, 'intagibleAssets')
+            if intagible_assets is None:
+                return None
+            
+            goodwill = db_crud.select_financial_data(balance_sheet_id, 'goodwill')
+            if goodwill is None:
+                goodwill = None
 
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+            if shares_outstanding is None:
+                return None
+            
+            tangible_book_value = float(total_equity) - float(intagible_assets) - float(goodwill)
+            if shares_outstanding == 0:
+                return None
+            
+            tangible_book_value_per_share = tangible_book_value / float(shares_outstanding)
 
+            latest_price = db_crud.get_last_price(ticker)
+            if latest_price is None:
+                return None
+            
+            return safe_divide(float(latest_price), float(tangible_book_value_per_share))
+        except Exception as e:
+            print(f"Error calculating price to book ratio for {ticker}: {e}")
+            return 0
+        
+def calculate_price_to_earnings_ratio(ticker, year):
+        try:
+            company_id = db_crud.select_company(ticker)
+            if company_id is None:
+                return None
+        
+            financial_statement_id = db_crud.select_financial_statement(company_id, 'income_statement', year)
+            if financial_statement_id is None:
+                return None
+
+            net_income = db_crud.select_financial_data(financial_statement_id, 'netIncome')
+            if net_income is None:
+                return None
+
+            balance_sheet_id = db_crud.select_financial_statement(company_id, 'balance_sheet', year)
+            if balance_sheet_id is None:
+                return None
+            
+            shares_outstanding = db_crud.select_financial_data(balance_sheet_id, 'sharesOutstanding')
+            if shares_outstanding is None:
+                return None
+            
+            earnings_per_share = safe_divide(float(net_income), float(shares_outstanding))
+
+            date = get_last_trading_day(year)
+
+            price = db_crud.get_price(ticker, date)
+            if price is None:
+                return None
+            
+            return safe_divide(float(price), float(earnings_per_share))
+        except Exception as e:
+            print(f"Error calculating PE ratio for {ticker}: {e}")
+            return 0
