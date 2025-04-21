@@ -15,55 +15,21 @@ from datetime import datetime
 from services.financial_data_processor import get_financial_ratios_df
 from services.db_instance import get_db
 
-
-
 # Sidebar
 st.sidebar.header("Controls")
 
 db_crud = get_db()
 
-def filter_tickers(search_term, all_tickers, max_display=5):
-    if not search_term:
-        # If no search term, return the first max_display tickers
-        return all_tickers[:max_display]
-    else:
-        # Case-insensitive search for tickers that start with the search term
-        search_term = search_term.upper()
-        filtered = [ticker for ticker in all_tickers if ticker.startswith(search_term)]
-        return filtered
+# Check if ticker is selected in session state
+if 'selected_ticker' not in st.session_state or st.session_state.selected_ticker is None:
+    st.warning("No company selected. Please return to the home page and select a company.")
+    st.stop()
 
-all_tickers = db_crud.select_all_company_tickers()
+# Get the selected ticker from session state
+selected_ticker = st.session_state.selected_ticker.upper()
 
-# Initialize session state if needed
-if 'search_term' not in st.session_state:
-    st.session_state.search_term = ""
-
-# Create a single search input
-search_term = st.sidebar.text_input("Search ticker:", value=st.session_state.search_term)
-
-# Filter the tickers based on search
-if not search_term:
-    # If search is empty, show first 5 tickers
-    filtered_tickers = all_tickers[:5]
-else:
-    # Filter tickers that start with the search term (case insensitive)
-    search_upper = search_term.upper()
-    filtered_tickers = [ticker for ticker in all_tickers if ticker.startswith(search_upper)]
-
-# Show the filtered results in a selectbox
-if filtered_tickers:
-    selected_ticker = st.sidebar.selectbox(
-        "Select ticker:",
-        options=filtered_tickers,
-        key="ticker_select"
-    )
-else:
-    st.sidebar.warning("No matching tickers found")
-    selected_ticker = None
-
-# Save search term to session state when it changes
-if search_term != st.session_state.search_term:
-    st.session_state.search_term = search_term
+# Display ticker in sidebar for reference
+st.sidebar.info(f"Selected company: {selected_ticker}")
 
 # Get data for the selected company
 df =  get_financial_ratios_df(selected_ticker, 2013, 2023)

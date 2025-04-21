@@ -190,7 +190,7 @@ class DatabaseCRUD:
                 if year not in data:
                     data[year] = {}
                 data[year][record_type] = value
-
+                
         return data
     
     def rename_column(self, old_column_name, new_column_name):

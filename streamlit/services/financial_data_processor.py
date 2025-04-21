@@ -29,7 +29,7 @@ def get_income_statement_df(ticker, start_year, end_year):
     df.index.name = "Year"
     df.sort_index(inplace=True)
 
-    df = df.applymap(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
+    df = df.map(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
 
     column_mapping = {
         "revenue": "Revenue",
@@ -42,8 +42,12 @@ def get_income_statement_df(ticker, start_year, end_year):
         "netIncome": "Net Income",
         "interestExpense": "Interest Expense"
     }
-
     df.rename(columns=column_mapping, inplace=True)
+
+    for col in column_mapping.values():
+        if col not in df.columns:
+            df[col] = None
+
     df = df[list(column_mapping.values())]
 
     df.sort_index(ascending=False, inplace=True)
@@ -75,7 +79,7 @@ def get_balance_sheet_df(ticker, start_year, end_year):
     df.index.name = "Year"
     df.sort_index(inplace=True)
 
-    df = df.applymap(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
+    df = df.map(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
 
     column_mapping = {
         "totalAssets": "Total Assets",
@@ -96,8 +100,12 @@ def get_balance_sheet_df(ticker, start_year, end_year):
         "commonStock": "Common Stock",
         "sharesOutstanding": "Shares Outstanding"
     }
-
     df.rename(columns=column_mapping, inplace=True)
+
+    for col in column_mapping.values():
+        if col not in df.columns:
+            df[col] = None
+
     df = df[list(column_mapping.values())]
 
     df.sort_index(ascending=False, inplace=True)
@@ -126,7 +134,7 @@ def get_cashflow_statement_df(ticker, start_year, end_year):
     df.index.name = "Year"
     df.sort_index(inplace=True)
 
-    df = df.applymap(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
+    df = df.map(lambda x: round(int(x) / 1_000_000_000, 2) if x not in [None, "None"] else None)
 
     column_mapping = {
         "operatingCashFlow": "Operating Cash Flow",
@@ -135,11 +143,13 @@ def get_cashflow_statement_df(ticker, start_year, end_year):
         "capitalExpenditures": "CAPEX",
         "dividendPayout": "Dividend Payout",
         "dividendPayoutPreferredStock": "Dividend Preferred Stock Payout"
-        # "changeInOperatingAssets": "Change in Operating Assets",
-        # "changeInOperatingLiabilities": "Change in Operating Liabilities"
     }
-
     df.rename(columns=column_mapping, inplace=True)
+
+    for col in column_mapping.values():
+        if col not in df.columns:
+            df[col] = None
+
     df = df[list(column_mapping.values())]
 
     df.sort_index(ascending=False, inplace=True)

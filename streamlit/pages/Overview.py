@@ -10,25 +10,30 @@ import plotly.express as px
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from stock.Stock import Stock
-from utils.Constants import BASE_DIR, DB_NAME, FILTERED_DIVIDEND_COMPANY_FILE_PATH
+from utils.Constants import FILTERED_DIVIDEND_COMPANY_FILE_PATH
 from services.db_instance import get_db
 from services.financial_data_processor import get_income_statement_df, get_balance_sheet_df, get_cashflow_statement_df
 from datetime import datetime
-
 
 def get_valid_defaults(defaults, available_columns):
     return [col for col in defaults if col in available_columns]
 
 db_crud = get_db()
 
-st.header("Get an overview of the stock you are interested in")
+st.markdown("Get an overview of the stock you are interested in")
 
-st.markdown("""
-    Please enter the stock ticker symbol you are interested in, and we will provide you with an overview of the stock's performance and key metrics.
-""")
+# Check if ticker is selected in session state
+if 'selected_ticker' not in st.session_state or st.session_state.selected_ticker is None:
+    st.warning("No company selected. Please return to the home page and select a company.")
+    st.stop()
 
-ticker = st.text_input("Enter Stock Ticker Symbol", placeholder="e.g., AAPL, MSFT, GOOGL")
-ticker = ticker.upper()
+# Get the selected ticker from session state
+selected_ticker = st.session_state.selected_ticker
+
+# Display ticker in sidebar for reference
+st.sidebar.info(f"Selected company: {selected_ticker}")
+
+selected_ticker = selected_ticker.upper()
 
 # Inițializare a stării la începutul fișierului
 if "company_found" not in st.session_state:
@@ -38,12 +43,12 @@ if "company_id" not in st.session_state:
 if "company_ticker" not in st.session_state:
     st.session_state.company_ticker = ""
 
-if st.button("Search") and ticker:
+if st.button("Search") and selected_ticker:
     try:
-        company_id = db_crud.select_company(ticker)
+        company_id = db_crud.select_company(selected_ticker)
         if company_id is not None:
             # Verifică dacă s-a schimbat ticker-ul
-            if "company_ticker" in st.session_state and st.session_state.company_ticker != ticker:
+            if "company_ticker" in st.session_state and st.session_state.company_ticker != selected_ticker:
                 # Resetează datele financiare dacă s-a schimbat ticker-ul
                 if "income_statement_df" in st.session_state:
                     del st.session_state.income_statement_df
@@ -52,10 +57,10 @@ if st.button("Search") and ticker:
 
             st.session_state.company_found = True
             st.session_state.company_id = company_id
-            st.session_state.company_ticker = ticker
+            st.session_state.company_ticker = selected_ticker
         else:
             st.session_state.company_found = False
-            st.warning(f"Company **{ticker.upper()}** is not stored in our database.")
+            st.warning(f"Company **{selected_ticker.upper()}** is not stored in our database.")
     except Exception as e:
         st.error(f"Error searching for company: {str(e)}")
 
