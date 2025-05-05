@@ -23,12 +23,14 @@ def insert_daily_prices():
     backup_filename = "backup_" + cnst.DB_NAME
     print(f"Căutăm fișierul: {backup_filename}")
 
+    days_lag = 1
+
     df = pd.read_csv(cnst.FILLED_DAILY_PRICE_FILE_PATH, index_col=0)
     if download_file_from_drive("backup_" + cnst.DB_NAME, database_path):
         print(f"Latest database version of {cnst.DB_NAME} was downloaded successfully at {database_path}")
         time.sleep(20)
         db_crud = DatabaseCRUD()
-        yestarday = pd.Timestamp.today() - pd.Timedelta(days=2)
+        yestarday = pd.Timestamp.today() - pd.Timedelta(days=days_lag)
         formatted_yestarday = yestarday.strftime("%Y-%m-%d")
         for index, row in df.iterrows():
             date = formatted_yestarday

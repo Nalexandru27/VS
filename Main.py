@@ -77,7 +77,7 @@ def create_excel_file():
 # create_excel_file()
 
 def analyze_specific_companies():
-    tickers = ["TROW", "PEP", "REXR", "DEO", "HRL", "BF.B", "ARE", "RHI", "NKE", "SWKS", "TGT", "UPS", "NUE", "TTC", "O", "CBU", "OZK"]
+    tickers = ["TROW", "PEP", "REXR", "DEO", "HRL", "BF.B", "ARE", "RHI", "NKE", "SWKS", "TGT", "UPS", "NUE", "TTC", "O", "CBU", "OZK", "PII", "SCVL", "HPQ", "COP", "SWK", "SCL", "MDT", "WST", "MRK", "PLD", "SJW"]
     results = {}
     for ticker in tickers:
         results[ticker] = True
