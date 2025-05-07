@@ -1,0 +1,55 @@
+2025-05-07 23:51:42,814 - INFO - [sentiment_analysis.py:63] - --- Început configurare resurse NLTK ---
+2025-05-07 23:51:42,814 - INFO - [sentiment_analysis.py:40] - Verificare resursă NLTK 'punkt_tab' la 'tokenizers/punkt_tab'...
+2025-05-07 23:51:42,828 - INFO - [sentiment_analysis.py:42] - Resursa NLTK 'punkt_tab' este deja disponibilă.
+2025-05-07 23:51:42,828 - INFO - [sentiment_analysis.py:84] - --- Sfârșit configurare resurse NLTK ---
+2025-05-07 23:51:42,946 - DEBUG - [retry.py:286] - Converted retries value: 3 -> Retry(total=3, connect=None, read=None, redirect=None, status=None)
+2025-05-07 23:51:42,946 - DEBUG - [connectionpool.py:1049] - Starting new HTTPS connection (1): huggingface.co:443
+2025-05-07 23:51:43,499 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-05-07 23:51:43,696 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/config.json HTTP/1.1" 200 0
+2025-05-07 23:51:43,913 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-05-07 23:51:44,067 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/vocab.txt HTTP/1.1" 200 0
+2025-05-07 23:51:44,314 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/config.json HTTP/1.1" 200 0
+2025-05-07 23:51:47,091 - DEBUG - [tpu_cluster_resolver.py:34] - Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2025-05-07 23:51:47,306 - DEBUG - [__init__.py:47] - Creating converter from 7 to 5
+2025-05-07 23:51:47,306 - DEBUG - [__init__.py:47] - Creating converter from 5 to 7
+2025-05-07 23:51:47,306 - DEBUG - [__init__.py:47] - Creating converter from 7 to 5
+2025-05-07 23:51:47,306 - DEBUG - [__init__.py:47] - Creating converter from 5 to 7
+2025-05-07 23:51:47,947 - DEBUG - [__init__.py:342] - matplotlib data path: D:\FacultyYear3\Licenta\VS\tf-env\lib\site-packages\matplotlib\mpl-data
+2025-05-07 23:51:47,963 - DEBUG - [__init__.py:342] - CONFIGDIR=C:\Users\Asus\.matplotlib
+2025-05-07 23:51:47,963 - DEBUG - [__init__.py:1557] - interactive is False
+2025-05-07 23:51:47,963 - DEBUG - [__init__.py:1558] - platform is win32
+2025-05-07 23:51:48,020 - DEBUG - [__init__.py:342] - CACHEDIR=C:\Users\Asus\.matplotlib
+2025-05-07 23:51:48,020 - DEBUG - [font_manager.py:1635] - Using fontManager instance from C:\Users\Asus\.matplotlib\fontlist-v390.json
+2025-05-07 23:51:48,411 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/main/model.safetensors HTTP/1.1" 404 0
+2025-05-07 23:51:48,411 - DEBUG - [connectionpool.py:1049] - Starting new HTTPS connection (1): huggingface.co:443
+2025-05-07 23:51:48,612 - INFO - [sentiment_analysis.py:354] - Project directory: d:\FacultyYear3\Licenta\VS
+2025-05-07 23:51:48,628 - INFO - [sentiment_analysis.py:356] - Project directory contents: ['.env', '.git', '.gitignore', '.idea', 'companies.db', 'companies.db-shm', 'companies.db-wal', 'database', 'dataframe_machine_learning.csv', 'financial_analysis', 'financial_predictor_model', 'google-creds.json', 'HistoryAnalysis', 'Main.py', 'outData', 'PriceEstimators', 'pyrightconfig.json', 'reports_sentiment_analysis', 'sec-edgar-filings', 'sentiment_analysis.log', 'sentiment_results', 'setup_env.bat', 'stock', 'streamlit', 'tf-env', 'utils']
+2025-05-07 23:51:48,628 - INFO - [sentiment_analysis.py:362] - Looking for files in: d:\FacultyYear3\Licenta\VS\sec-edgar-filings\TGT\10-K
+2025-05-07 23:51:48,628 - INFO - [sentiment_analysis.py:386] - Found 1 submission folders for TGT
+2025-05-07 23:51:48,628 - INFO - [sentiment_analysis.py:396] - Found primary HTML file: d:\FacultyYear3\Licenta\VS\sec-edgar-filings\TGT\10-K\0000027419-25-000018\primary-document.html
+2025-05-07 23:51:48,628 - INFO - [sentiment_analysis.py:188] - Procesare fișier: d:\FacultyYear3\Licenta\VS\sec-edgar-filings\TGT\10-K\0000027419-25-000018\primary-document.html
+2025-05-07 23:51:48,856 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "GET /api/models/yiyanghkust/finbert-tone HTTP/1.1" 200 3023
+2025-05-07 23:51:49,036 - DEBUG - [sentiment_analysis.py:150] - Lungimea totală a textului brut (înainte de extragerea secțiunilor): 241087
+2025-05-07 23:51:49,036 - DEBUG - [sentiment_analysis.py:155] - Încerc extragerea secțiunii: MD&A
+2025-05-07 23:51:49,054 - DEBUG - [sentiment_analysis.py:163] -   Patternul 3 pentru 'MD&A' a găsit potrivire. Lungime text extras (brut): 38944
+2025-05-07 23:51:49,054 - DEBUG - [sentiment_analysis.py:175] -   Secțiunea 'MD&A': Lungime după curățare: 38906 (original: 38944)
+2025-05-07 23:51:49,058 - DEBUG - [sentiment_analysis.py:155] - Încerc extragerea secțiunii: Risk_Factors
+2025-05-07 23:51:49,058 - DEBUG - [sentiment_analysis.py:163] -   Patternul 2 pentru 'Risk_Factors' a găsit potrivire. Lungime text extras (brut): 48401
+2025-05-07 23:51:49,058 - DEBUG - [sentiment_analysis.py:175] -   Secțiunea 'Risk_Factors': Lungime după curățare: 48401 (original: 48401)
+2025-05-07 23:51:49,058 - DEBUG - [sentiment_analysis.py:155] - Încerc extragerea secțiunii: Business
+2025-05-07 23:51:49,072 - DEBUG - [sentiment_analysis.py:163] -   Patternul 2 pentru 'Business' a găsit potrivire. Lungime text extras (brut): 18957
+2025-05-07 23:51:49,072 - DEBUG - [sentiment_analysis.py:175] -   Secțiunea 'Business': Lungime după curățare: 18953 (original: 18957)
+2025-05-07 23:51:49,072 - DEBUG - [sentiment_analysis.py:245] - analyze_text primit. Lungime text (după strip): 38906. Primii 50 caractere: 'Executive Overview In 2024, we drove our strategy '
+2025-05-07 23:51:49,090 - DEBUG - [sentiment_analysis.py:275] - Textul a fost împărțit în 157 propoziții și 157 chunk-uri.
+2025-05-07 23:51:49,090 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "GET /api/models/yiyanghkust/finbert-tone/commits/main HTTP/1.1" 200 4606
+2025-05-07 23:51:49,333 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "GET /api/models/yiyanghkust/finbert-tone/discussions?p=0 HTTP/1.1" 200 11234
+2025-05-07 23:51:49,537 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "GET /api/models/yiyanghkust/finbert-tone/commits/refs%2Fpr%2F18 HTTP/1.1" 200 5571
+2025-05-07 23:51:50,048 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/refs%2Fpr%2F18/model.safetensors.index.json HTTP/1.1" 404 0
+2025-05-07 23:51:50,557 - DEBUG - [connectionpool.py:544] - https://huggingface.co:443 "HEAD /yiyanghkust/finbert-tone/resolve/refs%2Fpr%2F18/model.safetensors HTTP/1.1" 302 0
+2025-05-07 23:52:12,348 - DEBUG - [sentiment_analysis.py:307] - Scoruri medii calculate: {'Negative': 0.8755508661270142, 'Neutral': 0.09701268374919891, 'Positive': 0.02743660844862461}
+2025-05-07 23:52:12,348 - DEBUG - [sentiment_analysis.py:245] - analyze_text primit. Lungime text (după strip): 48401. Primii 50 caractere: 'Our business is subject to many risks. The followi'
+2025-05-07 23:52:12,348 - DEBUG - [sentiment_analysis.py:275] - Textul a fost împărțit în 165 propoziții și 162 chunk-uri.
+2025-05-07 23:52:36,096 - DEBUG - [sentiment_analysis.py:307] - Scoruri medii calculate: {'Negative': 0.12961193919181824, 'Neutral': 0.011908618733286858, 'Positive': 0.8584793210029602}
+2025-05-07 23:52:36,104 - DEBUG - [sentiment_analysis.py:245] - analyze_text primit. Lungime text (după strip): 18953. Primii 50 caractere: 'GeneralTarget Corporation was incorporated in Minn'
+2025-05-07 23:52:36,104 - DEBUG - [sentiment_analysis.py:275] - Textul a fost împărțit în 75 propoziții și 71 chunk-uri.
+2025-05-07 23:52:47,784 - DEBUG - [sentiment_analysis.py:307] - Scoruri medii calculate: {'Negative': 0.6630799770355225, 'Neutral': 0.3367530405521393, 'Positive': 0.0001670973579166457}
